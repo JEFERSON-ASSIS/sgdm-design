@@ -1,0 +1,152 @@
+/*
+ * @sgdm/design — tokens
+ *
+ * Toda cor, fonte, raio e sombra dos componentes sai daqui. Os nomes dizem o
+ * PAPEL (primary, surface, text-muted), nunca a marca ou a cor. Para mudar o
+ * visual de um sistema, sobrescreva as variáveis depois deste arquivo; para
+ * trocar de linguagem visual (ex.: Material), troque este arquivo inteiro.
+ *
+ * Cores ficam em canais RGB separados por espaço ("30 64 175"), e não em hex,
+ * para o Tailwind aplicar opacidade (bg-primary/80). Em CSS próprio, use
+ * rgb(var(--sd-color-primary)). O hex equivalente está no comentário.
+ *
+ * Valores levantados do SGDM (apps/web/app/globals.css) em 28/09/2026.
+ */
+
+/* Inter servida pelo próprio pacote — nada de CDN. Licença em fonts/. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./fonts/inter-latin-ext-wght-normal.woff2') format('woff2-variations'),
+    url('./fonts/inter-latin-ext-wght-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./fonts/inter-latin-wght-normal.woff2') format('woff2-variations'),
+    url('./fonts/inter-latin-wght-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* ---------- Ação principal ---------- */
+  --sd-color-primary: 30 64 175; /* #1e40af — botão principal */
+  --sd-color-primary-hover: 30 64 175; /* #1e40af — no SGDM o hover (blue-800) é igual à cor */
+  --sd-color-primary-light: 59 130 246; /* #3b82f6 — borda de campo em foco, contorno de foco */
+  --sd-color-primary-soft: 239 246 255; /* #eff6ff — fundo claro (hover gov.br, ícone de card) */
+  --sd-color-primary-ring: 219 234 254; /* #dbeafe — anel de foco do campo, trilho de progresso */
+  --sd-color-on-primary: 255 255 255; /* #ffffff — texto sobre a cor principal */
+
+  /* Destaque: links, passo atual, aba ativa, indicadores de carregamento. */
+  --sd-color-accent: 37 99 235; /* #2563eb */
+  --sd-color-accent-text: 29 78 216; /* #1d4ed8 — texto de aba/passo ativo */
+
+  --sd-color-secondary: 124 58 237; /* #7c3aed */
+  --sd-color-secondary-soft: 245 243 255; /* #f5f3ff */
+
+  /* ---------- Superfícies ---------- */
+  --sd-color-background: 241 245 249; /* #f1f5f9 — fundo da aplicação */
+  --sd-color-surface: 255 255 255; /* #ffffff — cards, modais, campos */
+  --sd-color-surface-hover: 248 250 252; /* #f8fafc — hover de linha, cabeçalho de tabela */
+  --sd-color-surface-muted: 241 245 249; /* #f1f5f9 — hover de botão fantasma, selo neutro */
+  --sd-color-surface-inverse: 30 41 59; /* #1e293b — balão de dica */
+  --sd-color-on-inverse: 255 255 255; /* #ffffff */
+  --sd-color-overlay: 0 0 0; /* fundo escurecido atrás de modal e menu móvel */
+
+  /* ---------- Menu lateral ---------- */
+  --sd-color-sidebar: 15 23 42; /* #0f172a */
+  --sd-color-sidebar-hover: 30 41 59; /* #1e293b */
+  --sd-color-sidebar-active: 37 99 235; /* #2563eb */
+  --sd-color-sidebar-foreground: 255 255 255; /* #ffffff */
+  --sd-color-sidebar-muted: 148 163 184; /* #94a3b8 — item inativo, subtítulo */
+  --sd-color-sidebar-border: 51 65 85; /* #334155 — divisórias (usadas a 60%) */
+
+  /* ---------- Texto ---------- */
+  --sd-color-text: 15 23 42; /* #0f172a — texto principal, títulos de página */
+  --sd-color-text-title: 30 41 59; /* #1e293b — títulos de seção e de cabeçalho */
+  --sd-color-text-label: 51 65 85; /* #334155 — rótulos de campo, botão secundário */
+  --sd-color-text-body: 71 85 105; /* #475569 — corpo de mensagens */
+  --sd-color-text-muted: 100 116 139; /* #64748b — descrições */
+  --sd-color-text-subtle: 148 163 184; /* #94a3b8 — dicas, placeholder, ícones apagados */
+
+  /* ---------- Bordas ---------- */
+  --sd-color-border: 226 232 240; /* #e2e8f0 */
+  --sd-color-border-subtle: 241 245 249; /* #f1f5f9 — divisórias internas de card */
+
+  /* ---------- Feedback ----------
+   * Cada tom tem: base (500), soft (fundo 50), border (200), strong (600, ícone
+   * e fundo de botão) e text (800, texto sobre o soft). */
+  --sd-color-success: 34 197 94; /* #22c55e */
+  --sd-color-success-soft: 240 253 244; /* #f0fdf4 */
+  --sd-color-success-border: 187 247 208; /* #bbf7d0 */
+  --sd-color-success-strong: 22 163 74; /* #16a34a */
+  --sd-color-success-text: 22 101 52; /* #166534 */
+
+  --sd-color-warning: 245 158 11; /* #f59e0b */
+  --sd-color-warning-soft: 255 251 235; /* #fffbeb */
+  --sd-color-warning-border: 253 230 138; /* #fde68a */
+  --sd-color-warning-strong: 217 119 6; /* #d97706 */
+  --sd-color-warning-text: 146 64 14; /* #92400e */
+
+  --sd-color-danger: 239 68 68; /* #ef4444 */
+  --sd-color-danger-soft: 254 242 242; /* #fef2f2 */
+  --sd-color-danger-border: 254 202 202; /* #fecaca */
+  --sd-color-danger-strong: 220 38 38; /* #dc2626 — botão de ação destrutiva */
+  --sd-color-danger-hover: 185 28 28; /* #b91c1c */
+  --sd-color-danger-text: 153 27 27; /* #991b1b */
+
+  --sd-color-info: 6 182 212; /* #06b6d4 */
+  --sd-color-info-soft: 236 254 255; /* #ecfeff */
+  --sd-color-info-border: 165 243 252; /* #a5f3fc */
+  --sd-color-info-strong: 8 145 178; /* #0891b2 */
+  --sd-color-info-text: 21 94 117; /* #155e75 */
+
+  /* Marca-texto: dado a preencher no editor de documentos. */
+  --sd-color-highlight: 254 243 199; /* #fef3c7 */
+
+  /* ---------- Marca externa ---------- */
+  --sd-color-govbr: 19 81 180; /* #1351b4 — botão "Entrar com gov.br" */
+
+  /* ---------- Gráficos (CHART_COLORS do SGDM, na mesma ordem) ---------- */
+  --sd-color-chart-1: 59 130 246; /* #3B82F6 SOLICITACAO_ABERTA */
+  --sd-color-chart-2: 6 182 212; /* #06B6D4 NUMERACAO_LIBERADA */
+  --sd-color-chart-3: 245 158 11; /* #F59E0B EM_ELABORACAO */
+  --sd-color-chart-4: 139 92 246; /* #8B5CF6 AGUARDANDO_ASSINATURA */
+  --sd-color-chart-5: 34 197 94; /* #22C55E ASSINADO */
+  --sd-color-chart-6: 16 185 129; /* #10B981 PUBLICADO */
+  --sd-color-chart-7: 100 116 139; /* #64748B ARQUIVADO */
+  --sd-color-chart-8: 239 68 68; /* #EF4444 CANCELADO */
+  --sd-color-chart-9: 249 115 22; /* #F97316 NAO_UTILIZADO */
+  --sd-color-chart-10: 99 102 241; /* #6366F1 EM_ANALISE */
+  --sd-color-chart-11: 236 72 153; /* #EC4899 AGUARDANDO_PUBLICACAO */
+  --sd-color-chart-12: 159 18 57; /* #9F1239 ERRO_EMISSAO */
+
+  /* ---------- Fontes ---------- */
+  --sd-font-sans: 'Inter', Arial, sans-serif;
+  --sd-font-document: 'Times New Roman', Times, serif;
+
+  /* ---------- Raios ---------- */
+  --sd-radius-card: 16px; /* cards e modais */
+  --sd-radius-control: 8px; /* botões, campos, itens de menu */
+  --sd-radius-tile: 12px; /* ícone de card, logotipo, avisos */
+  --sd-radius-popover: 6px; /* balão de dica */
+  --sd-radius-pill: 9999px; /* selos */
+
+  /* ---------- Sombras ---------- */
+  --sd-shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --sd-shadow-card-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --sd-shadow-popover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --sd-shadow-modal: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --sd-shadow-nav-active: 0 4px 6px -1px rgb(30 58 138 / 0.3), 0 2px 4px -2px rgb(30 58 138 / 0.3);
+  --sd-shadow-brand: 0 10px 15px -3px rgb(30 58 138 / 0.4), 0 4px 6px -4px rgb(30 58 138 / 0.4);
+  --sd-shadow-step: 0 4px 6px -1px rgb(219 234 254 / 1), 0 2px 4px -2px rgb(219 234 254 / 1);
+}
