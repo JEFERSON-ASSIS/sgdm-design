@@ -29,13 +29,14 @@ const chart = Object.fromEntries(
 );
 
 /**
- * Lê components.css com o mesmo postcss que o Tailwind do projeto usa. Depois
- * do build ele está em dist/; no repositório (catálogo, testes), em src/styles.
+ * Lê components.css com o mesmo postcss que o Tailwind do projeto usa. No
+ * repositório (catálogo, testes) vale o de src/styles; instalado, só existe o
+ * de dist/.
  */
 function lerComponentes() {
   const candidatos = [
-    path.join(__dirname, 'dist', 'components.css'),
     path.join(__dirname, 'src', 'styles', 'components.css'),
+    path.join(__dirname, 'dist', 'components.css'),
   ];
   const arquivo = candidatos.find((c) => fs.existsSync(c));
   if (!arquivo) {
