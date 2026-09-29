@@ -10,5 +10,7 @@ export default defineConfig({
   // Os componentes usam estado e efeitos: no App Router do Next precisam ser
   // de cliente. O bundle é um arquivo só, então a diretiva vai no topo dele.
   banner: { js: "'use client';" },
-  external: ['react', 'react-dom', 'react/jsx-runtime', 'lucide-react'],
+  // O recharts é peer opcional e o pacote nunca o importa; fica na lista só
+  // para garantir que, se um dia alguém importar, ele não seja embutido.
+  external: ['react', 'react-dom', 'react/jsx-runtime', 'lucide-react', 'recharts'],
 });
