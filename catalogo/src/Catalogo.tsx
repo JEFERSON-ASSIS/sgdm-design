@@ -70,16 +70,20 @@ import {
   type TooltipPlacement,
 } from '../../src';
 import { Tokens } from './Tokens';
+import { AvisosECarregamento, BotoesNovos, FormulariosNovos, ListasDeDados, RotulosEIcones } from './CatalogoB';
 
 const SECOES = [
   { id: 'tokens', rotulo: 'Tokens', icone: Palette },
   { id: 'botoes', rotulo: 'Botões', icone: MousePointerClick },
   { id: 'formularios', rotulo: 'Formulários', icone: Type },
   { id: 'cards', rotulo: 'Cards', icone: Layers },
+  { id: 'rotulos', rotulo: 'Rótulos e ícones', icone: Hash },
+  { id: 'dados', rotulo: 'Lista de dados', icone: ClipboardList },
   { id: 'status', rotulo: 'Status', icone: CheckCircle2 },
   { id: 'tabela', rotulo: 'Tabela e abas', icone: Table2 },
   { id: 'modais', rotulo: 'Modais', icone: FileSignature },
   { id: 'feedback', rotulo: 'Feedback', icone: Bell },
+  { id: 'avisos', rotulo: 'Avisos e carregamento', icone: AlertTriangle },
   { id: 'wizard', rotulo: 'Wizard', icone: ClipboardList },
 ];
 
@@ -135,7 +139,7 @@ function Linha({ rotulo, children }: { rotulo: string; children: ReactNode }) {
   );
 }
 
-const VARIANTES: ButtonVariant[] = ['primary', 'secondary', 'danger', 'ghost', 'govbr'];
+const VARIANTES: ButtonVariant[] = ['primary', 'secondary', 'danger', 'danger-outline', 'success', 'ghost', 'link', 'govbr'];
 
 function Botoes() {
   return (
@@ -535,14 +539,22 @@ function Conteudo() {
       <Secao id="tokens" titulo="Tokens" descricao="Lidos de src/styles/tokens.css">
         <Tokens />
       </Secao>
-      <Secao id="botoes" titulo="Button" descricao="Variantes primary, secondary, danger, ghost e govbr; tamanhos md e sm; loading e disabled.">
+      <Secao id="botoes" titulo="Button e IconButton" descricao="Variantes primary, secondary, danger, danger-outline, success, ghost, link e govbr; tamanhos sm, md e lg; loading, disabled, href e asChild.">
         <Botoes />
+        <BotoesNovos />
       </Secao>
-      <Secao id="formularios" titulo="Input, Textarea, Select, FormField, FormSection">
+      <Secao id="formularios" titulo="Input, PasswordInput, Textarea, Select, Checkbox, FileUpload, FormField, FormSection" descricao="Campos com ícone, prefixo e sufixo; senha com mostrar/ocultar; caixas de marcar com indeterminado; envio de arquivo.">
         <Formularios />
+        <FormulariosNovos />
       </Secao>
       <Secao id="cards" titulo="StatCard, Card, CollapsibleCard, Accordion, PageHeader" descricao="StatCard em todos os tons; Card com padding e tone; CollapsibleCard controlado; Accordion para linhas de lista.">
         <Cards />
+      </Secao>
+      <Secao id="rotulos" titulo="Eyebrow, Chip e IconTile" descricao="Sobrelinha; chip em todos os tons (filled, soft, outline, mono); quadrado de ícone, também usado no StatCard e no EmptyState.">
+        <RotulosEIcones />
+      </Secao>
+      <Secao id="dados" titulo="DescriptionList e KeyValue" descricao="Os quatro formatos de lista rótulo → valor do SGDM.">
+        <ListasDeDados />
       </Secao>
       <Secao id="status" titulo="StatusBadge" descricao="Mapa padrão, atalho Ativo/Inativo, size, case, outline e os mapas de numeração, licitação e peça">
         <Card>
@@ -565,6 +577,9 @@ function Conteudo() {
       </Secao>
       <Secao id="feedback" titulo="Toast, Tooltip, ErrorState, EmptyState" descricao="Tooltip nos quatro lados; EmptyState padrão e tracejado.">
         <Feedback />
+      </Secao>
+      <Secao id="avisos" titulo="Alert, Spinner, LoadingState e Skeleton" descricao="Avisos em todos os tons, com ícone, título, ações, fechar e a variante stage; indicadores de carregamento.">
+        <AvisosECarregamento />
       </Secao>
       <Secao id="wizard" titulo="WizardStepper">
         <WizardStepper
