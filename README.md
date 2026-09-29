@@ -4,7 +4,7 @@ O visual do SGDM empacotado para os sistemas novos nascerem com a mesma aparênc
 
 - **Tokens** (`tokens.css`): cores, famílias de tom, tema por perfil, fontes, tamanhos, raios, sombras, camadas (z-index), tempo e medidas de layout, com nomes de papel (`--sd-color-primary`, `--sd-radius-control`, `--sd-z-modal`). A fonte Inter vem dentro do pacote, sem CDN. Veja [Tokens](#tokens).
 - **Preset do Tailwind** (`tailwind-preset`): expõe os tokens como `bg-primary`, `text-muted`, `rounded-control` e `shadow-card`, e injeta as classes `.card`, `.btn-*`, `.input`, `.nav-item`… do SGDM.
-- **Componentes**: Button, Card, Input, Textarea, Select, FormField, FormSection, Modal, ConfirmModal, PageHeader, StatusBadge, StatCard, Table, Tabs, Toast (`ToastProvider` + `useToast`), EmptyState, ErrorState, WizardStepper, Tooltip (DicaInfo), CollapsibleCard, Accordion, AppLayout, Sidebar, Header e NavigationProgress.
+- **Componentes**: Button, IconButton, Card, Input, PasswordInput, Textarea, Select, Checkbox, CheckboxCard, CheckboxGroup, FileUpload, FileButton, FormField, FormSection, Modal, ConfirmModal, PageHeader, StatusBadge, StatCard, Table, Tabs, Toast (`ToastProvider` + `useToast`), Alert (Callout), Spinner, LoadingState, Skeleton, PageSkeleton, EmptyState, ErrorState, Eyebrow (Overline), Chip (Tag), IconTile, DescriptionList, KeyValue, WizardStepper, Tooltip (DicaInfo), CollapsibleCard, Accordion, AppLayout, Sidebar, Header e NavigationProgress.
 
 Para ver tudo funcionando, rode `npm run catalogo` neste repositório.
 
@@ -184,6 +184,55 @@ Variantes que completam os componentes (v0.2):
 <Select size="compact" icon={<Building2 />} aria-label="Prefeitura em gestão" options={prefeituras} />
 ```
 
+Componentes novos da v0.2 (padrões que o SGDM repetia à mão):
+
+```tsx
+{/* Aviso (callout): info | warning | success | danger | violet | purple | neutral.
+    danger vira role="alert"; os demais, role="note" (ou role="status" por prop). */}
+<Alert tone="warning" icon={AlertTriangle} title="Sem temporalidade"
+  actions={<Button size="sm" variant="secondary">Cadastrar</Button>} onClose={fechar}>
+  Documentos desses tipos não ficam elegíveis a destinação.
+</Alert>
+<Alert variant="stage" title="Etapa 3 — Elaboração.">Preencha os campos e salve.</Alert>
+<Alert tone="danger" size="sm">{erro}</Alert>
+
+{/* Carregamento */}
+<Spinner size="sm" />                          {/* xs | sm | md | lg; com label vira role="status" */}
+<LoadingState />                               {/* bloco py-16; o texto vai ao leitor de tela */}
+<LoadingState mode="inline" label="Carregando histórico…" />
+<Skeleton shape="title" /> <Skeleton lines={3} /> <Skeleton shape="card" />
+<PageSkeleton />                               {/* o loading.tsx do painel */}
+
+{/* Rótulos e ícones */}
+<Eyebrow>Identificação</Eyebrow>               {/* 11px, caixa-alta; size, weight, tone, as */}
+<Chip tone="indigo">RH</Chip>                   {/* variant filled | soft | outline; size xs | sm */}
+<Chip mono size="xs">licitacao.editar</Chip>
+<IconTile icon={Users} tone="teal" shape="circle" variant="tint" />
+
+{/* Botões */}
+<Button variant="link">Ver todas</Button>       {/* + success e danger-outline; size="lg" (py-3) */}
+<Button href="/novo" linkComponent={Link} icon={<Plus />}>Novo</Button>
+<Button asChild variant="secondary"><Link href="/lista">Lista</Link></Button>
+<IconButton icon={<Trash2 />} aria-label="Excluir" variant="danger" size="sm" />  {/* aria-label obrigatório */}
+
+{/* Lista de dados (<dl>): rows | grid | tiles | compact */}
+<DescriptionList variant="rows" items={[{ label: 'Protocolo', value: p, mono: true }, { label: 'Órgão', value: o }]} />
+<KeyValue label="Servidor" value={nome} />
+
+{/* Formulário */}
+<Input label="E-mail" leftIcon={<Mail />} />
+<Input label="Valor" prefix="R$" />  <Input label="Desconto" suffix="%" />
+<PasswordInput label="Senha" {...register('senha')} />   {/* volta a ocultar em 10 s */}
+<Checkbox label="Perfil ativo" checked={ativo} onChange={(e) => setAtivo(e.target.checked)} />
+<Checkbox aria-label="Todos" indeterminate />   {/* aria-checked="mixed" */}
+<CheckboxCard label="Editar" meta="licitacao.editar" description="Altera dados do processo" />
+<CheckboxGroup title="Licitações" selectAllLabel="Selecionar módulo" options={perms} value={sel} onChange={setSel} />
+<FileUpload files={arquivos} onChange={setArquivos} maxFiles={5} />
+<FileButton accept="application/pdf,.pdf" onFiles={([f]) => enviar(f)} variant="primary">Carregar assinado</FileButton>
+```
+
+`StatCard` e `EmptyState` desenham o ícone com o `IconTile`. As cores de chip, aviso e ícone saem dos mapas de `tones.ts`, um por degrau, escritos por extenso para o Tailwind achá-los no `dist`.
+
 ### Layout
 
 Tudo que é específico do SGDM chega por prop: nome, ícone, itens de menu, seletor de prefeitura e notificações. O menu e o cabeçalho conversam pelo `AppLayout`, sem store externa.
@@ -257,7 +306,7 @@ Todo token segue `--sd-<categoria>-<papel>[-<variante>]`. O esquema completo est
 | Sombra | `card`, `card-hover`, `popover`, `dropdown`, `modal`, `inner`, `nav-active`, `brand`, `brand-strong`, `step` | `shadow-dropdown`, `shadow-brand-strong` |
 | Camada | `raised` 10, `dropdown` 20, `sticky` 30, `overlay` 40, `modal` 50, `toast` 60, `tooltip` 100, `progress` 110 | `z-modal`, `z-tooltip` |
 | Tempo | `--sd-duration-fast` 150ms, `-normal` 200ms, `-slow` 300ms, `--sd-ease-standard`, `--sd-ease-out` | `duration-normal`, `ease-standard` (o `transition` puro já usa fast + standard) |
-| Medida | `--sd-size-sidebar` 256, `-sidebar-collapsed` 72, `-header` 56, `-modal-md` 512, `-modal-lg` 768, `-tooltip` 288, `-dropdown` 384, `-editor-min` 420, `-editor-frame-min` 480, `-print-sheet` 820, `-kanban-column-min/max` 280–320 | `w-sidebar`, `h-header`, `max-w-modal-lg`, `min-h-editor`, `w-kanban-column` |
+| Medida | `--sd-size-sidebar` 256, `-sidebar-collapsed` 72, `-header` 56, `-modal-md` 512, `-modal-lg` 768, `-tooltip` 288, `-dropdown` 384, `-editor-min` 420, `-editor-frame-min` 480, `-print-sheet` 820, `-kanban-column-min/max` 280–320, `-dl-label` 160 | `w-sidebar`, `h-header`, `max-w-modal-lg`, `min-h-editor`, `w-kanban-column`, `grid-cols-label-value` |
 | Espaço da página | `--sd-space-page-sm` 16, `-md` 24, `-lg` 32 | `p-page-sm lg:p-page-md xl:p-page-lg` |
 | Breakpoint | `--sd-breakpoint-lg` 1024px (informativo) | `lg:` |
 

@@ -65,40 +65,51 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
 
 ## B. Componentes novos (ordem = quanto aparecem no SGDM)
 
-- [ ] **B1. `Alert` / `Callout`** (~120×, 56 arquivos).
+- [x] **B1. `Alert` / `Callout`** (~120×, 56 arquivos).
   - Tons: info, warning, success, danger, violet, neutral.
   - Aceita ícone, título opcional, ações e botão de fechar opcional.
   - Variante `stage` para o aviso "Etapa 3 — Elaboração", como em `DocumentoEditorPanel.tsx:766,774`.
-- [ ] **B2. Carregamento** (~88×).
+- [x] **B2. Carregamento** (~88×).
   - `Spinner` nos tamanhos sm, md e lg.
   - `LoadingState`, com spinner e texto "Carregando…" configurável, nos modos inline e bloco.
-- [ ] **B3. `Skeleton`**, nas formas linha, bloco e card. Referência: `(d)/loading.tsx`.
-- [ ] **B4. `Eyebrow` / `Overline`** (50×). Rótulo `text-[11px] uppercase tracking-wide text-muted`.
-- [ ] **B5. `Chip` / `Tag`** (~37×).
+- [x] **B3. `Skeleton`**, nas formas linha, bloco e card. Referência: `(d)/loading.tsx`.
+- [x] **B4. `Eyebrow` / `Overline`** (50×). Rótulo `text-[11px] uppercase tracking-wide text-muted`.
+- [x] **B5. `Chip` / `Tag`** (~37×).
   - Tamanhos xs e sm.
   - Tons de todas as famílias, com versão preenchida ou com contorno.
   - Ícone opcional e modo mono, para códigos.
-- [ ] **B6. `IconTile`** (~35×). Ícone num quadrado ou círculo com fundo de tom. Exportar e reusar dentro de `StatCard` e `EmptyState`.
-- [ ] **B7. Mais variantes de `Button`.**
+- [x] **B6. `IconTile`** (~35×). Ícone num quadrado ou círculo com fundo de tom. Exportar e reusar dentro de `StatCard` e `EmptyState`.
+- [x] **B7. Mais variantes de `Button`.**
   - `link`, só texto, `text-primary hover:underline`.
   - `success`, em esmeralda.
   - `danger-outline`.
   - Tamanho `lg`, com `py-3`.
   - Prop `href`, para renderizar como `<a>`, e prop `asChild`, ou um render prop simples, para aceitar o `<Link>` do Next sem depender do Next.
-- [ ] **B8. `IconButton`** (~25×). Quadrado nos tamanhos sm e md, com `aria-label` obrigatório e as variantes ghost, secondary e danger.
-- [ ] **B9. `DescriptionList` / `KeyValue`** (~36×).
+- [x] **B8. `IconButton`** (~25×). Quadrado nos tamanhos sm e md, com `aria-label` obrigatório e as variantes ghost, secondary e danger.
+- [x] **B9. `DescriptionList` / `KeyValue`** (~36×).
   - Formatos `dl` em linhas `[160px_1fr]`, grade de blocos rótulo/valor e modo compacto.
   - Referências: `DocumentoDadosPanel.tsx:48-58` e `validar/[codigo]/page.tsx:227`.
-- [ ] **B10. `Checkbox`** (24×).
+- [x] **B10. `Checkbox`** (24×).
   - Checkbox simples.
   - `CheckboxCard`, com borda e descrição.
   - `CheckboxGroup`, com cabeçalho "marcar todos", matriz de permissões e estado indeterminado. Referência: `components/perfis/PerfilPermissoesEditor.tsx:274-320`.
   - O app não tem radio nem switch, então não criar.
-- [ ] **B11. `PasswordInput`**, com mostrar/ocultar. Referência: `components/forms/CampoSenha.tsx`.
-- [ ] **B12. `Input` com ícone à esquerda e à direita**, e prefixo/sufixo de texto, como `R$` e `%`.
-- [ ] **B13. Envio de arquivo.**
+- [x] **B11. `PasswordInput`**, com mostrar/ocultar. Referência: `components/forms/CampoSenha.tsx`.
+- [x] **B12. `Input` com ícone à esquerda e à direita**, e prefixo/sufixo de texto, como `R$` e `%`.
+- [x] **B13. Envio de arquivo.**
   - `FileUpload` com área de arrastar e soltar, lista de arquivos e remoção. Referência: `components/forms/FileUpload.tsx:96-153`.
   - `FileButton`: um `label` com cara de botão sobre um input escondido. Referência: `AssinaturaDigitalPanel.tsx:171`.
+
+> **Notas de B1–B13 (feitas em 28/09/2026).**
+> - `Alert`: o texto do corpo é o tom 900 (`-deep`), menos no `danger`, que fica em red-800 (`-text`), como no SGDM. O papel ARIA padrão é `alert` no danger e `note` nos demais; `role="status"` fica por prop. Além dos seis tons pedidos entrou `purple`, que é o do aviso "Etapa 4 — Aguardando assinatura". A variante `stage` põe o título em negrito na mesma linha do texto e usa a borda do tom (a Etapa 3 do SGDM usa blue-100, a Etapa 4 purple-200; ficou uma regra só).
+> - `Spinner` ganhou também o `xs` (14px), que o app usa em botões pequenos. O `LoadingState` em bloco não mostra o texto na tela (o SGDM mostra só o spinner), mas o anuncia; `showLabel` muda isso.
+> - `Skeleton`: a linha usa `bg-surface-muted` (slate-100) e os blocos `bg-skeleton` (slate-200), como o `loading.tsx`. A largura `lg` é 320px (`w-80`), porque `w-72` é barrado pelo teste de medidas soltas. Entrou também o `PageSkeleton`, o `loading.tsx` inteiro.
+> - `Chip`: `filled` (fundo 100), `soft` (fundo 50) e `outline` (fundo 50 com borda 200, retangular). O `tones.ts` ganhou um mapa por degrau (`TONE_BG_SOFT`, `TONE_BG_TINT`, `TONE_BORDER`, `TONE_TEXT_STRONG`, `TONE_SOLID`, `TONE_TEXT`, `TONE_TEXT_DEEP`), escritos por extenso.
+> - `Button variant="link"` usa `text-accent` (blue-600) com hover em `accent-text` (blue-700), que é o que as telas usam; `text-primary` (blue-800) não aparece em link no SGDM. `href` renderiza `<a>` ou o `linkComponent` (mesmo padrão do `StatCard` e do `Sidebar`), e `asChild` veste o filho. O ref do `Button` continua tipado como `HTMLButtonElement`, para não quebrar quem já o usa.
+> - `DescriptionList`: a coluna de 160px virou o token `--sd-size-dl-label` e a classe `grid-cols-label-value` do preset. Os formatos são `rows`, `grid`, `tiles` e `compact`.
+> - `Checkbox`: indeterminado no DOM e `aria-checked="mixed"`. No `CheckboxCard` e nos itens do `CheckboxGroup`, o nome acessível é só o título e a descrição entra por `aria-describedby`.
+> - `FileButton` é um `<button>` que aciona o input escondido, e não um `label`. É o que o `AssinaturaDigitalPanel` faz de fato, e funciona pelo teclado sem truque; o `label` com input `hidden` do `FileUpload` do SGDM não recebe foco.
+> - `FileUpload` filtra os arquivos soltos pelo `accept` (o SGDM não filtra) e avisa os recusados em `onReject`.
 - [ ] **B14. `Timeline`.**
   - Variantes: ícone em círculo com linha, lista de pontos com `border-l` e linha do tempo de fases.
   - Referências: `DocumentoHistorico.tsx:153-186` e `LicitacaoTimeline.tsx:99-129`.
