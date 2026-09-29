@@ -38,6 +38,10 @@ describe('tokens.css', () => {
     ['color-danger', '#ef4444'],
     ['color-info', '#3b82f6'],
     ['color-govbr', '#1351b4'],
+    ['color-scrollbar-thumb', '#cbd5e1'],
+    ['color-scrollbar-thumb-hover', '#94a3b8'],
+    ['color-scrollbar-thumb-on-dark', '#334155'],
+    ['color-scrollbar-thumb-on-dark-hover', '#475569'],
   ])('--sd-%s vale %s (valor do SGDM)', (nome, hex) => {
     expect(valor(nome)).toBe(hexParaCanais(hex));
   });
@@ -110,7 +114,7 @@ describe('preset do Tailwind', () => {
   });
 
   it('injeta as classes de componente antes dos utilitários', async () => {
-    const css = await gerar('btn-primary px-6 card stat-card input nav-item nav-item-active scrollbar-none');
+    const css = await gerar('btn-primary px-6 card stat-card input nav-item nav-item-active scrollbar-none scrollbar-on-dark');
     const btn = css.indexOf('.btn-primary {');
     const px6 = css.indexOf('.px-6 {');
     expect(btn).toBeGreaterThan(-1);
@@ -118,5 +122,20 @@ describe('preset do Tailwind', () => {
     expect(css).toMatch(/\.stat-card \{[^}]*var\(--sd-radius-card\)/);
     expect(css).toContain('.scrollbar-none::-webkit-scrollbar');
     expect(css).not.toContain('@apply');
+  });
+
+  it('barra de rolagem fina e visível por padrão, com variante escura, por token', async () => {
+    const css = await gerar('scrollbar-on-dark');
+    expect(css).toContain('scrollbar-width: thin');
+    expect(css).toContain('scrollbar-color: rgb(var(--sd-scrollbar-thumb)) transparent');
+    expect(css).toContain('::-webkit-scrollbar {');
+    expect(css).toMatch(/::-webkit-scrollbar-thumb\s*\{[^}]*background-color:\s*rgb\(var\(--sd-scrollbar-thumb\)\)/);
+    expect(css).toMatch(/::-webkit-scrollbar-thumb:hover\s*\{[^}]*background-color:\s*rgb\(var\(--sd-scrollbar-thumb-hover\)\)/);
+    expect(css).toMatch(/\.scrollbar-on-dark\s*\{[^}]*--sd-scrollbar-thumb:\s*var\(--sd-color-scrollbar-thumb-on-dark\)/);
+    // Não usa cor fixa: só var(--sd-color-scrollbar-*) no trecho da regra.
+    const inicio = css.indexOf('--sd-scrollbar-thumb:');
+    const fim = css.indexOf('*::-webkit-scrollbar-thumb:hover');
+    const trecho = css.slice(inicio, fim);
+    expect(trecho).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
   });
 });

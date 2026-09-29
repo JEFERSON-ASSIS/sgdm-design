@@ -2,6 +2,15 @@
 
 Todas as mudanças do `@sgdm/design`. O pacote segue o [versionamento semântico](https://semver.org/lang/pt-BR/): enquanto estiver em `0.x`, uma versão menor pode trazer mudança visível.
 
+## 0.2.1 — 28/09/2026
+
+Correção de acessibilidade: quem não usa roda do mouse (trackpad sem inércia, tela de toque) não conseguia rolar `AppLayout`, `Sidebar` e `Modal`, porque a barra vinha escondida (`scrollbar-none`).
+
+- **Barra de rolagem fina e visível por padrão**, em toda a aplicação: `--sd-color-scrollbar-thumb` (`#cbd5e1`) e `--sd-color-scrollbar-thumb-hover` (`#94a3b8`), 10px, cantos arredondados, afastada da borda (`background-clip: content-box`). `scrollbar-width: thin` no Firefox.
+- **Variante escura**, para superfícies como o menu lateral: classe `.scrollbar-on-dark`, com `--sd-color-scrollbar-thumb-on-dark` (`#334155`) e `--sd-color-scrollbar-thumb-on-dark-hover` (`#475569`).
+- `AppLayout` (conteúdo) e `Modal` (corpo) perderam o `scrollbar-none`; o `Sidebar` (menu) trocou `scrollbar-none` por `scrollbar-on-dark`.
+- `.scrollbar-none` continua no pacote, para quem quiser esconder a rolagem de propósito — só não é mais usada pelos componentes.
+
 ## 0.2.0 — 28/09/2026
 
 A versão 2 cobre o SGDM inteiro. Um levantamento comparou todas as telas de `SGDM/apps/web` com o pacote. Tudo o que as telas repetiam à mão virou token ou componente. O detalhe de cada item está em `docs/checklist-v2.md`, e o README tem a tabela "padrão do SGDM → componente do pacote".

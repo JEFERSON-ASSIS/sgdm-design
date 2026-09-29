@@ -1,6 +1,6 @@
 {
   "name": "@sgdm/design",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Design system do SGDM: tokens, preset do Tailwind e componentes React.",
   "license": "UNLICENSED",
   "private": true,

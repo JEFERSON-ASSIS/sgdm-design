@@ -137,6 +137,16 @@
   --sd-color-border-subtle: 241 245 249; /* #f1f5f9 — divisórias internas de card */
   --sd-color-border-strong: 203 213 225; /* #cbd5e1 slate-300 — checkbox, contorno tracejado */
 
+  /* ---------- Barra de rolagem ----------
+   * Fina e visível em toda a área com rolagem (quem não usa roda do mouse
+   * precisa vê-la e arrastá-la). --thumb/-thumb-hover valem sobre fundo claro;
+   * -on-dark-* são a variante para superfícies escuras (menu lateral), como o
+   * padrão on-dark-* de texto acima. */
+  --sd-color-scrollbar-thumb: 203 213 225; /* #cbd5e1 slate-300 */
+  --sd-color-scrollbar-thumb-hover: 148 163 184; /* #94a3b8 slate-400 */
+  --sd-color-scrollbar-thumb-on-dark: 51 65 85; /* #334155 slate-700 */
+  --sd-color-scrollbar-thumb-on-dark-hover: 71 85 105; /* #475569 slate-600 */
+
   /* ---------- Feedback ----------
    * Oito degraus por tom; ver ESQUEMA DE NOMES no topo. */
   --sd-color-success: 16 185 129; /* #10b981 emerald-500 */

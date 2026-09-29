@@ -92,6 +92,10 @@ Ele só age no papel (`@media print`): página A4 com margens de 20mm × 18mm, s
 
 `@sgdm/design/components.css` é o fonte das classes de componente, em sintaxe do Tailwind (`@layer`/`@apply`). Ele vai no pacote para consulta. Quem usa o preset não precisa dele.
 
+## Barra de rolagem
+
+Toda área com rolagem mostra, por padrão, uma barra fina e visível (thumb `--sd-color-scrollbar-thumb`, com hover), em vez de escondida — quem não usa roda do mouse (trackpad sem inércia, tela de toque) precisa enxergá-la e arrastá-la. Numa superfície escura (o menu lateral, por exemplo), ponha `className="scrollbar-on-dark"` no elemento com rolagem para usar o par de tons escuros. Quem ainda quiser esconder a rolagem de propósito continua com `className="scrollbar-none"`, que o pacote não usa mais em nenhum componente próprio.
+
 ## Uso
 
 ```tsx

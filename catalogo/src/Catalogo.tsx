@@ -294,8 +294,35 @@ function Cards() {
         ))}
       </div>
       <Recolhiveis />
+      <RolagemVisivel />
       <Card>
         <PageHeader title="PageHeader" description="Título da página com descrição e ação" action={<Button icon={<Plus />}>Novo</Button>} />
+      </Card>
+    </div>
+  );
+}
+
+function RolagemVisivel() {
+  const linhas = Array.from({ length: 20 }, (_, i) => i + 1);
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <Card title="Rolagem visível (padrão)" description="Barra fina, sem esconder — quem não tem roda do mouse consegue arrastar.">
+        <div className="h-40 overflow-y-auto rounded-control border border-border p-3">
+          {linhas.map((n) => (
+            <p key={n} className="py-1 text-sm text-body">
+              Linha {n}
+            </p>
+          ))}
+        </div>
+      </Card>
+      <Card title='Sobre fundo escuro (className="scrollbar-on-dark")' description="Mesma barra, com o par de tons escuros do token.">
+        <div className="scrollbar-on-dark h-40 overflow-y-auto rounded-control bg-sidebar p-3 text-sidebar-foreground">
+          {linhas.map((n) => (
+            <p key={n} className="py-1 text-sm">
+              Linha {n}
+            </p>
+          ))}
+        </div>
       </Card>
     </div>
   );
@@ -565,7 +592,7 @@ function Conteudo() {
         <Formularios />
         <FormulariosNovos />
       </Secao>
-      <Secao id="cards" titulo="StatCard, Card, CollapsibleCard, Accordion, PageHeader" descricao="StatCard em todos os tons; Card com padding e tone; CollapsibleCard controlado; Accordion para linhas de lista.">
+      <Secao id="cards" titulo="StatCard, Card, CollapsibleCard, Accordion, PageHeader" descricao="StatCard em todos os tons; Card com padding e tone; CollapsibleCard controlado; Accordion para linhas de lista; a barra de rolagem fina, visível por padrão, e a variante escura.">
         <Cards />
       </Secao>
       <Secao id="rotulos" titulo="Eyebrow, Chip e IconTile" descricao="Sobrelinha; chip em todos os tons (filled, soft, outline, mono); quadrado de ícone, também usado no StatCard e no EmptyState.">

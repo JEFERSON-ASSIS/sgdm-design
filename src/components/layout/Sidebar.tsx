@@ -114,7 +114,7 @@ export function Sidebar({
         )}
       </div>
 
-      <nav aria-label={label} className="scrollbar-none flex-1 space-y-1 overflow-y-auto px-3 py-4">
+      <nav aria-label={label} className="scrollbar-on-dark flex-1 space-y-1 overflow-y-auto px-3 py-4">
         {sections.map((secao, i) => (
           <div key={secao.label ?? i} className="space-y-1">
             {secao.label && !recolhido && (

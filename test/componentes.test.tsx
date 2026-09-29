@@ -216,6 +216,8 @@ describe('Modal', () => {
     expect(dialog).toHaveAccessibleDescription('Preencha os dados');
     expect(dialog).toHaveClass('rounded-card', 'shadow-modal');
     expect(dialog.contains(document.activeElement)).toBe(true);
+    // A rolagem do corpo é visível por padrão (barra fina do token), não escondida.
+    expect(screen.getByText('conteúdo').parentElement).not.toHaveClass('scrollbar-none');
   });
 
   it('fecha pelo botão, pelo Esc e pelo fundo, devolvendo o foco', async () => {
@@ -605,12 +607,18 @@ describe('Layout', () => {
     );
     expect(screen.getByRole('progressbar', { name: 'Carregando página' })).toBeInTheDocument();
     expect(screen.getByRole('main')).toHaveTextContent('tela');
+    // A área de conteúdo mostra a barra de rolagem (fina, pelo token), não a esconde.
+    expect(screen.getByRole('main')).not.toHaveClass('scrollbar-none');
     expect(screen.getByRole('heading', { name: 'Usuários' })).toBeInTheDocument();
     expect(screen.getByText('MD')).toBeInTheDocument();
     expect(screen.getByText('sino')).toBeInTheDocument();
 
     const menus = screen.getAllByRole('navigation', { name: 'Menu principal' });
     const desktop = menus[0]!;
+    // O menu é uma superfície escura: usa a variante escura da barra de rolagem,
+    // não o scrollbar-none (que escondia a rolagem).
+    expect(desktop).toHaveClass('scrollbar-on-dark');
+    expect(desktop).not.toHaveClass('scrollbar-none');
     const ativo = within(desktop).getByRole('link', { name: 'Usuários' });
     expect(ativo).toHaveClass('nav-item', 'nav-item-active');
     expect(ativo).toHaveAttribute('aria-current', 'page');

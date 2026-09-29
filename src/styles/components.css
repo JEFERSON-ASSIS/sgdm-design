@@ -181,4 +181,47 @@
   .scrollbar-none::-webkit-scrollbar {
     display: none;
   }
+
+  /*
+   * Barra de rolagem fina e visível, em toda a aplicação por padrão (quem não
+   * usa roda do mouse — trackpad sem inércia, tela de toque, arrastar o
+   * polegar — precisa vê-la e arrastá-la). O .scrollbar-none acima continua
+   * disponível para quem quiser esconder de propósito.
+   *
+   * As cores moram em duas variáveis locais com o valor claro por padrão; a
+   * classe .scrollbar-on-dark só troca essas duas variáveis dentro da própria
+   * subárvore (o menu lateral e outras superfícies escuras), sem duplicar a
+   * regra.
+   */
+  :root {
+    --sd-scrollbar-thumb: var(--sd-color-scrollbar-thumb);
+    --sd-scrollbar-thumb-hover: var(--sd-color-scrollbar-thumb-hover);
+  }
+
+  .scrollbar-on-dark {
+    --sd-scrollbar-thumb: var(--sd-color-scrollbar-thumb-on-dark);
+    --sd-scrollbar-thumb-hover: var(--sd-color-scrollbar-thumb-on-dark-hover);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--sd-scrollbar-thumb)) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--sd-scrollbar-thumb));
+    border-radius: var(--sd-radius-pill);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--sd-scrollbar-thumb-hover));
+  }
 }

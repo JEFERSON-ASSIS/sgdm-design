@@ -119,7 +119,7 @@ export function Modal({
         </div>
         {/* A janela é clara mesmo aberta sobre o login. */}
         <OnDark value={false}>
-          <div className="scrollbar-none flex-1 overflow-y-auto px-5 py-4">{children}</div>
+          <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
           {footer != null && (
             <div className="flex flex-wrap justify-end gap-2 border-t border-border-subtle bg-surface-hover/80 px-5 py-4">
               {footer}
