@@ -36,10 +36,10 @@ export {
   type Profile,
 } from './tokens';
 
-export type { Tone } from './components/tones';
+export { TONES, type Tone, type ToneFamily } from './components/tones';
 
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './components/Button';
-export { Card, type CardProps } from './components/Card';
+export { Card, type CardProps, type CardPadding } from './components/Card';
 export {
   FormField,
   FormSection,
@@ -55,7 +55,7 @@ export { ConfirmModal, type ConfirmModalProps, type ConfirmReason } from './comp
 export { PageHeader, type PageHeaderProps } from './components/PageHeader';
 export { StatusBadge, type StatusBadgeProps } from './components/StatusBadge';
 export { StatCard, type StatCardProps } from './components/StatCard';
-export { Table, type TableProps, type TableColumn } from './components/Table';
+export { Table, type TableProps, type TableColumn, type TableFooter } from './components/Table';
 export { Tabs, type TabsProps, type TabItem } from './components/Tabs';
 export {
   ToastProvider,
@@ -68,8 +68,9 @@ export {
 export { EmptyState, type EmptyStateProps } from './components/EmptyState';
 export { ErrorState, ErrorInline, type ErrorStateProps } from './components/ErrorState';
 export { WizardStepper, type WizardStepperProps, type WizardStep } from './components/WizardStepper';
-export { Tooltip, DicaInfo, type TooltipProps } from './components/Tooltip';
+export { Tooltip, DicaInfo, type TooltipProps, type TooltipPlacement } from './components/Tooltip';
 export { CollapsibleCard, type CollapsibleCardProps } from './components/CollapsibleCard';
+export { Accordion, type AccordionProps, type AccordionItem } from './components/Accordion';
 
 export {
   AppLayout,

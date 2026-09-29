@@ -11,6 +11,10 @@ export interface CollapsibleCardProps {
   badge?: ReactNode;
   /** Configuração que se mexe uma vez costuma nascer fechada. */
   defaultOpen?: boolean;
+  /** Aberto ou fechado vindo de fora (modo controlado). */
+  open?: boolean;
+  /** Chamado ao clicar no cabeçalho, com o próximo estado. */
+  onOpenChange?: (open: boolean) => void;
   children: ReactNode;
 }
 
@@ -25,16 +29,24 @@ export function CollapsibleCard({
   icon,
   badge,
   defaultOpen = false,
+  open,
+  onOpenChange,
   children,
 }: CollapsibleCardProps) {
-  const [aberto, setAberto] = useState(defaultOpen);
+  const [interno, setInterno] = useState(defaultOpen);
+  const aberto = open ?? interno;
   const corpoId = useId();
+
+  function alternar() {
+    if (open === undefined) setInterno(!aberto);
+    onOpenChange?.(!aberto);
+  }
 
   return (
     <div className="card overflow-hidden">
       <button
         type="button"
-        onClick={() => setAberto((v) => !v)}
+        onClick={alternar}
         aria-expanded={aberto}
         aria-controls={corpoId}
         className="card-header focus-ring flex w-full flex-wrap items-center gap-3 text-left transition hover:bg-surface-hover focus-visible:-outline-offset-2"

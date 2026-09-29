@@ -1,5 +1,8 @@
 import { useId, type ReactElement, cloneElement, isValidElement } from 'react';
 import { Info } from 'lucide-react';
+import { cn } from '../cn';
+
+export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
 export interface TooltipProps {
   /** Explicação curta mostrada no balão. */
@@ -9,13 +12,22 @@ export interface TooltipProps {
    * ícone "i" do SGDM (DicaInfo).
    */
   children?: ReactElement<{ 'aria-describedby'?: string }>;
+  /** Lado do gatilho em que o balão abre. Padrão: `top`, como no SGDM. */
+  placement?: TooltipPlacement;
 }
+
+const POSICAO: Record<TooltipPlacement, string> = {
+  top: 'bottom-full left-1/2 mb-2 -translate-x-1/2',
+  bottom: 'top-full left-1/2 mt-2 -translate-x-1/2',
+  left: 'right-full top-1/2 mr-2 -translate-y-1/2',
+  right: 'left-full top-1/2 ml-2 -translate-y-1/2',
+};
 
 /**
  * Balão de dica que abre ao passar o mouse ou ao focar (teclado e toque).
  * Fica fora do <label> para o clique não marcar o checkbox.
  */
-export function Tooltip({ text, children }: TooltipProps) {
+export function Tooltip({ text, children, placement = 'top' }: TooltipProps) {
   const id = useId();
   const gatilho =
     children && isValidElement(children) ? (
@@ -36,7 +48,11 @@ export function Tooltip({ text, children }: TooltipProps) {
       <span
         id={id}
         role="tooltip"
-        className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-72 -translate-x-1/2 rounded-popover bg-surface-inverse px-3 py-2 text-xs font-normal leading-relaxed text-on-inverse shadow-popover group-focus-within:block group-hover:block"
+        data-placement={placement}
+        className={cn(
+          'pointer-events-none absolute z-tooltip hidden w-tooltip rounded-popover bg-surface-inverse px-3 py-2 text-xs font-normal leading-relaxed text-on-inverse shadow-popover group-focus-within:block group-hover:block',
+          POSICAO[placement],
+        )}
       >
         {text}
       </span>
