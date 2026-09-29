@@ -15,7 +15,7 @@ const TextareaControle = forwardRef<
   return (
     <textarea
       ref={ref}
-      className={cn('input min-h-[100px] resize-y', erro && 'input-error')}
+      className={cn('input min-h-textarea resize-y', erro && 'input-error')}
       {...aria}
       {...rest}
     />

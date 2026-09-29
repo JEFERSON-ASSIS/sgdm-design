@@ -29,7 +29,7 @@ export function ErrorState({
   return (
     <div
       role="alert"
-      className="flex items-start gap-3 rounded-tile border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-text"
+      className="flex items-start gap-3 rounded-callout border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-text"
     >
       <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden />
       <div className="min-w-0 flex-1">

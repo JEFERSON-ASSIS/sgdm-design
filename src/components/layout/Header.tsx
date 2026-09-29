@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Menu } from 'lucide-react';
+import { isDesktopViewport } from '../../tokens';
 import { useSidebar } from './AppLayout';
 
 export interface HeaderUser {
@@ -39,12 +40,12 @@ export function Header({ title, actions, user, onMenuClick, menuLabel = 'Alterna
   function alternar() {
     if (onMenuClick) return onMenuClick();
     if (!ctx) return;
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) ctx.setMobileOpen(true);
+    if (!isDesktopViewport()) ctx.setMobileOpen(true);
     else ctx.toggle();
   }
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-surface px-4 lg:px-6">
+    <header className="flex h-header shrink-0 items-center justify-between border-b border-border bg-surface px-page-sm lg:px-page-md">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
@@ -63,14 +64,14 @@ export function Header({ title, actions, user, onMenuClick, menuLabel = 'Alterna
         {user && (
           <div className="hidden items-center gap-2 border-l border-border pl-4 sm:flex">
             <div
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-pill bg-accent text-[11px] font-bold text-on-primary"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-pill bg-accent text-xs2 font-bold text-on-primary"
               aria-hidden
             >
               {user.initials ?? iniciais(user.name)}
             </div>
             <div className="hidden max-w-[12rem] text-right md:block">
               <p className="truncate text-xs font-semibold text-title">{user.name}</p>
-              {user.subtitle && <p className="truncate text-[10px] text-muted">{user.subtitle}</p>}
+              {user.subtitle && <p className="truncate text-2xs text-muted">{user.subtitle}</p>}
             </div>
           </div>
         )}

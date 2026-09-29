@@ -244,7 +244,7 @@ describe('Modal', () => {
         x
       </Modal>,
     );
-    expect(screen.getByRole('dialog')).toHaveClass('max-w-3xl');
+    expect(screen.getByRole('dialog')).toHaveClass('max-w-modal-lg');
   });
 });
 
@@ -330,8 +330,8 @@ describe('StatusBadge', () => {
         <StatusBadge active={false} />
       </>,
     );
-    expect(screen.getByText('Ativo')).toHaveClass('bg-emerald-50');
-    expect(screen.getByText('Inativo')).toHaveClass('bg-slate-100');
+    expect(screen.getByText('Ativo')).toHaveClass('bg-success-soft');
+    expect(screen.getByText('Inativo')).toHaveClass('bg-surface-muted');
   });
 });
 
@@ -618,9 +618,9 @@ describe('Layout', () => {
     expect(within(desktop).getByText('Principal')).toHaveClass('section-label');
 
     const aside = desktop.closest('aside')!;
-    expect(aside).toHaveClass('w-64');
+    expect(aside).toHaveClass('w-sidebar');
     await userEvent.click(screen.getByRole('button', { name: 'Alternar menu' }));
-    expect(aside).toHaveClass('w-[72px]');
+    expect(aside).toHaveClass('w-sidebar-collapsed');
     expect(within(desktop).queryByText('Principal')).not.toBeInTheDocument();
 
     await userEvent.click(screen.getAllByRole('button', { name: 'Sair' })[0]!);

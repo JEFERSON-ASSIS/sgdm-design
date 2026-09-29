@@ -37,7 +37,7 @@ export function WizardStepper({ steps, current, label = 'Progresso' }: WizardSte
             >
               <div
                 className={cn(
-                  'relative z-10 flex h-10 w-10 items-center justify-center rounded-pill border-2 text-sm font-bold transition-all',
+                  'relative z-raised flex h-10 w-10 items-center justify-center rounded-pill border-2 text-sm font-bold transition-all',
                   done && 'border-accent bg-accent text-on-primary',
                   active && 'border-accent bg-surface text-accent shadow-step',
                   !done && !active && 'border-border bg-surface text-subtle',

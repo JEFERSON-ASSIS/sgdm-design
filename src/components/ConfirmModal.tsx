@@ -83,7 +83,7 @@ export function ConfirmModal({
           </label>
           <textarea
             id={motivoId}
-            className="input min-h-[100px] w-full resize-y"
+            className="input min-h-textarea w-full resize-y"
             placeholder={reason.placeholder ?? 'Descreva o motivo...'}
             value={reason.value}
             onChange={(e) => reason.onChange(e.target.value)}

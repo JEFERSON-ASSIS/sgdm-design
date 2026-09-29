@@ -1,6 +1,7 @@
-import type { ComponentType, ElementType, ReactNode } from 'react';
+import { useEffect, useRef, type ComponentType, type ElementType, type ReactNode } from 'react';
 import { LogOut } from 'lucide-react';
 import { cn } from '../../cn';
+import { isDesktopViewport } from '../../tokens';
 import { useSidebar } from './AppLayout';
 
 export interface NavItem {
@@ -78,6 +79,20 @@ export function Sidebar({
     ctx?.setMobileOpen(v);
   };
 
+  // A gaveta só existe abaixo de BREAKPOINT_LG. Se a tela crescer com ela
+  // aberta (girar o tablet, redimensionar), fecha — senão o fundo escurecido
+  // some pelo lg:hidden mas o estado continua "aberto".
+  const fecharGaveta = useRef(setMobileOpen);
+  fecharGaveta.current = setMobileOpen;
+  useEffect(() => {
+    if (!mobileOpen || typeof window === 'undefined') return;
+    const aoRedimensionar = () => {
+      if (isDesktopViewport()) fecharGaveta.current(false);
+    };
+    window.addEventListener('resize', aoRedimensionar);
+    return () => window.removeEventListener('resize', aoRedimensionar);
+  }, [mobileOpen]);
+
   // O mesmo conteúdo serve ao menu fixo (desktop) e à gaveta (celular). A gaveta
   // nunca aparece recolhida.
   const conteudo = (recolhido: boolean) => (
@@ -94,7 +109,7 @@ export function Sidebar({
         {!recolhido && (
           <div className="min-w-0">
             <p className="truncate text-base font-bold leading-tight">{brand.name}</p>
-            {brand.subtitle && <p className="truncate text-[11px] text-sidebar-muted">{brand.subtitle}</p>}
+            {brand.subtitle && <p className="truncate text-xs2 text-sidebar-muted">{brand.subtitle}</p>}
           </div>
         )}
       </div>
@@ -159,7 +174,7 @@ export function Sidebar({
     <>
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-overlay/50 lg:hidden"
+          className="fixed inset-0 z-overlay bg-overlay/50 lg:hidden"
           onClick={() => setMobileOpen(false)}
           aria-hidden
         />
@@ -168,8 +183,8 @@ export function Sidebar({
       <aside
         data-collapsed={collapsed}
         className={cn(
-          'hidden h-full shrink-0 flex-col bg-sidebar text-sidebar-foreground transition-[width] duration-200 ease-in-out lg:flex',
-          collapsed ? 'w-[72px]' : 'w-64',
+          'hidden h-full shrink-0 flex-col bg-sidebar text-sidebar-foreground transition-[width] duration-normal ease-standard lg:flex',
+          collapsed ? 'w-sidebar-collapsed' : 'w-sidebar',
         )}
       >
         {conteudo(collapsed)}
@@ -177,7 +192,7 @@ export function Sidebar({
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-[transform,visibility] lg:hidden',
+          'fixed inset-y-0 left-0 z-modal flex w-sidebar flex-col bg-sidebar text-sidebar-foreground transition-[transform,visibility] lg:hidden',
           // invisible tira a gaveta fechada da ordem do Tab e dos leitores de tela.
           mobileOpen ? 'visible translate-x-0' : 'invisible -translate-x-full',
         )}

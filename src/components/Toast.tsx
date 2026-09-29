@@ -59,7 +59,7 @@ function ToastView({ item, onDismiss, closeLabel }: { item: ToastItem; onDismiss
     <div
       role={item.variant === 'error' ? 'alert' : 'status'}
       data-variant={item.variant}
-      className="pointer-events-auto flex w-full items-start gap-3 rounded-tile border border-border bg-surface px-4 py-3 shadow-popover animate-toast-in"
+      className="pointer-events-auto flex w-full items-start gap-3 rounded-callout border border-border bg-surface px-4 py-3 shadow-popover animate-toast-in"
     >
       <Icone className={cn('mt-0.5 h-5 w-5 shrink-0', cor)} aria-hidden />
       <div className="min-w-0 flex-1 text-sm">
@@ -118,7 +118,7 @@ export function ToastProvider({ children, max = 4, closeLabel = 'Fechar aviso' }
       {children}
       <div
         aria-live="polite"
-        className="pointer-events-none fixed bottom-4 right-4 z-[60] flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2"
+        className="pointer-events-none fixed bottom-4 right-4 z-toast flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2"
       >
         {itens.map((item) => (
           <ToastView key={item.id} item={item} onDismiss={() => dismiss(item.id)} closeLabel={closeLabel} />

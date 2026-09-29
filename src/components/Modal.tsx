@@ -77,7 +77,7 @@ export function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+    <div className="fixed inset-0 z-modal flex items-end justify-center p-4 sm:items-center">
       <div
         className="absolute inset-0 bg-overlay/40 backdrop-blur-[1px]"
         onClick={onClose}
@@ -93,7 +93,7 @@ export function Modal({
         tabIndex={-1}
         className={cn(
           'relative flex max-h-[90vh] w-full flex-col overflow-hidden rounded-card border border-border bg-surface shadow-modal outline-none',
-          size === 'lg' ? 'max-w-3xl' : 'max-w-lg',
+          size === 'lg' ? 'max-w-modal-lg' : 'max-w-modal-md',
         )}
       >
         <div className="flex items-start justify-between border-b border-border-subtle px-5 py-4">

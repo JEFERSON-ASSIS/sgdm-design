@@ -69,7 +69,7 @@ export function AppLayout({
         {sidebar}
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
           {header}
-          <main className="scrollbar-none flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-6 xl:p-8">
+          <main className="scrollbar-none flex-1 overflow-y-auto overflow-x-hidden p-page-sm lg:p-page-md xl:p-page-lg">
             <div className="w-full min-w-0 space-y-6">{children}</div>
           </main>
         </div>
