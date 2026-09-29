@@ -1,7 +1,7 @@
 import type { ComponentType, ReactNode } from 'react';
 import { Inbox } from 'lucide-react';
-import { cn } from '../cn';
-import { TONE_ICON, type Tone } from './tones';
+import { IconTile } from './IconTile';
+import type { Tone } from './tones';
 
 export interface EmptyStateProps {
   title: ReactNode;
@@ -45,9 +45,7 @@ export function EmptyState({
 
   return (
     <div className="flex flex-col items-center justify-center px-5 py-12 text-center">
-      <div className={cn('flex h-12 w-12 items-center justify-center rounded-pill', TONE_ICON[tone])}>
-        <Icon className="h-6 w-6" aria-hidden />
-      </div>
+      <IconTile icon={Icon} tone={tone} size="xl" shape="circle" />
       <p className="mt-4 text-sm font-semibold text-title">{title}</p>
       {description != null && <p className="mt-1 max-w-sm text-sm text-muted">{description}</p>}
       {action != null && <div className="mt-5">{action}</div>}

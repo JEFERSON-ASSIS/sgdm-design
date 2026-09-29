@@ -1,7 +1,7 @@
 import type { ComponentType, ElementType, ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
-import { cn } from '../cn';
-import { TONE_ICON, type Tone } from './tones';
+import { IconTile } from './IconTile';
+import type { Tone } from './tones';
 
 export interface StatCardProps {
   title: ReactNode;
@@ -29,9 +29,7 @@ export function StatCard({
   return (
     <div className="stat-card" data-tone={tone}>
       <div className="flex items-start justify-between">
-        <div className={cn('flex h-11 w-11 items-center justify-center rounded-tile', TONE_ICON[tone])}>
-          <Icon className="h-5 w-5" aria-hidden />
-        </div>
+        <IconTile icon={Icon} tone={tone} size="lg" />
       </div>
       <div>
         <p className="text-3xl font-bold tracking-tight text-foreground">{value}</p>

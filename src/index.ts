@@ -71,6 +71,18 @@ export { WizardStepper, type WizardStepperProps, type WizardStep } from './compo
 export { Tooltip, DicaInfo, type TooltipProps, type TooltipPlacement } from './components/Tooltip';
 export { CollapsibleCard, type CollapsibleCardProps } from './components/CollapsibleCard';
 export { Accordion, type AccordionProps, type AccordionItem } from './components/Accordion';
+export { Alert, Callout, type AlertProps, type AlertTone, type CalloutProps } from './components/Alert';
+export { Spinner, LoadingState, type SpinnerProps, type SpinnerSize, type LoadingStateProps } from './components/Spinner';
+export { Skeleton, PageSkeleton, type SkeletonProps, type SkeletonShape, type PageSkeletonProps } from './components/Skeleton';
+export { Eyebrow, Overline, type EyebrowProps, type OverlineProps } from './components/Eyebrow';
+export { Chip, Tag, type ChipProps, type ChipVariant, type ChipSize, type TagProps } from './components/Chip';
+export {
+  IconTile,
+  type IconTileProps,
+  type IconTileSize,
+  type IconTileShape,
+  type IconTileVariant,
+} from './components/IconTile';
 
 export {
   AppLayout,
