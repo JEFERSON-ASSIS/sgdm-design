@@ -322,3 +322,26 @@ export const TONE_BG_STRONG: Record<Tone, string> = {
   blue: 'bg-info-strong',
   red: 'bg-danger-strong',
 };
+
+/** Fundo base (500): ponto de status em lista de contagem, amostra de cor. */
+export const TONE_BG_BASE: Record<Tone, string> = {
+  primary: 'bg-primary-light',
+  secondary: 'bg-violet',
+  success: 'bg-success',
+  warning: 'bg-warning',
+  danger: 'bg-danger',
+  info: 'bg-info',
+  neutral: 'bg-subtle',
+  cyan: 'bg-cyan',
+  indigo: 'bg-indigo',
+  rose: 'bg-rose',
+  violet: 'bg-violet',
+  purple: 'bg-purple',
+  orange: 'bg-orange',
+  teal: 'bg-teal',
+  sky: 'bg-sky',
+  emerald: 'bg-success',
+  amber: 'bg-warning',
+  blue: 'bg-info',
+  red: 'bg-danger',
+};

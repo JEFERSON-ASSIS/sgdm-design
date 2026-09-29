@@ -187,6 +187,38 @@ export {
 } from './components/IconTile';
 
 export {
+  KanbanBoard,
+  KanbanColumn,
+  KanbanCard,
+  type KanbanBoardProps,
+  type KanbanColumnProps,
+  type KanbanCardProps,
+} from './components/Kanban';
+export {
+  DashboardHero,
+  QuickActions,
+  QueueCard,
+  CountList,
+  MiniStat,
+  type DashboardHeroProps,
+  type DashboardHeroVariant,
+  type QuickActionsProps,
+  type QuickAction,
+  type QueueCardProps,
+  type CountListProps,
+  type CountListItem,
+  type MiniStatProps,
+  type MiniStatVariant,
+} from './components/Dashboard';
+export {
+  MiniCalendar,
+  MONTHS_PT,
+  WEEKDAYS_PT,
+  monthWeeks,
+  type MiniCalendarProps,
+} from './components/MiniCalendar';
+
+export {
   AuthLayout,
   AuthCard,
   AuthMessage,
