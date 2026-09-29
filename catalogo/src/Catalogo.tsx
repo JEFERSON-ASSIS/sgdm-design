@@ -12,6 +12,8 @@ import {
   FileText,
   Hash,
   Layers,
+  ListFilter,
+  MoreHorizontal,
   LayoutDashboard,
   MousePointerClick,
   Newspaper,
@@ -71,6 +73,7 @@ import {
 } from '../../src';
 import { Tokens } from './Tokens';
 import { AvisosECarregamento, BotoesNovos, FormulariosNovos, ListasDeDados, RotulosEIcones } from './CatalogoB';
+import { Documento, LinhaDoTempoEPassos, MenusENotificacoes, NavegacaoEFiltros, SinoDeExemplo } from './CatalogoC';
 
 const SECOES = [
   { id: 'tokens', rotulo: 'Tokens', icone: Palette },
@@ -84,7 +87,10 @@ const SECOES = [
   { id: 'modais', rotulo: 'Modais', icone: FileSignature },
   { id: 'feedback', rotulo: 'Feedback', icone: Bell },
   { id: 'avisos', rotulo: 'Avisos e carregamento', icone: AlertTriangle },
-  { id: 'wizard', rotulo: 'Wizard', icone: ClipboardList },
+  { id: 'passos', rotulo: 'Linha do tempo e passos', icone: ClipboardList },
+  { id: 'navegacao', rotulo: 'Abas, filtros e listas', icone: ListFilter },
+  { id: 'menus', rotulo: 'Menus e notificações', icone: MoreHorizontal },
+  { id: 'documento', rotulo: 'PDF, código e painel fixo', icone: FileText },
 ];
 
 /** Cores principais de exemplo: cada sistema troca só os tokens. */
@@ -581,7 +587,7 @@ function Conteudo() {
       <Secao id="avisos" titulo="Alert, Spinner, LoadingState e Skeleton" descricao="Avisos em todos os tons, com ícone, título, ações, fechar e a variante stage; indicadores de carregamento.">
         <AvisosECarregamento />
       </Secao>
-      <Secao id="wizard" titulo="WizardStepper">
+      <Secao id="passos" titulo="WizardStepper, Timeline, NumberedSteps, ProcessStepper e FlowChips" descricao="Wizard em círculos e em caixas com links; linha do tempo com ícone, pontos e fases; instruções numeradas; o quadro “onde você está”; a sequência A → B → C.">
         <WizardStepper
           current={2}
           steps={[
@@ -591,6 +597,16 @@ function Conteudo() {
             { title: 'Envio' },
           ]}
         />
+        <LinhaDoTempoEPassos />
+      </Secao>
+      <Secao id="navegacao" titulo="Tabs pill, SegmentedControl, FilterBar, SearchInput e SelectableList" descricao="Abas em pílula com cor por aba; filtro de botões lado a lado; card de filtros; campo de busca; lista mestre com item ativo.">
+        <NavegacaoEFiltros />
+      </Secao>
+      <Secao id="menus" titulo="Dropdown, Popover, NotificationBell e CounterBadge" descricao="Fecham com Esc (devolvendo o foco) e com clique fora; o sino também está no cabeçalho do catálogo.">
+        <MenusENotificacoes />
+      </Secao>
+      <Secao id="documento" titulo="PdfViewer, InlineCode, Mono e StickyAside" descricao="Prévia de PDF em painel e em página; código e texto mono; painel lateral que gruda ao rolar (role a página).">
+        <Documento />
       </Secao>
     </>
   );
@@ -643,20 +659,23 @@ export function Catalogo() {
             title="Catálogo"
             user={{ name: 'Maria da Silva', subtitle: 'Prefeitura de Exemplo' }}
             actions={
-              <div className="hidden sm:block">
-                <Select
-                  size="compact"
-                  icon={<Palette />}
-                  aria-label="Cor principal"
-                  value={tema}
-                  onChange={(e) => setTema(e.target.value)}
-                  options={[
-                    { value: 'sgdm', label: 'Cor principal: SGDM' },
-                    { value: 'verde', label: 'Cor principal: verde' },
-                    { value: 'vinho', label: 'Cor principal: vinho' },
-                  ]}
-                />
-              </div>
+              <>
+                <SinoDeExemplo />
+                <div className="hidden sm:block">
+                  <Select
+                    size="compact"
+                    icon={<Palette />}
+                    aria-label="Cor principal"
+                    value={tema}
+                    onChange={(e) => setTema(e.target.value)}
+                    options={[
+                      { value: 'sgdm', label: 'Cor principal: SGDM' },
+                      { value: 'verde', label: 'Cor principal: verde' },
+                      { value: 'vinho', label: 'Cor principal: vinho' },
+                    ]}
+                  />
+                </div>
+              </>
             }
           />
         }
