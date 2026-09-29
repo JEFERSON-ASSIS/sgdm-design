@@ -130,6 +130,7 @@
   --sd-color-on-dark-error: 248 113 113; /* #f87171 red-400 — mensagem de erro */
   --sd-color-on-dark-link: 96 165 250; /* #60a5fa blue-400 — link, contorno de foco */
   --sd-color-on-dark-link-hover: 147 197 253; /* #93c5fd blue-300 */
+  --sd-color-on-dark-success: 52 211 153; /* #34d399 emerald-400 — ícone de "senha redefinida" */
 
   /* ---------- Bordas ---------- */
   --sd-color-border: 226 232 240; /* #e2e8f0 */
@@ -318,6 +319,12 @@
   --sd-color-chart-grid: 226 232 240; /* #E2E8F0 — linhas de grade */
   --sd-color-chart-bar: 59 130 246; /* #3B82F6 — barra sem cor definida */
 
+  /* ---------- Impressão (print.css) ----------
+   * Papel branco e tinta preta, sem depender do tema da tela. */
+  --sd-color-print-ink: 0 0 0; /* #000000 — texto impresso */
+  --sd-color-print-paper: 255 255 255; /* #ffffff — fundo da página */
+  --sd-color-print-border: 153 153 153; /* #999999 — borda de tabela impressa */
+
   /* ---------- Fontes ---------- */
   --sd-font-sans: 'Inter', Arial, sans-serif;
   --sd-font-document: 'Times New Roman', Times, serif;
@@ -404,6 +411,9 @@
   --sd-size-kanban-column-min: 280px;
   --sd-size-kanban-column-max: 320px;
   --sd-size-dl-label: 160px; /* coluna do rótulo na lista de dados em linhas */
+  --sd-size-form: 448px; /* coluna do formulário do login, texto da página de erro */
+  --sd-size-public-sm: 512px; /* página pública estreita (validar código) */
+  --sd-size-public-md: 768px; /* página pública com resultado (validar/[codigo]) */
   /* Só informativo: media query não lê variável. O preset usa o mesmo valor em
    * screens.lg, e o JS usa BREAKPOINT_LG (src/tokens.ts). */
   --sd-breakpoint-lg: 1024px;

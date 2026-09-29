@@ -32,7 +32,7 @@ export const PRESET_SCALES = {
   ease: ['standard', 'out'],
   w: ['sidebar', 'sidebar-collapsed', 'tooltip', 'dropdown'],
   h: ['header'],
-  'max-w': ['modal-md', 'modal-lg', 'tooltip', 'dropdown', 'print-sheet'],
+  'max-w': ['modal-md', 'modal-lg', 'tooltip', 'dropdown', 'print-sheet', 'form', 'public-sm', 'public-md'],
   'min-h': ['textarea', 'editor', 'editor-frame'],
   p: ['page-sm', 'page-md', 'page-lg'],
 } as const;

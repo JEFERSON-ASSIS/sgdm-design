@@ -134,6 +134,12 @@ module.exports = {
           error: cor('on-dark-error'),
           link: cor('on-dark-link'),
           'link-hover': cor('on-dark-link-hover'),
+          success: cor('on-dark-success'),
+        },
+        print: {
+          ink: cor('print-ink'),
+          paper: cor('print-paper'),
+          border: cor('print-border'),
         },
         border: {
           DEFAULT: cor('border'),
@@ -204,7 +210,16 @@ module.exports = {
       },
       width: vars('size', ['sidebar', 'sidebar-collapsed', 'tooltip', 'dropdown']),
       height: vars('size', ['header']),
-      maxWidth: vars('size', ['modal-md', 'modal-lg', 'tooltip', 'dropdown', 'print-sheet']),
+      maxWidth: vars('size', [
+        'modal-md',
+        'modal-lg',
+        'tooltip',
+        'dropdown',
+        'print-sheet',
+        'form',
+        'public-sm',
+        'public-md',
+      ]),
       minHeight: {
         textarea: 'var(--sd-size-textarea-min)',
         editor: 'var(--sd-size-editor-min)',
