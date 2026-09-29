@@ -1,9 +1,11 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type Key, type ReactNode } from 'react';
 import {
   AlertTriangle,
   Archive,
   BarChart3,
   Bell,
+  Building2,
+  Paperclip,
   CheckCircle2,
   ClipboardList,
   FileSignature,
@@ -22,6 +24,7 @@ import {
   Type,
 } from 'lucide-react';
 import {
+  Accordion,
   Button,
   Card,
   CollapsibleCard,
@@ -41,6 +44,20 @@ import {
   StatCard,
   StatusBadge,
   STATUS_COLORS,
+  STATUS_LABELS,
+  NUMERACAO_STATUS_COLORS,
+  NUMERACAO_STATUS_LABELS,
+  LICITACAO_STATUS_COLORS,
+  LICITACAO_STATUS_LABELS,
+  LICITACAO_SITUACAO_COLORS,
+  LICITACAO_SITUACAO_LABELS,
+  LICITACAO_FASE_COLORS,
+  LICITACAO_FASE_LABELS,
+  PECA_STATUS_COLORS,
+  PECA_STATUS_LABELS,
+  PECA_ESTADO_COLORS,
+  PECA_ESTADO_LABELS,
+  TONES,
   Table,
   Tabs,
   Textarea,
@@ -49,7 +66,8 @@ import {
   useToast,
   WizardStepper,
   type ButtonVariant,
-  type Tone,
+  type StatusColorMap,
+  type TooltipPlacement,
 } from '../../src';
 import { Tokens } from './Tokens';
 
@@ -118,7 +136,6 @@ function Linha({ rotulo, children }: { rotulo: string; children: ReactNode }) {
 }
 
 const VARIANTES: ButtonVariant[] = ['primary', 'secondary', 'danger', 'ghost', 'govbr'];
-const TONS: Tone[] = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'];
 
 function Botoes() {
   return (
@@ -167,6 +184,21 @@ function Formularios() {
               { value: 'educacao', label: 'Educação' },
             ]}
           />
+          <Select
+            label="Com ícone à esquerda"
+            icon={<Building2 />}
+            options={[{ value: 'a', label: 'Prefeitura de Exemplo' }]}
+          />
+          <FormField label='Select size="compact" com ícone (seletor de prefeitura)'>
+            <Select
+              size="compact"
+              icon={<Building2 />}
+              options={[
+                { value: '', label: 'Visão plataforma (geral)' },
+                { value: 'a', label: 'Prefeitura de Exemplo' },
+              ]}
+            />
+          </FormField>
           <Textarea label="Observação" placeholder="Texto livre" />
           <FormField label="Campo próprio dentro do FormField" hint="O rótulo liga sozinho ao campo">
             <Input placeholder="Input sem label, dentro do FormField" />
@@ -193,12 +225,12 @@ function Cards() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {TONS.map((t, i) => (
+        {TONES.map((t, i) => (
           <StatCard
             key={t}
             title={`tone="${t}"`}
-            value={[12, 7, 128, 3, 1, 45, 0][i]}
-            icon={[FileText, FileSignature, Newspaper, AlertTriangle, Trash2, Hash, Archive][i]!}
+            value={(i * 17) % 130}
+            icon={[FileText, FileSignature, Newspaper, AlertTriangle, Trash2, Hash, Archive][i % 7]!}
             tone={t}
             href={i < 2 ? '#cards' : undefined}
           />
@@ -217,6 +249,29 @@ function Cards() {
           </CollapsibleCard>
         </div>
       </div>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Card padding="sm" title='padding="sm"'>
+          <p className="text-sm text-body">p-4</p>
+        </Card>
+        <Card title='padding="md" (padrão)'>
+          <p className="text-sm text-body">p-5</p>
+        </Card>
+        <Card padding="lg" title='padding="lg"'>
+          <p className="text-sm text-body">p-6</p>
+        </Card>
+        <Card padding="none" title='padding="none"'>
+          <p className="text-sm text-body">encosta na borda</p>
+        </Card>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {(['info', 'warning', 'success', 'danger', 'violet', 'indigo', 'teal', 'neutral'] as const).map((t) => (
+          <Card key={t} tone={t} padding="sm">
+            <p className="text-sm font-medium text-title">tone="{t}"</p>
+            <p className="text-xs text-body">Card tingido</p>
+          </Card>
+        ))}
+      </div>
+      <Recolhiveis />
       <Card>
         <PageHeader title="PageHeader" description="Título da página com descrição e ação" action={<Button icon={<Plus />}>Novo</Button>} />
       </Card>
@@ -241,6 +296,7 @@ function TabelaEAbas() {
   return (
     <div className="space-y-6">
       <Table columns={COLUNAS} rows={LINHAS} caption="Secretarias" />
+      <TabelaCompleta />
       <Tabs
         label="Estados da tabela"
         items={[
@@ -261,6 +317,146 @@ function TabelaEAbas() {
         ]}
       />
     </div>
+  );
+}
+
+function Recolhiveis() {
+  const [aberto, setAberto] = useState(false);
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <div className="space-y-2">
+        <Button size="sm" variant="secondary" onClick={() => setAberto((v) => !v)}>
+          {aberto ? 'Fechar' : 'Abrir'} de fora (open/onOpenChange)
+        </Button>
+        <CollapsibleCard title="CollapsibleCard controlado" open={aberto} onOpenChange={setAberto}>
+          <p className="text-sm text-body">Estado mantido pela tela.</p>
+        </CollapsibleCard>
+      </div>
+      <Accordion
+        defaultOpen={['etp']}
+        items={[
+          {
+            id: 'etp',
+            title: 'Estudo técnico preliminar',
+            description: 'Art. 18, § 1º',
+            meta: '4 seções',
+            badge: (
+              <StatusBadge status="X" colors={{ X: 'bg-amber-100 text-amber-800' }}>
+                2 personalizados
+              </StatusBadge>
+            ),
+            content: <p className="text-sm text-body">Conteúdo da linha aberta.</p>,
+          },
+          {
+            id: 'tr',
+            title: 'Termo de referência',
+            description: 'Art. 6º, XXIII',
+            meta: '6 seções',
+            content: <p className="text-sm text-body">Outra linha.</p>,
+          },
+          {
+            id: 'dfd',
+            title: 'Documento de formalização da demanda',
+            meta: '3 seções',
+            content: <p className="text-sm text-body">Mais uma.</p>,
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
+const MAPAS: { nome: string; cores: StatusColorMap; rotulos: Record<string, string>; licitacao?: boolean }[] = [
+  { nome: 'STATUS_COLORS + STATUS_LABELS', cores: STATUS_COLORS, rotulos: STATUS_LABELS },
+  { nome: 'NUMERACAO_STATUS_COLORS', cores: NUMERACAO_STATUS_COLORS, rotulos: NUMERACAO_STATUS_LABELS },
+  { nome: 'LICITACAO_STATUS_COLORS (sm, normal)', cores: LICITACAO_STATUS_COLORS, rotulos: LICITACAO_STATUS_LABELS, licitacao: true },
+  { nome: 'LICITACAO_SITUACAO_COLORS (sm, normal)', cores: LICITACAO_SITUACAO_COLORS, rotulos: LICITACAO_SITUACAO_LABELS, licitacao: true },
+  { nome: 'PECA_STATUS_COLORS (sm, normal)', cores: PECA_STATUS_COLORS, rotulos: PECA_STATUS_LABELS, licitacao: true },
+  { nome: 'PECA_ESTADO_COLORS (sm, normal)', cores: PECA_ESTADO_COLORS, rotulos: PECA_ESTADO_LABELS, licitacao: true },
+];
+
+function MapasDeStatus() {
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      <Card title="size e case">
+        <div className="space-y-3">
+          {(['xs', 'sm'] as const).flatMap((size) =>
+            (['upper', 'normal'] as const).map((caixa) => (
+              <Linha key={size + caixa} rotulo={`${size} · ${caixa}`}>
+                <StatusBadge status="EM_ANALISE" labels={STATUS_LABELS} size={size} case={caixa} />
+                <StatusBadge status="ASSINADO" labels={STATUS_LABELS} size={size} case={caixa} />
+              </Linha>
+            )),
+          )}
+        </div>
+      </Card>
+      <Card title='variant="outline" (fase da licitação)'>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(LICITACAO_FASE_LABELS).map(([fase, rotulo], i) => (
+            <StatusBadge
+              key={fase}
+              variant="outline"
+              size="sm"
+              case="normal"
+              status={i === 1 ? 'ATIVA' : 'INATIVA'}
+              colors={LICITACAO_FASE_COLORS}
+            >
+              {rotulo}
+            </StatusBadge>
+          ))}
+        </div>
+      </Card>
+      {MAPAS.map((m) => (
+        <Card key={m.nome} title={m.nome}>
+          <div className="flex flex-wrap gap-2">
+            {Object.keys(m.cores).map((s) =>
+              m.licitacao ? (
+                <StatusBadge key={s} status={s} colors={m.cores} labels={m.rotulos} size="sm" case="normal" />
+              ) : (
+                <StatusBadge key={s} status={s} colors={m.cores} labels={m.rotulos} />
+              ),
+            )}
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+type Item = { id: number; numero: string; descricao: string; un: string; qtd: number; total: string };
+const ITENS: Item[] = [
+  { id: 1, numero: '1', descricao: 'Papel A4, resma com 500 folhas', un: 'CX', qtd: 40, total: 'R$ 1.200,00' },
+  { id: 2, numero: '2', descricao: 'Toner para impressora laser', un: 'UN', qtd: 12, total: 'R$ 3.480,00' },
+  { id: 3, numero: '3', descricao: 'Grampeador de mesa', un: 'UN', qtd: 8, total: 'R$ 256,00' },
+];
+
+function TabelaCompleta() {
+  const [selecionados, setSelecionados] = useState<Key[]>([2]);
+  return (
+    <Card
+      title="Itens do processo"
+      description={`density="compact", headerCase="upper", bare, footer e selectable — ${selecionados.length} selecionado(s)`}
+      padding="none"
+    >
+      <Table
+        bare
+        density="compact"
+        headerCase="upper"
+        selectable
+        selected={selecionados}
+        onSelectedChange={setSelecionados}
+        selectRowLabel={(r) => `Selecionar item ${r.numero}`}
+        rows={ITENS}
+        columns={[
+          { key: 'numero', header: 'Nº' },
+          { key: 'descricao', header: 'Descrição', emphasis: true },
+          { key: 'un', header: 'Un.' },
+          { key: 'qtd', header: 'Qtd.', align: 'right' },
+          { key: 'total', header: 'Total', align: 'right' },
+        ]}
+        footer={{ label: 'Valor estimado do processo', values: { total: 'R$ 4.936,00' } }}
+      />
+    </Card>
   );
 }
 
@@ -302,9 +498,13 @@ function Feedback() {
           <Button variant="secondary" onClick={() => toast.toast({ title: 'Nova versão disponível' })}>info</Button>
         </div>
       </Card>
-      <Card title="Dica (Tooltip)">
-        <div className="flex items-center gap-2 text-sm text-label">
-          Passe o mouse ou foque o ícone <Tooltip text="Explicação curta que aparece no balão." />
+      <Card title="Dica (Tooltip)" description="placement top, bottom, left e right">
+        <div className="flex flex-wrap items-center gap-8 py-10 text-sm text-label">
+          {(['top', 'bottom', 'left', 'right'] as TooltipPlacement[]).map((p) => (
+            <span key={p} className="flex items-center gap-2">
+              {p} <Tooltip placement={p} text={`Balão em placement="${p}".`} />
+            </span>
+          ))}
         </div>
       </Card>
       <Card title="ErrorState">
@@ -315,6 +515,14 @@ function Feedback() {
       </Card>
       <Card title="EmptyState" padding="none">
         <EmptyState title="Nenhuma pendência" description="Tudo em dia por aqui." tone="success" icon={CheckCircle2} />
+      </Card>
+      <Card title='EmptyState variant="dashed"'>
+        <EmptyState
+          variant="dashed"
+          icon={Paperclip}
+          title="Nenhum documento externo juntado a este processo."
+          action={<Button size="sm" variant="secondary">Juntar documento</Button>}
+        />
       </Card>
     </div>
   );
@@ -333,10 +541,10 @@ function Conteudo() {
       <Secao id="formularios" titulo="Input, Textarea, Select, FormField, FormSection">
         <Formularios />
       </Secao>
-      <Secao id="cards" titulo="StatCard, Card, CollapsibleCard, PageHeader">
+      <Secao id="cards" titulo="StatCard, Card, CollapsibleCard, Accordion, PageHeader" descricao="StatCard em todos os tons; Card com padding e tone; CollapsibleCard controlado; Accordion para linhas de lista.">
         <Cards />
       </Secao>
-      <Secao id="status" titulo="StatusBadge" descricao="Mapa padrão STATUS_COLORS do SGDM e o atalho Ativo/Inativo">
+      <Secao id="status" titulo="StatusBadge" descricao="Mapa padrão, atalho Ativo/Inativo, size, case, outline e os mapas de numeração, licitação e peça">
         <Card>
           <div className="flex flex-wrap gap-2">
             {Object.keys(STATUS_COLORS).map((s) => (
@@ -347,14 +555,15 @@ function Conteudo() {
             <StatusBadge active={false} />
           </div>
         </Card>
+        <MapasDeStatus />
       </Secao>
-      <Secao id="tabela" titulo="Table e Tabs">
+      <Secao id="tabela" titulo="Table e Tabs" descricao="Padrão; compacta, com cabeçalho em caixa-alta, seleção, total e bare dentro de Card.">
         <TabelaEAbas />
       </Secao>
       <Secao id="modais" titulo="Modal e ConfirmModal">
         <Modais />
       </Secao>
-      <Secao id="feedback" titulo="Toast, Tooltip, ErrorState, EmptyState">
+      <Secao id="feedback" titulo="Toast, Tooltip, ErrorState, EmptyState" descricao="Tooltip nos quatro lados; EmptyState padrão e tracejado.">
         <Feedback />
       </Secao>
       <Secao id="wizard" titulo="WizardStepper">
@@ -419,8 +628,10 @@ export function Catalogo() {
             title="Catálogo"
             user={{ name: 'Maria da Silva', subtitle: 'Prefeitura de Exemplo' }}
             actions={
-              <div className="w-56">
+              <div className="hidden sm:block">
                 <Select
+                  size="compact"
+                  icon={<Palette />}
                   aria-label="Cor principal"
                   value={tema}
                   onChange={(e) => setTema(e.target.value)}
