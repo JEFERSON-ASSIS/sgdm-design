@@ -1,5 +1,8 @@
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { cn } from '../cn';
+import { TONE_SOLID, type Tone } from './tones';
+
+export type TabsVariant = 'underline' | 'pill';
 
 export interface TabItem {
   id: string;
@@ -7,6 +10,11 @@ export interface TabItem {
   /** Conteúdo da aba. Sem conteúdo, o Tabs funciona só como barra de abas. */
   content?: ReactNode;
   disabled?: boolean;
+  /**
+   * Variante `pill`: cor da aba quando ativa (ex.: `indigo` para "Análise",
+   * `warning` para "Correção"). Padrão: `primary` (azul de destaque).
+   */
+  tone?: Tone;
 }
 
 export interface TabsProps {
@@ -18,10 +26,27 @@ export interface TabsProps {
   onChange?: (id: string) => void;
   /** Nome do grupo de abas, para leitores de tela. */
   label?: string;
+  /**
+   * `underline` (padrão): abas sublinhadas.
+   * `pill`: barra branca com borda e a aba ativa preenchida — a barra de abas
+   * da tela do documento. Cada aba pode ter a própria cor (`tone`).
+   */
+  variant?: TabsVariant;
 }
 
-/** Abas sublinhadas do SGDM, com navegação por setas do teclado. */
-export function Tabs({ items, value, defaultValue, onChange, label }: TabsProps) {
+/** Aba em forma de pílula (também usada pelo SegmentedControl). */
+export function classePilula(ativa: boolean, tone: Tone = 'primary', compacta = false): string {
+  return cn(
+    'focus-ring shrink-0 rounded-control text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50',
+    compacta ? 'px-3 py-1.5' : 'px-5 py-2.5',
+    ativa
+      ? cn(TONE_SOLID[tone], 'shadow-card')
+      : cn('text-body', compacta ? 'hover:bg-surface-muted' : 'hover:bg-surface-hover'),
+  );
+}
+
+/** Abas do SGDM (sublinhadas ou em pílula), com navegação por setas do teclado. */
+export function Tabs({ items, value, defaultValue, onChange, label, variant = 'underline' }: TabsProps) {
   const base = useId();
   const [interno, setInterno] = useState(defaultValue ?? items[0]?.id);
   const ativo = value ?? interno;
@@ -51,7 +76,18 @@ export function Tabs({ items, value, defaultValue, onChange, label }: TabsProps)
 
   return (
     <div>
-      <div role="tablist" aria-label={label} className="flex gap-1 border-b border-border" onKeyDown={aoTeclar}>
+      <div
+        role="tablist"
+        aria-label={label}
+        data-variant={variant}
+        className={cn(
+          'flex gap-1',
+          variant === 'pill'
+            ? 'w-full overflow-x-auto rounded-panel border border-border bg-surface p-1'
+            : 'border-b border-border',
+        )}
+        onKeyDown={aoTeclar}
+      >
         {items.map((t) => {
           const selecionada = t.id === ativo;
           return (
@@ -68,12 +104,17 @@ export function Tabs({ items, value, defaultValue, onChange, label }: TabsProps)
               tabIndex={selecionada ? 0 : -1}
               disabled={t.disabled}
               onClick={() => selecionar(t.id)}
-              className={cn(
-                'focus-ring -mb-px border-b-2 px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50',
-                selecionada
-                  ? 'border-accent text-accent-text'
-                  : 'border-transparent text-muted hover:text-label',
-              )}
+              data-tone={variant === 'pill' ? (t.tone ?? 'primary') : undefined}
+              className={
+                variant === 'pill'
+                  ? classePilula(selecionada, t.tone)
+                  : cn(
+                      'focus-ring -mb-px border-b-2 px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50',
+                      selecionada
+                        ? 'border-accent text-accent-text'
+                        : 'border-transparent text-muted hover:text-label',
+                    )
+              }
             >
               {t.label}
             </button>

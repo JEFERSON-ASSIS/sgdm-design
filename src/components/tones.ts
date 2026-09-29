@@ -253,3 +253,72 @@ export const TONE_TEXT_DEEP: Record<Tone, string> = {
   red: 'text-danger-deep',
 };
 
+
+/** Texto/ícone -hover (700): ícone sobre -soft (cabeçalho de painel tingido, passo concluído). */
+export const TONE_TEXT_HOVER: Record<Tone, string> = {
+  primary: 'text-accent-text',
+  secondary: 'text-violet-hover',
+  success: 'text-success-hover',
+  warning: 'text-warning-hover',
+  danger: 'text-danger-hover',
+  info: 'text-info-hover',
+  neutral: 'text-label',
+  cyan: 'text-cyan-hover',
+  indigo: 'text-indigo-hover',
+  rose: 'text-rose-hover',
+  violet: 'text-violet-hover',
+  purple: 'text-purple-hover',
+  orange: 'text-orange-hover',
+  teal: 'text-teal-hover',
+  sky: 'text-sky-hover',
+  emerald: 'text-success-hover',
+  amber: 'text-warning-hover',
+  blue: 'text-info-hover',
+  red: 'text-danger-hover',
+};
+
+/** Contorno interno -tint (100): etapa do FlowChips (`ring-1 ring-inset`). */
+export const TONE_RING_TINT: Record<Tone, string> = {
+  primary: 'ring-primary-ring',
+  secondary: 'ring-violet-tint',
+  success: 'ring-success-tint',
+  warning: 'ring-warning-tint',
+  danger: 'ring-danger-tint',
+  info: 'ring-info-tint',
+  neutral: 'ring-border-subtle',
+  cyan: 'ring-cyan-tint',
+  indigo: 'ring-indigo-tint',
+  rose: 'ring-rose-tint',
+  violet: 'ring-violet-tint',
+  purple: 'ring-purple-tint',
+  orange: 'ring-orange-tint',
+  teal: 'ring-teal-tint',
+  sky: 'ring-sky-tint',
+  emerald: 'ring-success-tint',
+  amber: 'ring-warning-tint',
+  blue: 'ring-info-tint',
+  red: 'ring-danger-tint',
+};
+
+/** Fundo -strong (600) sem texto: ponto da linha do tempo. */
+export const TONE_BG_STRONG: Record<Tone, string> = {
+  primary: 'bg-accent',
+  secondary: 'bg-secondary',
+  success: 'bg-success-strong',
+  warning: 'bg-warning-strong',
+  danger: 'bg-danger-strong',
+  info: 'bg-info-strong',
+  neutral: 'bg-muted',
+  cyan: 'bg-cyan-strong',
+  indigo: 'bg-indigo-strong',
+  rose: 'bg-rose-strong',
+  violet: 'bg-violet-strong',
+  purple: 'bg-purple-strong',
+  orange: 'bg-orange-strong',
+  teal: 'bg-teal-strong',
+  sky: 'bg-sky-strong',
+  emerald: 'bg-success-strong',
+  amber: 'bg-warning-strong',
+  blue: 'bg-info-strong',
+  red: 'bg-danger-strong',
+};
