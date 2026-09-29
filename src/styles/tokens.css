@@ -403,6 +403,7 @@
   --sd-size-print-sheet: 820px; /* folha do processo na tela */
   --sd-size-kanban-column-min: 280px;
   --sd-size-kanban-column-max: 320px;
+  --sd-size-dl-label: 160px; /* coluna do rótulo na lista de dados em linhas */
   /* Só informativo: media query não lê variável. O preset usa o mesmo valor em
    * screens.lg, e o JS usa BREAKPOINT_LG (src/tokens.ts). */
   --sd-breakpoint-lg: 1024px;

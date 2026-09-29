@@ -83,6 +83,14 @@ export { Skeleton, PageSkeleton, type SkeletonProps, type SkeletonShape, type Pa
 export { Eyebrow, Overline, type EyebrowProps, type OverlineProps } from './components/Eyebrow';
 export { Chip, Tag, type ChipProps, type ChipVariant, type ChipSize, type TagProps } from './components/Chip';
 export {
+  DescriptionList,
+  KeyValue,
+  type DescriptionListProps,
+  type DescriptionListVariant,
+  type DescriptionItem,
+  type KeyValueProps,
+} from './components/DescriptionList';
+export {
   IconTile,
   type IconTileProps,
   type IconTileSize,

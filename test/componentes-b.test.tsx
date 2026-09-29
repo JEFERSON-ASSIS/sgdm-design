@@ -8,10 +8,12 @@ import {
   Button,
   Callout,
   Chip,
+  DescriptionList,
   EmptyState,
   Eyebrow,
   IconButton,
   IconTile,
+  KeyValue,
   LoadingState,
   Overline,
   PageSkeleton,
@@ -377,5 +379,66 @@ describe('B8. IconButton', () => {
     // @ts-expect-error aria-label é obrigatório
     const el = <IconButton icon={<Plus />} />;
     expect(el).toBeTruthy();
+  });
+});
+
+describe('B9. DescriptionList / KeyValue', () => {
+  const itens = [
+    { label: 'Protocolo', value: 'SGDM-2026-0001', mono: true },
+    { label: 'Órgão', value: 'Secretaria de Saúde' },
+    { label: 'Observação', value: '' },
+  ];
+
+  it('rows: dl com linhas de rótulo fixo e divisória', () => {
+    const { container } = render(<DescriptionList variant="rows" items={itens} />);
+    const dl = container.querySelector('dl')!;
+    expect(dl).toHaveClass('divide-y', 'divide-border-subtle');
+    const linhas = dl.querySelectorAll(':scope > div');
+    expect(linhas).toHaveLength(3);
+    expect(linhas[0]).toHaveClass('sm:grid-cols-label-value', 'px-5', 'py-3');
+    expect(within(dl).getByText('Protocolo').tagName).toBe('DT');
+    expect(within(dl).getByText('SGDM-2026-0001')).toHaveClass('font-mono');
+    expect(linhas[2]!.querySelector('dd')).toHaveTextContent('—');
+  });
+
+  it('grid (padrão) em colunas, com item de linha inteira', () => {
+    const { container } = render(
+      <DescriptionList items={[{ label: 'Rito', value: 'Licitação' }, { label: 'Objeto', value: 'Papel', fullWidth: true }]} />,
+    );
+    const dl = container.querySelector('dl')!;
+    expect(dl).toHaveClass('grid', 'gap-4', 'sm:grid-cols-2');
+    expect(within(dl).getByText('Objeto').parentElement).toHaveClass('sm:col-span-2');
+    expect(within(dl).getByText('Rito')).toHaveClass('text-xs', 'text-muted');
+  });
+
+  it('tiles: caixa clara, rótulo em caixa-alta e ícone', () => {
+    const { container } = render(
+      <DescriptionList variant="tiles" items={[{ label: 'Tipo documental', value: 'Portaria', icon: FileText }]} />,
+    );
+    const dl = container.querySelector('dl')!;
+    expect(dl).toHaveClass('sm:grid-cols-2', 'lg:grid-cols-3');
+    const caixa = dl.firstElementChild!;
+    expect(caixa).toHaveClass('rounded-panel', 'border-border-subtle');
+    expect(within(caixa as HTMLElement).getByText('Tipo documental')).toHaveClass('text-xs2', 'uppercase');
+    expect(caixa.querySelector('svg')).toHaveAttribute('aria-hidden');
+  });
+
+  it('compact: "Rótulo: valor"', () => {
+    render(<DescriptionList variant="compact" empty="n/d" items={[{ label: 'Rito', value: 'Dispensa' }, { label: 'Lei' }]} />);
+    expect(screen.getByText('Rito:')).toHaveClass('font-semibold');
+    expect(screen.getByText('n/d').tagName).toBe('DD');
+  });
+
+  it('KeyValue: um par só, empilhado ou em linha', () => {
+    const { container } = render(
+      <>
+        <KeyValue label="Servidor" value="Maria" />
+        <KeyValue label="Hash" value="abc123" layout="inline" mono />
+      </>,
+    );
+    const [a, b] = Array.from(container.querySelectorAll('dl'));
+    expect(within(a!).getByText('Servidor').tagName).toBe('DT');
+    expect(within(b!).getByText('Hash:').tagName).toBe('DT');
+    expect(within(b!).getByText('abc123')).toHaveClass('font-mono');
   });
 });

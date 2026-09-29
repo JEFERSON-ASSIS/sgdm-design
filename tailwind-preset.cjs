@@ -211,6 +211,10 @@ module.exports = {
         'editor-frame': 'var(--sd-size-editor-frame-min)',
       },
       padding: vars('space', ['page-sm', 'page-md', 'page-lg']),
+      gridTemplateColumns: {
+        // Lista de dados em linhas: rótulo de largura fixa e valor no resto.
+        'label-value': 'var(--sd-size-dl-label) minmax(0, 1fr)',
+      },
       keyframes: {
         'nav-progress': {
           '0%': { transform: 'translateX(-100%)' },

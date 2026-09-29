@@ -292,3 +292,11 @@ describe('componentes usam as escalas, não números soltos', () => {
     }
   });
 });
+
+describe('B9. coluna do rótulo da lista de dados', () => {
+  it('token de 160px e grid-cols-label-value no preset', async () => {
+    expect(valor('size-dl-label')).toBe('160px');
+    const css = await gerar('sm:grid-cols-label-value');
+    expect(css).toContain('grid-template-columns: var(--sd-size-dl-label) minmax(0, 1fr)');
+  });
+});
