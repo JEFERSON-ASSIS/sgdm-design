@@ -54,6 +54,24 @@ export {
   type FormSectionProps,
 } from './components/FormField';
 export { Input, type InputProps, type CampoProps } from './components/Input';
+export { PasswordInput, type PasswordInputProps } from './components/PasswordInput';
+export {
+  Checkbox,
+  CheckboxCard,
+  CheckboxGroup,
+  type CheckboxProps,
+  type CheckboxCardProps,
+  type CheckboxGroupProps,
+  type CheckboxGroupOption,
+} from './components/Checkbox';
+export {
+  FileUpload,
+  FileButton,
+  fileMatchesAccept,
+  formatFileSize,
+  type FileUploadProps,
+  type FileButtonProps,
+} from './components/FileUpload';
 export { Textarea, type TextareaProps } from './components/Textarea';
 export { Select, type SelectProps, type SelectOption } from './components/Select';
 export { Modal, type ModalProps } from './components/Modal';
