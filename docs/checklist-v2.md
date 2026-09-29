@@ -110,21 +110,33 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
 > - `Checkbox`: indeterminado no DOM e `aria-checked="mixed"`. No `CheckboxCard` e nos itens do `CheckboxGroup`, o nome acessível é só o título e a descrição entra por `aria-describedby`.
 > - `FileButton` é um `<button>` que aciona o input escondido, e não um `label`. É o que o `AssinaturaDigitalPanel` faz de fato, e funciona pelo teclado sem truque; o `label` com input `hidden` do `FileUpload` do SGDM não recebe foco.
 > - `FileUpload` filtra os arquivos soltos pelo `accept` (o SGDM não filtra) e avisa os recusados em `onReject`.
-- [ ] **B14. `Timeline`.**
+- [x] **B14. `Timeline`.**
   - Variantes: ícone em círculo com linha, lista de pontos com `border-l` e linha do tempo de fases.
   - Referências: `DocumentoHistorico.tsx:153-186` e `LicitacaoTimeline.tsx:99-129`.
-- [ ] **B15. `Tabs variant="pill"` / `SegmentedControl`**, com cor por aba. Referência: `(d)/documentos/[id]/page.tsx:690-708`.
-- [ ] **B16. `FilterBar`.** Card com título "Filtros", grade de campos e botão limpar. Criar também o `SearchInput`.
-- [ ] **B17. Passos.**
+- [x] **B15. `Tabs variant="pill"` / `SegmentedControl`**, com cor por aba. Referência: `(d)/documentos/[id]/page.tsx:690-708`.
+- [x] **B16. `FilterBar`.** Card com título "Filtros", grade de campos e botão limpar. Criar também o `SearchInput`.
+- [x] **B17. Passos.**
   - `NumberedSteps`, uma lista de instruções numeradas (`AssinaturaDigitalPanel.tsx:113-193`).
   - `ProcessStepper` vertical compacto, o "Onde você está no processo" (`DocumentoEditorPanel.tsx:61-102`).
   - `WizardStepper` ganha um modo com links (PassosCadastro) e um modo sem card.
-- [ ] **B18. `SelectableList`.** Lista mestre com item ativo destacado. Referência: `(d)/cadastros/perfis/page.tsx:204-235`.
-- [ ] **B19. `Dropdown` / `Popover`** genérico, que fecha ao clicar fora e com Esc.
+- [x] **B18. `SelectableList`.** Lista mestre com item ativo destacado. Referência: `(d)/cadastros/perfis/page.tsx:204-235`.
+- [x] **B19. `Dropdown` / `Popover`** genérico, que fecha ao clicar fora e com Esc.
   - `NotificationBell`, com contador (9+), cabeçalho, "marcar todas", lista com ponto de não lido e link no rodapé.
   - Referência: `components/layout/NotificacoesDropdown.tsx:128-297`.
-- [ ] **B20. `CounterBadge`**, a bolinha com número sobre um ícone.
-- [ ] **B21. `PdfViewer`.** Card com `object`/`iframe`, fallback de download e toolbar. Referência: `DocumentoPreviaPanel.tsx:94-135`.
+- [x] **B20. `CounterBadge`**, a bolinha com número sobre um ícone.
+- [x] **B21. `PdfViewer`.** Card com `object`/`iframe`, fallback de download e toolbar. Referência: `DocumentoPreviaPanel.tsx:94-135`.
+
+> **Notas de B14–B21 (feitas em 28/09/2026).**
+> - `Timeline`: três variantes, `icon`, `dots` e `phases`, numa `<ol>`. Na `phases`, a fase atual leva `aria-current="step"` e cada situação é lida em texto escondido ("concluída", "devolvida"…), configurável por `statusLabels`. O ponto da variante `dots` fica centrado na borda com `-left-px -translate-x-1/2`, sem o `-left-[5px]` do SGDM. A linha da fase concluída usa `success-border` (emerald-200); o SGDM usa emerald-300, que não é degrau do pacote.
+> - `Tabs variant="pill"` com `tone` por aba (preenchido no degrau 600, `TONE_SOLID`). O `SegmentedControl` é o filtro da tela de numerações (card com botões compactos) e, para o leitor de tela, um grupo de rádio (`radiogroup`/`radio`, setas mudam a escolha). Não troca painel; para isso existe o `Tabs variant="pill"`.
+> - `FilterBar` é um marco `role="search"` nomeado pelo título. O botão de limpar ocupa a última célula da grade, como no SGDM. `SearchInput` é `type="text"` com `role="searchbox"`: o `type="search"` põe o "x" do navegador ao lado do nosso. Enter chama `onSearch`, Esc limpa.
+> - Passos: `NumberedSteps` e `ProcessStepper` em `Steps.tsx`. O "✓" em texto do SGDM virou o ícone `Check`, com "concluído" para o leitor de tela. O `WizardStepper` ganhou `variant="tiles"` (a trilha dos cadastros), `href` por passo com `linkComponent`, e `bare` (sem card; padrão em `tiles`). Com link, o `aria-current` sai do `li` e vai para o link. A largura mínima da caixa é `min-w-44` (176px), porque `min-w-[180px]` é barrado pelo teste de medidas soltas.
+> - Cores de seleção seguem a cor principal, e não o azul fixo: `SelectableList`, a caixa atual do `WizardStepper tiles` e o sino usam `primary-soft`/`accent`. Por isso o título ativo fica em `text-primary` (blue-800), e não em blue-900.
+> - `SelectableList` é uma lista de botões com `aria-current="true"` no ativo, e não um `listbox`: os itens têm descrição e selo, e o padrão do SGDM é navegação mestre/detalhe. As setas andam entre os itens, sem escolher.
+> - `Popover` (diálogo não modal) e `Dropdown` (`role="menu"`) dividem o mesmo núcleo (`usePopoverCore`). Fecham com clique fora, com Esc (devolvendo o foco ao gatilho) e quando o foco sai. O gatilho é um elemento passado em `trigger` (`Button`, `IconButton`), que recebe o clique e `aria-expanded`/`aria-haspopup`/`aria-controls`. O foco só entra no painel quando quem abriu foi o usuário, e não quando o `open` vem de fora. O painel usa `z-dropdown` (20) e `shadow-dropdown`; o SGDM usa `z-50`.
+> - `NotificationBell` não busca nada: lista, carregando, erro e ações chegam por prop, e o `onOpenChange` serve para buscar só ao abrir. O nome do botão traz a contagem ("Notificações (12 não lidas)") e uma região `aria-live` anuncia a mudança do número.
+> - `CounterBadge`: sobre um ícone (filhos), inline, ou no canto do pai (`placement="corner"`). `label` troca o número lido e `live` anuncia a mudança. `formatCount` é exportado.
+> - `PdfViewer`: `panel` é a prévia do editor (iframe, `min-h-editor` = 420px, sem a barra do leitor do navegador); `page` é a tela do PDF (`object`, `min-h-editor-frame` = 480px, alternativa de download). O `IconButton` ganhou o tamanho `xs` (24px, raio de 4px) para a toolbar do painel.
 - [ ] **B22. Layouts de página.**
   - `AuthLayout` dividido: formulário em fundo escuro e painel de imagem com gradiente (`app/login/page.tsx:66-176`). Os componentes de formulário ganham a variante `onDark`.
   - `AuthCard`, o cartão escuro centralizado (`app/redefinir-senha/page.tsx:171-190`).
@@ -139,9 +151,14 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
   - `MiniStat`.
   - `MiniCalendar`.
   - Referência: `components/dashboard/*`.
-- [ ] **B25. `InlineCode` / `Mono`**, para protocolo e hash.
-- [ ] **B26. `FlowChips`**, a sequência A → B → C (`components/perfis/PerfilGuiaCard.tsx:164-176`).
-- [ ] **B27. `StickyAside`**, o painel lateral fixo (`components/pecas/ChecklistConteudoMinimo.tsx:24`).
+- [x] **B25. `InlineCode` / `Mono`**, para protocolo e hash.
+- [x] **B26. `FlowChips`**, a sequência A → B → C (`components/perfis/PerfilGuiaCard.tsx:164-176`).
+- [x] **B27. `StickyAside`**, o painel lateral fixo (`components/pecas/ChecklistConteudoMinimo.tsx:24`).
+
+> **Notas de B25–B27 (feitas em 28/09/2026).**
+> - `InlineCode` é `<code>` e `Mono` é `<span>`, com as mesmas props: `size`, `tone`, `weight`, `boxed` (fundo cinza) e `breakAll` (hash).
+> - `FlowChips` é uma `<ol>` com as setas escondidas do leitor de tela. A cor de cada perfil vem por `tone` (fundo 50, texto 900, contorno 100); o `tones.ts` ganhou `TONE_RING_TINT`, `TONE_TEXT_HOVER` e `TONE_BG_STRONG`.
+> - `StickyAside` é um `<aside>` nomeado pelo título, com o cabeçalho tingido por `tone` e `offset` de 16, 24 (padrão, o `top-6` do SGDM) ou 32px. Não leva `z-sticky`, como no SGDM, para não passar por cima de menus abertos no conteúdo.
 - [ ] **B28. Gráficos.**
   - `ChartCard`, com título e ações.
   - `ChartLegend`, com amostra de cor e %.

@@ -4,7 +4,7 @@ O visual do SGDM empacotado para os sistemas novos nascerem com a mesma aparênc
 
 - **Tokens** (`tokens.css`): cores, famílias de tom, tema por perfil, fontes, tamanhos, raios, sombras, camadas (z-index), tempo e medidas de layout, com nomes de papel (`--sd-color-primary`, `--sd-radius-control`, `--sd-z-modal`). A fonte Inter vem dentro do pacote, sem CDN. Veja [Tokens](#tokens).
 - **Preset do Tailwind** (`tailwind-preset`): expõe os tokens como `bg-primary`, `text-muted`, `rounded-control` e `shadow-card`, e injeta as classes `.card`, `.btn-*`, `.input`, `.nav-item`… do SGDM.
-- **Componentes**: Button, IconButton, Card, Input, PasswordInput, Textarea, Select, Checkbox, CheckboxCard, CheckboxGroup, FileUpload, FileButton, FormField, FormSection, Modal, ConfirmModal, PageHeader, StatusBadge, StatCard, Table, Tabs, Toast (`ToastProvider` + `useToast`), Alert (Callout), Spinner, LoadingState, Skeleton, PageSkeleton, EmptyState, ErrorState, Eyebrow (Overline), Chip (Tag), IconTile, DescriptionList, KeyValue, WizardStepper, Tooltip (DicaInfo), CollapsibleCard, Accordion, AppLayout, Sidebar, Header e NavigationProgress.
+- **Componentes**: Button, IconButton, Card, Input, PasswordInput, Textarea, Select, Checkbox, CheckboxCard, CheckboxGroup, FileUpload, FileButton, FormField, FormSection, Modal, ConfirmModal, PageHeader, StatusBadge, StatCard, Table, Tabs, Toast (`ToastProvider` + `useToast`), Alert (Callout), Spinner, LoadingState, Skeleton, PageSkeleton, EmptyState, ErrorState, Eyebrow (Overline), Chip (Tag), IconTile, DescriptionList, KeyValue, WizardStepper, NumberedSteps, ProcessStepper, Timeline, FlowChips, SegmentedControl, FilterBar, SearchInput, SelectableList, Popover, Dropdown, NotificationBell, CounterBadge, PdfViewer, InlineCode (Mono), StickyAside, Tooltip (DicaInfo), CollapsibleCard, Accordion, AppLayout, Sidebar, Header e NavigationProgress.
 
 Para ver tudo funcionando, rode `npm run catalogo` neste repositório.
 
@@ -213,7 +213,7 @@ Componentes novos da v0.2 (padrões que o SGDM repetia à mão):
 <Button variant="link">Ver todas</Button>       {/* + success e danger-outline; size="lg" (py-3) */}
 <Button href="/novo" linkComponent={Link} icon={<Plus />}>Novo</Button>
 <Button asChild variant="secondary"><Link href="/lista">Lista</Link></Button>
-<IconButton icon={<Trash2 />} aria-label="Excluir" variant="danger" size="sm" />  {/* aria-label obrigatório */}
+<IconButton icon={<Trash2 />} aria-label="Excluir" variant="danger" size="sm" />  {/* aria-label obrigatório; size xs | sm | md */}
 
 {/* Lista de dados (<dl>): rows | grid | tiles | compact */}
 <DescriptionList variant="rows" items={[{ label: 'Protocolo', value: p, mono: true }, { label: 'Órgão', value: o }]} />
@@ -229,6 +229,56 @@ Componentes novos da v0.2 (padrões que o SGDM repetia à mão):
 <CheckboxGroup title="Licitações" selectAllLabel="Selecionar módulo" options={perms} value={sel} onChange={setSel} />
 <FileUpload files={arquivos} onChange={setArquivos} maxFiles={5} />
 <FileButton accept="application/pdf,.pdf" onFiles={([f]) => enviar(f)} variant="primary">Carregar assinado</FileButton>
+```
+
+Navegação, histórico, menus e documento (v0.2):
+
+```tsx
+{/* Linha do tempo: icon (histórico) | dots (workflow curto) | phases (fases da licitação) */}
+<Timeline label="Movimentações" tone="info" empty="Nenhuma movimentação registrada."
+  items={[{ id, title: 'Documento assinado', subtitle: 'Aguardando → Assinado',
+    author: { name: 'Maria', role: 'Prefeita' }, date: '12/09/2026 14:32', meta: 'IP 10.0.0.1', icon: CheckCircle2 }]} />
+<Timeline variant="phases" items={fases.map((f) => ({ id: f.id, title: f.nome, status: 'done', aside: f.setor }))} />
+{/* status: done | current | returned | pending */}
+
+{/* Passos */}
+<NumberedSteps steps={[{ title: 'Baixe o PDF', content: <Button size="sm">Baixar</Button> }, { title: 'Assine', description: '…' }]} />
+<ProcessStepper current={3} steps={[{ label: 'Solicitação' }, { label: 'Análise' }, { label: 'Elaboração' }]} />
+<WizardStepper variant="tiles" current={2} linkComponent={Link}
+  steps={[{ title: 'Secretarias', description: 'as unidades', href: '/cadastros/secretarias' }, …]} />
+<WizardStepper bare current={2} steps={passos} />      {/* sem o card */}
+<FlowChips tone="indigo" label="Fluxo" steps={['Solicitar', 'Analisar', 'Assinar']} />
+
+{/* Abas em pílula (cor por aba) e escolha entre poucas opções */}
+<Tabs variant="pill" items={[{ id: 'dados', label: 'Dados' }, { id: 'analise', label: 'Análise', tone: 'indigo' }]} />
+<SegmentedControl label="Filtrar" value={f} onChange={setF} options={[{ value: 'todos', label: 'Todos' }, …]} />
+
+{/* Filtros e busca */}
+<FilterBar onClear={limpar} columns={4}>
+  <SearchInput aria-label="Buscar" value={q} onValueChange={setQ} onSearch={buscar} />   {/* Enter busca, Esc limpa */}
+  <Select aria-label="Tipo" options={tipos} />
+</FilterBar>
+
+{/* Lista mestre (tela mestre/detalhe): item ativo com aria-current, setas andam */}
+<SelectableList label="Perfis" icon={Shield} items={perfis} value={id} onChange={setId} />
+
+{/* Menus e painéis: fecham com Esc (devolvendo o foco), clique fora e Tab */}
+<Dropdown label="Ações" trigger={<IconButton icon={<MoreHorizontal />} aria-label="Ações" />}
+  items={[{ id: 'editar', label: 'Editar', icon: Pencil, onSelect: editar }, { id: 's', separator: true },
+    { id: 'excluir', label: 'Excluir', tone: 'danger', onSelect: excluir }]} />
+<Popover label="Filtros avançados" trigger={<Button variant="secondary">Mais filtros</Button>}>
+  {({ close }) => <Form onDone={close} />}
+</Popover>
+<NotificationBell count={naoLidas} items={itens} loading={isLoading} onOpenChange={setAberto}
+  onItemClick={marcarLida} onMarkAllRead={marcarTodas} footerHref="/notificacoes" linkComponent={Link} />
+<CounterBadge count={3}><Bell /></CounterBadge>          {/* "9+" acima de max; formatCount(n, max) */}
+
+{/* Documento */}
+<PdfViewer src={blobUrl} title="Prévia do documento" onRefresh={recarregar} downloadName="portaria.pdf" />
+<PdfViewer variant="page" src={url} title="PDF do documento" />   {/* object + link de download */}
+<InlineCode size="xs">USUARIO_GERENCIAR</InlineCode>  <InlineCode size="xs" breakAll>{hash}</InlineCode>
+<Mono size="sm" weight="semibold">{numeroProcesso}</Mono>
+<StickyAside title="Conteúdo mínimo" description="Art. 18" tone="warning" icon={Scale}>…</StickyAside>
 ```
 
 `StatCard` e `EmptyState` desenham o ícone com o `IconTile`. As cores de chip, aviso e ícone saem dos mapas de `tones.ts`, um por degrau, escritos por extenso para o Tailwind achá-los no `dist`.
