@@ -220,5 +220,6 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
   - Os quatro testes de comportamento já existiam (lotes 2 e 3). O lote 4 trouxe `layouts-b22`, `kanban-painel-b23-b24`, `graficos-b28`, `editor-impressao-b29-b30` e `tokens-b4`: 292 testes no total.
 - [x] **D3. README.** Tabela "padrão do SGDM → componente do pacote" com todos os itens.
   - Seção "Padrão do SGDM → componente do pacote", de A1 a C8, com a referência no app e o que usar no lugar.
-- [ ] **D4. Versão.** `package.json` passa a 0.2.0, com `CHANGELOG.md`.
+- [x] **D4. Versão.** `package.json` passa a 0.2.0, com `CHANGELOG.md`.
+  - `npm version 0.2.0 --no-git-tag-version` (sem tag: o envio ao GitHub e a tag `v0.2.0` ficam com o usuário). O `CHANGELOG.md` resume a v2 inteira e o que muda para quem usava a 0.1.
 - [ ] **D5. Verificação.** Build, testes, `tsc`, build do catálogo e instalação pelo git. Tirar uma captura do catálogo.
