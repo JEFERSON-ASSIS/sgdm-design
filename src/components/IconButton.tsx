@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '../cn';
 
 export type IconButtonVariant = 'ghost' | 'secondary' | 'danger';
-export type IconButtonSize = 'sm' | 'md';
+export type IconButtonSize = 'xs' | 'sm' | 'md';
 
 export interface IconButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'style' | 'children' | 'aria-label'> {
@@ -20,7 +20,10 @@ export interface IconButtonProps
    * `danger`: como o ghost, mas fica vermelho no hover (excluir, remover).
    */
   variant?: IconButtonVariant;
-  /** `sm` 32px (linha de tabela, lista) ou `md` 36px (padrão, cabeçalho). */
+  /**
+   * `xs` 24px (toolbar de painel, raio de 4px), `sm` 32px (linha de tabela,
+   * lista) ou `md` 36px (padrão, cabeçalho).
+   */
   size?: IconButtonSize;
   loading?: boolean;
 }
@@ -32,6 +35,7 @@ const VARIANTES: Record<IconButtonVariant, string> = {
 };
 
 const TAMANHOS: Record<IconButtonSize, { caixa: string; icone: string }> = {
+  xs: { caixa: 'h-6 w-6 rounded-xs', icone: 'h-3.5 w-3.5' },
   sm: { caixa: 'h-8 w-8', icone: 'h-4 w-4' },
   md: { caixa: 'h-9 w-9', icone: 'h-5 w-5' },
 };

@@ -72,6 +72,8 @@ export {
   type FileUploadProps,
   type FileButtonProps,
 } from './components/FileUpload';
+export { SearchInput, type SearchInputProps } from './components/SearchInput';
+export { FilterBar, type FilterBarProps } from './components/FilterBar';
 export { Textarea, type TextareaProps } from './components/Textarea';
 export { Select, type SelectProps, type SelectOption } from './components/Select';
 export { Modal, type ModalProps } from './components/Modal';
@@ -80,7 +82,12 @@ export { PageHeader, type PageHeaderProps } from './components/PageHeader';
 export { StatusBadge, type StatusBadgeProps } from './components/StatusBadge';
 export { StatCard, type StatCardProps } from './components/StatCard';
 export { Table, type TableProps, type TableColumn, type TableFooter } from './components/Table';
-export { Tabs, type TabsProps, type TabItem } from './components/Tabs';
+export { Tabs, type TabsProps, type TabItem, type TabsVariant } from './components/Tabs';
+export {
+  SegmentedControl,
+  type SegmentedControlProps,
+  type SegmentedOption,
+} from './components/SegmentedControl';
 export {
   ToastProvider,
   useToast,
@@ -91,7 +98,29 @@ export {
 } from './components/Toast';
 export { EmptyState, type EmptyStateProps } from './components/EmptyState';
 export { ErrorState, ErrorInline, type ErrorStateProps } from './components/ErrorState';
-export { WizardStepper, type WizardStepperProps, type WizardStep } from './components/WizardStepper';
+export {
+  WizardStepper,
+  type WizardStepperProps,
+  type WizardStep,
+  type WizardStepperVariant,
+} from './components/WizardStepper';
+export {
+  NumberedSteps,
+  ProcessStepper,
+  type NumberedStepsProps,
+  type NumberedStep,
+  type ProcessStepperProps,
+  type ProcessStep,
+  type StepStatus,
+} from './components/Steps';
+export {
+  Timeline,
+  type TimelineProps,
+  type TimelineItem,
+  type TimelineVariant,
+  type TimelineStatus,
+} from './components/Timeline';
+export { FlowChips, type FlowChipsProps } from './components/FlowChips';
 export { Tooltip, DicaInfo, type TooltipProps, type TooltipPlacement } from './components/Tooltip';
 export { CollapsibleCard, type CollapsibleCardProps } from './components/CollapsibleCard';
 export { Accordion, type AccordionProps, type AccordionItem } from './components/Accordion';
@@ -108,6 +137,46 @@ export {
   type DescriptionItem,
   type KeyValueProps,
 } from './components/DescriptionList';
+export {
+  SelectableList,
+  type SelectableListProps,
+  type SelectableListItem,
+} from './components/SelectableList';
+export {
+  Popover,
+  type PopoverProps,
+  type PopoverAlign,
+  type PopoverSide,
+  type PopoverWidth,
+} from './components/Popover';
+export {
+  Dropdown,
+  type DropdownProps,
+  type DropdownItem,
+  type DropdownSeparator,
+  type DropdownEntry,
+} from './components/Dropdown';
+export {
+  NotificationBell,
+  type NotificationBellProps,
+  type NotificationItem,
+} from './components/NotificationBell';
+export {
+  CounterBadge,
+  formatCount,
+  type CounterBadgeProps,
+  type CounterBadgeTone,
+} from './components/CounterBadge';
+export { PdfViewer, type PdfViewerProps, type PdfViewerVariant } from './components/PdfViewer';
+export {
+  InlineCode,
+  Mono,
+  type InlineCodeProps,
+  type MonoProps,
+  type InlineCodeSize,
+  type InlineCodeTone,
+} from './components/InlineCode';
+export { StickyAside, type StickyAsideProps, type StickyAsideOffset } from './components/StickyAside';
 export {
   IconTile,
   type IconTileProps,
