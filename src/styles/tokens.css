@@ -1,16 +1,58 @@
 /*
  * @sgdm/design — tokens
  *
- * Toda cor, fonte, raio e sombra dos componentes sai daqui. Os nomes dizem o
- * PAPEL (primary, surface, text-muted), nunca a marca ou a cor. Para mudar o
- * visual de um sistema, sobrescreva as variáveis depois deste arquivo; para
- * trocar de linguagem visual (ex.: Material), troque este arquivo inteiro.
+ * Toda cor, fonte, medida, raio, sombra, camada e tempo dos componentes sai
+ * daqui. Os nomes dizem o PAPEL (primary, surface, text-muted), nunca a marca.
+ * Para mudar o visual de um sistema, sobrescreva as variáveis depois deste
+ * arquivo; para trocar de linguagem visual (ex.: Material), troque este
+ * arquivo inteiro.
  *
  * Cores ficam em canais RGB separados por espaço ("30 64 175"), e não em hex,
  * para o Tailwind aplicar opacidade (bg-primary/80). Em CSS próprio, use
  * rgb(var(--sd-color-primary)). O hex equivalente está no comentário.
  *
- * Valores levantados do SGDM (apps/web/app/globals.css) em 28/09/2026.
+ * Valores levantados do SGDM (apps/web) em 28/09/2026.
+ *
+ * ------------------------------------------------------------------------
+ * ESQUEMA DE NOMES — --sd-<categoria>-<papel>[-<variante>]
+ * ------------------------------------------------------------------------
+ *   categoria   exemplo                         classe do preset
+ *   color       --sd-color-surface              bg-surface, text-muted
+ *   font        --sd-font-sans                  font-sans, font-document
+ *   font-size   --sd-font-size-2xs              text-2xs, text-doc-12
+ *   radius      --sd-radius-card                rounded-card
+ *   shadow      --sd-shadow-modal               shadow-modal
+ *   z           --sd-z-modal                    z-modal
+ *   duration    --sd-duration-fast              duration-fast
+ *   ease        --sd-ease-standard              ease-standard
+ *   size        --sd-size-sidebar               w-sidebar, max-w-modal-md
+ *   space       --sd-space-page-md              p-page-md
+ *   breakpoint  --sd-breakpoint-lg              lg: (screens) e BREAKPOINT_LG no JS
+ *
+ * TONS. Os papéis de feedback (success, warning, danger, info) e as famílias
+ * de cor (cyan, indigo, rose, violet, purple, orange, teal, sky) têm todos os
+ * mesmos oito degraus, com o mesmo sufixo:
+ *
+ *   (sem sufixo) 500  cor base, gráfico, ponto de status
+ *   -soft         50  fundo de aviso, de card tingido, de ícone de StatCard
+ *   -tint        100  fundo de selo e de quadrado de ícone
+ *   -border      200  borda de aviso e de card tingido
+ *   -strong      600  ícone, botão preenchido
+ *   -hover       700  hover do botão preenchido, ícone sobre -tint
+ *   -text        800  texto sobre -soft/-tint (selos)
+ *   -deep        900  texto de aviso (callout)
+ *
+ * Os papéis de feedback valem mais que o nome da cor: success é esmeralda e
+ * info é azul porque é o que o SGDM usa, não o contrário.
+ *
+ * PERFIS. --sd-color-profile-<perfil>[-soft|-tint|-border|-icon|-text|-title]
+ * e --sd-shadow-profile-<perfil>, para rh, secretaria, prefeito, gabinete e
+ * plataforma. Apontam para as famílias acima (var()), então basta mudar a
+ * família para mudar o perfil.
+ *
+ * Os mesmos números de z, tempo, breakpoint e fonte do editor existem em JS
+ * (src/tokens.ts), para quem precisa deles fora do CSS; um teste garante que
+ * os dois lados batem.
  */
 
 /* Inter servida pelo próprio pacote — nada de CDN. Licença em fonts/. */
@@ -60,7 +102,11 @@
   --sd-color-surface-muted: 241 245 249; /* #f1f5f9 — hover de botão fantasma, selo neutro */
   --sd-color-surface-inverse: 30 41 59; /* #1e293b — balão de dica */
   --sd-color-on-inverse: 255 255 255; /* #ffffff */
-  --sd-color-overlay: 0 0 0; /* fundo escurecido atrás de modal e menu móvel */
+  --sd-color-skeleton: 226 232 240; /* #e2e8f0 slate-200 — bloco de carregamento */
+
+  /* Fundo escurecido atrás de modal e menu móvel. */
+  --sd-color-overlay: 0 0 0; /* #000000 — usado a 40% (bg-overlay/40) */
+  --sd-color-overlay-strong: 15 23 42; /* #0f172a slate-900 — usado a 50% e 70% */
 
   /* ---------- Menu lateral ---------- */
   --sd-color-sidebar: 15 23 42; /* #0f172a */
@@ -78,40 +124,178 @@
   --sd-color-text-muted: 100 116 139; /* #64748b — descrições */
   --sd-color-text-subtle: 148 163 184; /* #94a3b8 — dicas, placeholder, ícones apagados */
 
+  /* Texto sobre fundo escuro (login, cartão de redefinir senha). */
+  --sd-color-on-dark-label: 203 213 225; /* #cbd5e1 slate-300 — rótulo de campo */
+  --sd-color-on-dark-muted: 148 163 184; /* #94a3b8 slate-400 — subtítulo, ícone do campo */
+  --sd-color-on-dark-error: 248 113 113; /* #f87171 red-400 — mensagem de erro */
+  --sd-color-on-dark-link: 96 165 250; /* #60a5fa blue-400 — link, contorno de foco */
+  --sd-color-on-dark-link-hover: 147 197 253; /* #93c5fd blue-300 */
+
   /* ---------- Bordas ---------- */
   --sd-color-border: 226 232 240; /* #e2e8f0 */
   --sd-color-border-subtle: 241 245 249; /* #f1f5f9 — divisórias internas de card */
+  --sd-color-border-strong: 203 213 225; /* #cbd5e1 slate-300 — checkbox, contorno tracejado */
 
   /* ---------- Feedback ----------
-   * Cada tom tem: base (500), soft (fundo 50), border (200), strong (600, ícone
-   * e fundo de botão) e text (800, texto sobre o soft). */
-  --sd-color-success: 34 197 94; /* #22c55e */
-  --sd-color-success-soft: 240 253 244; /* #f0fdf4 */
-  --sd-color-success-border: 187 247 208; /* #bbf7d0 */
-  --sd-color-success-strong: 22 163 74; /* #16a34a */
-  --sd-color-success-text: 22 101 52; /* #166534 */
+   * Oito degraus por tom; ver ESQUEMA DE NOMES no topo. */
+  --sd-color-success: 16 185 129; /* #10b981 emerald-500 */
+  --sd-color-success-soft: 236 253 245; /* #ecfdf5 emerald-50 */
+  --sd-color-success-tint: 209 250 229; /* #d1fae5 emerald-100 */
+  --sd-color-success-border: 167 243 208; /* #a7f3d0 emerald-200 */
+  --sd-color-success-strong: 5 150 105; /* #059669 emerald-600 */
+  --sd-color-success-hover: 4 120 87; /* #047857 emerald-700 */
+  --sd-color-success-text: 6 95 70; /* #065f46 emerald-800 */
+  --sd-color-success-deep: 6 78 59; /* #064e3b emerald-900 */
 
-  --sd-color-warning: 245 158 11; /* #f59e0b */
-  --sd-color-warning-soft: 255 251 235; /* #fffbeb */
-  --sd-color-warning-border: 253 230 138; /* #fde68a */
-  --sd-color-warning-strong: 217 119 6; /* #d97706 */
-  --sd-color-warning-text: 146 64 14; /* #92400e */
+  --sd-color-warning: 245 158 11; /* #f59e0b amber-500 */
+  --sd-color-warning-soft: 255 251 235; /* #fffbeb amber-50 */
+  --sd-color-warning-tint: 254 243 199; /* #fef3c7 amber-100 */
+  --sd-color-warning-border: 253 230 138; /* #fde68a amber-200 */
+  --sd-color-warning-strong: 217 119 6; /* #d97706 amber-600 */
+  --sd-color-warning-hover: 180 83 9; /* #b45309 amber-700 */
+  --sd-color-warning-text: 146 64 14; /* #92400e amber-800 */
+  --sd-color-warning-deep: 120 53 15; /* #78350f amber-900 */
 
-  --sd-color-danger: 239 68 68; /* #ef4444 */
-  --sd-color-danger-soft: 254 242 242; /* #fef2f2 */
-  --sd-color-danger-border: 254 202 202; /* #fecaca */
-  --sd-color-danger-strong: 220 38 38; /* #dc2626 — botão de ação destrutiva */
-  --sd-color-danger-hover: 185 28 28; /* #b91c1c */
-  --sd-color-danger-text: 153 27 27; /* #991b1b */
+  --sd-color-danger: 239 68 68; /* #ef4444 red-500 */
+  --sd-color-danger-soft: 254 242 242; /* #fef2f2 red-50 */
+  --sd-color-danger-tint: 254 226 226; /* #fee2e2 red-100 */
+  --sd-color-danger-border: 254 202 202; /* #fecaca red-200 */
+  --sd-color-danger-strong: 220 38 38; /* #dc2626 red-600 — botão de ação destrutiva */
+  --sd-color-danger-hover: 185 28 28; /* #b91c1c red-700 */
+  --sd-color-danger-text: 153 27 27; /* #991b1b red-800 */
+  --sd-color-danger-deep: 127 29 29; /* #7f1d1d red-900 */
 
-  --sd-color-info: 6 182 212; /* #06b6d4 */
-  --sd-color-info-soft: 236 254 255; /* #ecfeff */
-  --sd-color-info-border: 165 243 252; /* #a5f3fc */
-  --sd-color-info-strong: 8 145 178; /* #0891b2 */
-  --sd-color-info-text: 21 94 117; /* #155e75 */
+  --sd-color-info: 59 130 246; /* #3b82f6 blue-500 */
+  --sd-color-info-soft: 239 246 255; /* #eff6ff blue-50 */
+  --sd-color-info-tint: 219 234 254; /* #dbeafe blue-100 */
+  --sd-color-info-border: 191 219 254; /* #bfdbfe blue-200 */
+  --sd-color-info-strong: 37 99 235; /* #2563eb blue-600 */
+  --sd-color-info-hover: 29 78 216; /* #1d4ed8 blue-700 */
+  --sd-color-info-text: 30 64 175; /* #1e40af blue-800 */
+  --sd-color-info-deep: 30 58 138; /* #1e3a8a blue-900 */
 
   /* Marca-texto: dado a preencher no editor de documentos. */
   --sd-color-highlight: 254 243 199; /* #fef3c7 */
+
+  /* ---------- Famílias de cor ----------
+   * Para selos, ícones, cards de indicador e perfis. Mesmos degraus do feedback.
+   * cyan fica aqui (e não em info) porque é a cor do gráfico e do procurador. */
+  --sd-color-cyan: 6 182 212; /* #06b6d4 cyan-500 */
+  --sd-color-cyan-soft: 236 254 255; /* #ecfeff cyan-50 */
+  --sd-color-cyan-tint: 207 250 254; /* #cffafe cyan-100 */
+  --sd-color-cyan-border: 165 243 252; /* #a5f3fc cyan-200 */
+  --sd-color-cyan-strong: 8 145 178; /* #0891b2 cyan-600 */
+  --sd-color-cyan-hover: 14 116 144; /* #0e7490 cyan-700 */
+  --sd-color-cyan-text: 21 94 117; /* #155e75 cyan-800 */
+  --sd-color-cyan-deep: 22 78 99; /* #164e63 cyan-900 */
+
+  --sd-color-indigo: 99 102 241; /* #6366f1 indigo-500 */
+  --sd-color-indigo-soft: 238 242 255; /* #eef2ff indigo-50 */
+  --sd-color-indigo-tint: 224 231 255; /* #e0e7ff indigo-100 */
+  --sd-color-indigo-border: 199 210 254; /* #c7d2fe indigo-200 */
+  --sd-color-indigo-strong: 79 70 229; /* #4f46e5 indigo-600 */
+  --sd-color-indigo-hover: 67 56 202; /* #4338ca indigo-700 */
+  --sd-color-indigo-text: 55 48 163; /* #3730a3 indigo-800 */
+  --sd-color-indigo-deep: 49 46 129; /* #312e81 indigo-900 */
+
+  --sd-color-rose: 244 63 94; /* #f43f5e rose-500 */
+  --sd-color-rose-soft: 255 241 242; /* #fff1f2 rose-50 */
+  --sd-color-rose-tint: 255 228 230; /* #ffe4e6 rose-100 */
+  --sd-color-rose-border: 254 205 211; /* #fecdd3 rose-200 */
+  --sd-color-rose-strong: 225 29 72; /* #e11d48 rose-600 */
+  --sd-color-rose-hover: 190 18 60; /* #be123c rose-700 */
+  --sd-color-rose-text: 159 18 57; /* #9f1239 rose-800 */
+  --sd-color-rose-deep: 136 19 55; /* #881337 rose-900 */
+
+  --sd-color-violet: 139 92 246; /* #8b5cf6 violet-500 */
+  --sd-color-violet-soft: 245 243 255; /* #f5f3ff violet-50 */
+  --sd-color-violet-tint: 237 233 254; /* #ede9fe violet-100 */
+  --sd-color-violet-border: 221 214 254; /* #ddd6fe violet-200 */
+  --sd-color-violet-strong: 124 58 237; /* #7c3aed violet-600 */
+  --sd-color-violet-hover: 109 40 217; /* #6d28d9 violet-700 */
+  --sd-color-violet-text: 91 33 182; /* #5b21b6 violet-800 */
+  --sd-color-violet-deep: 76 29 149; /* #4c1d95 violet-900 */
+
+  --sd-color-purple: 168 85 247; /* #a855f7 purple-500 */
+  --sd-color-purple-soft: 250 245 255; /* #faf5ff purple-50 */
+  --sd-color-purple-tint: 243 232 255; /* #f3e8ff purple-100 */
+  --sd-color-purple-border: 233 213 255; /* #e9d5ff purple-200 */
+  --sd-color-purple-strong: 147 51 234; /* #9333ea purple-600 */
+  --sd-color-purple-hover: 126 34 206; /* #7e22ce purple-700 */
+  --sd-color-purple-text: 107 33 168; /* #6b21a8 purple-800 */
+  --sd-color-purple-deep: 88 28 135; /* #581c87 purple-900 */
+
+  --sd-color-orange: 249 115 22; /* #f97316 orange-500 */
+  --sd-color-orange-soft: 255 247 237; /* #fff7ed orange-50 */
+  --sd-color-orange-tint: 255 237 213; /* #ffedd5 orange-100 */
+  --sd-color-orange-border: 254 215 170; /* #fed7aa orange-200 */
+  --sd-color-orange-strong: 234 88 12; /* #ea580c orange-600 */
+  --sd-color-orange-hover: 194 65 12; /* #c2410c orange-700 */
+  --sd-color-orange-text: 154 52 18; /* #9a3412 orange-800 */
+  --sd-color-orange-deep: 124 45 18; /* #7c2d12 orange-900 */
+
+  --sd-color-teal: 20 184 166; /* #14b8a6 teal-500 */
+  --sd-color-teal-soft: 240 253 250; /* #f0fdfa teal-50 */
+  --sd-color-teal-tint: 204 251 241; /* #ccfbf1 teal-100 */
+  --sd-color-teal-border: 153 246 228; /* #99f6e4 teal-200 */
+  --sd-color-teal-strong: 13 148 136; /* #0d9488 teal-600 */
+  --sd-color-teal-hover: 15 118 110; /* #0f766e teal-700 */
+  --sd-color-teal-text: 17 94 89; /* #115e59 teal-800 */
+  --sd-color-teal-deep: 19 78 74; /* #134e4a teal-900 */
+
+  --sd-color-sky: 14 165 233; /* #0ea5e9 sky-500 */
+  --sd-color-sky-soft: 240 249 255; /* #f0f9ff sky-50 */
+  --sd-color-sky-tint: 224 242 254; /* #e0f2fe sky-100 */
+  --sd-color-sky-border: 186 230 253; /* #bae6fd sky-200 */
+  --sd-color-sky-strong: 2 132 199; /* #0284c7 sky-600 */
+  --sd-color-sky-hover: 3 105 161; /* #0369a1 sky-700 */
+  --sd-color-sky-text: 7 89 133; /* #075985 sky-800 */
+  --sd-color-sky-deep: 12 74 110; /* #0c4a6e sky-900 */
+
+  /* ---------- Tema por perfil ----------
+   * Cor de destaque (DEFAULT, 600), fundo (-soft), fundo do ícone (-tint),
+   * borda, ícone (-icon, 700), texto (-text, 800) e título (-title, 950).
+   * Referência: components/dashboard/DashboardRoleHero.tsx e
+   * components/perfis/PerfilGuiaCard.tsx. Gabinete vem do guia (laranja). */
+  --sd-color-profile-rh: var(--sd-color-indigo-strong);
+  --sd-color-profile-rh-soft: var(--sd-color-indigo-soft);
+  --sd-color-profile-rh-tint: var(--sd-color-indigo-tint);
+  --sd-color-profile-rh-border: var(--sd-color-indigo-border);
+  --sd-color-profile-rh-icon: var(--sd-color-indigo-hover);
+  --sd-color-profile-rh-text: var(--sd-color-indigo-text);
+  --sd-color-profile-rh-title: 30 27 75; /* #1e1b4b indigo-950 */
+
+  --sd-color-profile-secretaria: var(--sd-color-info-strong);
+  --sd-color-profile-secretaria-soft: var(--sd-color-info-soft);
+  --sd-color-profile-secretaria-tint: var(--sd-color-info-tint);
+  --sd-color-profile-secretaria-border: var(--sd-color-info-border);
+  --sd-color-profile-secretaria-icon: var(--sd-color-info-hover);
+  --sd-color-profile-secretaria-text: var(--sd-color-info-text);
+  --sd-color-profile-secretaria-title: 23 37 84; /* #172554 blue-950 */
+
+  --sd-color-profile-prefeito: var(--sd-color-violet-strong);
+  --sd-color-profile-prefeito-soft: var(--sd-color-violet-soft);
+  --sd-color-profile-prefeito-tint: var(--sd-color-violet-tint);
+  --sd-color-profile-prefeito-border: var(--sd-color-violet-border);
+  --sd-color-profile-prefeito-icon: var(--sd-color-violet-hover);
+  --sd-color-profile-prefeito-text: var(--sd-color-violet-text);
+  --sd-color-profile-prefeito-title: 46 16 101; /* #2e1065 violet-950 */
+
+  --sd-color-profile-gabinete: var(--sd-color-orange-strong);
+  --sd-color-profile-gabinete-soft: var(--sd-color-orange-soft);
+  --sd-color-profile-gabinete-tint: var(--sd-color-orange-tint);
+  --sd-color-profile-gabinete-border: var(--sd-color-orange-border);
+  --sd-color-profile-gabinete-icon: var(--sd-color-orange-hover);
+  --sd-color-profile-gabinete-text: var(--sd-color-orange-text);
+  --sd-color-profile-gabinete-title: 67 20 7; /* #431407 orange-950 */
+
+  --sd-color-profile-plataforma: var(--sd-color-rose-strong);
+  --sd-color-profile-plataforma-soft: var(--sd-color-rose-soft);
+  --sd-color-profile-plataforma-tint: var(--sd-color-rose-tint);
+  --sd-color-profile-plataforma-border: var(--sd-color-rose-border);
+  --sd-color-profile-plataforma-icon: var(--sd-color-rose-hover);
+  --sd-color-profile-plataforma-text: var(--sd-color-rose-text);
+  --sd-color-profile-plataforma-title: 76 5 25; /* #4c0519 rose-950 */
 
   /* ---------- Marca externa ---------- */
   --sd-color-govbr: 19 81 180; /* #1351b4 — botão "Entrar com gov.br" */
@@ -129,24 +313,97 @@
   --sd-color-chart-10: 99 102 241; /* #6366F1 EM_ANALISE */
   --sd-color-chart-11: 236 72 153; /* #EC4899 AGUARDANDO_PUBLICACAO */
   --sd-color-chart-12: 159 18 57; /* #9F1239 ERRO_EMISSAO */
+  --sd-color-chart-13: 14 165 233; /* #0EA5E9 sky — série extra (relatórios) */
+  --sd-color-chart-fallback: 148 163 184; /* #94A3B8 — status sem cor no mapa */
+  --sd-color-chart-grid: 226 232 240; /* #E2E8F0 — linhas de grade */
+  --sd-color-chart-bar: 59 130 246; /* #3B82F6 — barra sem cor definida */
 
   /* ---------- Fontes ---------- */
   --sd-font-sans: 'Inter', Arial, sans-serif;
   --sd-font-document: 'Times New Roman', Times, serif;
 
+  /* ---------- Tamanhos de fonte ----------
+   * Os de interface complementam a escala do Tailwind (xs = 12px). */
+  --sd-font-size-2xs: 10px; /* selo de status, rótulo de seção do menu */
+  --sd-font-size-xs2: 11px; /* sobrelinha (eyebrow), iniciais do avatar */
+  /* Editor de documentos: as opções do seletor de tamanho. */
+  --sd-font-size-doc-10: 10pt;
+  --sd-font-size-doc-11: 11pt;
+  --sd-font-size-doc-12: 12pt; /* corpo do documento */
+  --sd-font-size-doc-14: 14pt; /* título do documento */
+  --sd-font-size-doc-16: 16pt;
+  --sd-font-size-doc-18: 18pt;
+  /* Impressão. */
+  --sd-font-size-print-body: 12pt;
+  --sd-font-size-print-table: 10pt;
+
   /* ---------- Raios ---------- */
   --sd-radius-card: 16px; /* cards e modais */
+  --sd-radius-panel: 12px; /* painel com borda dentro de card, coluna de kanban, item de lista */
+  --sd-radius-callout: 12px; /* aviso (callout, erro) e toast */
+  --sd-radius-tile: 12px; /* quadrado de ícone, logotipo */
   --sd-radius-control: 8px; /* botões, campos, itens de menu */
-  --sd-radius-tile: 12px; /* ícone de card, logotipo, avisos */
   --sd-radius-popover: 6px; /* balão de dica */
+  --sd-radius-tag: 6px; /* selo retangular (fase da licitação) */
+  --sd-radius-xs: 4px; /* botão de toolbar, chip, checkbox */
+  --sd-radius-marker: 2px; /* marca-texto do editor */
   --sd-radius-pill: 9999px; /* selos */
 
   /* ---------- Sombras ---------- */
   --sd-shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --sd-shadow-card-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --sd-shadow-popover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --sd-shadow-dropdown: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --sd-shadow-modal: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --sd-shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
   --sd-shadow-nav-active: 0 4px 6px -1px rgb(30 58 138 / 0.3), 0 2px 4px -2px rgb(30 58 138 / 0.3);
   --sd-shadow-brand: 0 10px 15px -3px rgb(30 58 138 / 0.4), 0 4px 6px -4px rgb(30 58 138 / 0.4);
+  --sd-shadow-brand-strong: 0 20px 25px -5px rgb(30 58 138 / 0.5), 0 8px 10px -6px rgb(30 58 138 / 0.5); /* logo do login */
   --sd-shadow-step: 0 4px 6px -1px rgb(219 234 254 / 1), 0 2px 4px -2px rgb(219 234 254 / 1);
+  /* Sombra colorida do quadrado de ícone do perfil (shadow-md na cor 200). */
+  --sd-shadow-profile-rh: 0 4px 6px -1px rgb(var(--sd-color-profile-rh-border)), 0 2px 4px -2px rgb(var(--sd-color-profile-rh-border));
+  --sd-shadow-profile-secretaria: 0 4px 6px -1px rgb(var(--sd-color-profile-secretaria-border)), 0 2px 4px -2px rgb(var(--sd-color-profile-secretaria-border));
+  --sd-shadow-profile-prefeito: 0 4px 6px -1px rgb(var(--sd-color-profile-prefeito-border)), 0 2px 4px -2px rgb(var(--sd-color-profile-prefeito-border));
+  --sd-shadow-profile-gabinete: 0 4px 6px -1px rgb(var(--sd-color-profile-gabinete-border)), 0 2px 4px -2px rgb(var(--sd-color-profile-gabinete-border));
+  --sd-shadow-profile-plataforma: 0 4px 6px -1px rgb(var(--sd-color-profile-plataforma-border)), 0 2px 4px -2px rgb(var(--sd-color-profile-plataforma-border));
+
+  /* ---------- Camadas (z-index) ----------
+   * Escala única. Nada no pacote usa número solto. */
+  --sd-z-raised: 10; /* acima do irmão, no mesmo contexto (bolinha do passo) */
+  --sd-z-dropdown: 20;
+  --sd-z-sticky: 30;
+  --sd-z-overlay: 40; /* fundo escurecido */
+  --sd-z-modal: 50; /* modal e gaveta do menu */
+  --sd-z-toast: 60;
+  --sd-z-tooltip: 100;
+  --sd-z-progress: 110; /* barra de carregamento do topo */
+
+  /* ---------- Tempo ---------- */
+  --sd-duration-fast: 150ms; /* hover, foco, entrada de toast */
+  --sd-duration-normal: 200ms; /* menu recolhendo, item do menu */
+  --sd-duration-slow: 300ms; /* painéis grandes */
+  --sd-duration-progress: 1000ms; /* uma volta da barra de carregamento */
+  --sd-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --sd-ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  /* ---------- Medidas de layout ---------- */
+  --sd-size-sidebar: 256px;
+  --sd-size-sidebar-collapsed: 72px;
+  --sd-size-header: 56px;
+  --sd-space-page-sm: 16px; /* padding da página no celular */
+  --sd-space-page-md: 24px; /* a partir de lg */
+  --sd-space-page-lg: 32px; /* a partir de xl */
+  --sd-size-modal-md: 512px;
+  --sd-size-modal-lg: 768px;
+  --sd-size-tooltip: 288px;
+  --sd-size-dropdown: 384px;
+  --sd-size-textarea-min: 100px;
+  --sd-size-editor-min: 420px; /* área de texto do editor */
+  --sd-size-editor-frame-min: 480px; /* moldura do editor carregando, visualizador de PDF */
+  --sd-size-print-sheet: 820px; /* folha do processo na tela */
+  --sd-size-kanban-column-min: 280px;
+  --sd-size-kanban-column-max: 320px;
+  /* Só informativo: media query não lê variável. O preset usa o mesmo valor em
+   * screens.lg, e o JS usa BREAKPOINT_LG (src/tokens.ts). */
+  --sd-breakpoint-lg: 1024px;
 }

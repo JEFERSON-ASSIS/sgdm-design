@@ -2,11 +2,13 @@
  * @sgdm/design — preset do Tailwind
  *
  * Expõe os tokens de tokens.css como nomes do Tailwind (bg-primary,
- * rounded-control, shadow-card, font-document…) e injeta as classes de
- * components.css (.card, .btn-primary, .input…) na camada "components".
+ * rounded-control, shadow-card, font-document, z-modal, duration-fast,
+ * w-sidebar…) e injeta as classes de components.css (.card, .btn-primary,
+ * .input…) na camada "components".
  *
  * Nenhum valor visual mora aqui: tudo aponta para var(--sd-*). Quem muda o
- * visual é o tokens.css.
+ * visual é o tokens.css. A única exceção é screens.lg, porque media query não
+ * lê variável CSS; o valor é o mesmo de --sd-breakpoint-lg e de BREAKPOINT_LG.
  */
 const fs = require('node:fs');
 const path = require('node:path');
@@ -15,18 +17,34 @@ const plugin = require('tailwindcss/plugin');
 /** Cor com suporte a opacidade do Tailwind (bg-primary/80). */
 const cor = (nome) => `rgb(var(--sd-color-${nome}) / <alpha-value>)`;
 
-/** Tom de feedback: base, soft, border, strong e text. */
+/** Os oito degraus de um tom (ver ESQUEMA DE NOMES em tokens.css). */
+const DEGRAUS = ['soft', 'tint', 'border', 'strong', 'hover', 'text', 'deep'];
 const tom = (nome) => ({
   DEFAULT: cor(nome),
-  soft: cor(`${nome}-soft`),
-  border: cor(`${nome}-border`),
-  strong: cor(`${nome}-strong`),
-  text: cor(`${nome}-text`),
+  ...Object.fromEntries(DEGRAUS.map((d) => [d, cor(`${nome}-${d}`)])),
 });
 
-const chart = Object.fromEntries(
-  Array.from({ length: 12 }, (_, i) => [String(i + 1), cor(`chart-${i + 1}`)]),
-);
+const FAMILIAS = ['cyan', 'indigo', 'rose', 'violet', 'purple', 'orange', 'teal', 'sky'];
+const PERFIS = ['rh', 'secretaria', 'prefeito', 'gabinete', 'plataforma'];
+
+const perfil = (nome) => ({
+  DEFAULT: cor(`profile-${nome}`),
+  ...Object.fromEntries(
+    ['soft', 'tint', 'border', 'icon', 'text', 'title'].map((d) => [d, cor(`profile-${nome}-${d}`)]),
+  ),
+});
+
+const chart = {
+  ...Object.fromEntries(Array.from({ length: 13 }, (_, i) => [String(i + 1), cor(`chart-${i + 1}`)])),
+  fallback: cor('chart-fallback'),
+  grid: cor('chart-grid'),
+  bar: cor('chart-bar'),
+};
+
+/** { nome: 'var(--sd-<prefixo>-nome)' } para uma lista de nomes. */
+const vars = (prefixo, nomes) => Object.fromEntries(nomes.map((n) => [n, `var(--sd-${prefixo}-${n})`]));
+
+const Z = ['raised', 'dropdown', 'sticky', 'overlay', 'modal', 'toast', 'tooltip', 'progress'];
 
 /**
  * Lê components.css com o mesmo postcss que o Tailwind do projeto usa. No
@@ -63,6 +81,9 @@ const camadas = lerComponentes();
 module.exports = {
   theme: {
     extend: {
+      screens: {
+        lg: '1024px', // = --sd-breakpoint-lg = BREAKPOINT_LG
+      },
       colors: {
         primary: {
           DEFAULT: cor('primary'),
@@ -88,7 +109,11 @@ module.exports = {
           inverse: cor('surface-inverse'),
         },
         'on-inverse': cor('on-inverse'),
-        overlay: cor('overlay'),
+        skeleton: cor('skeleton'),
+        overlay: {
+          DEFAULT: cor('overlay'),
+          strong: cor('overlay-strong'),
+        },
         sidebar: {
           DEFAULT: cor('sidebar'),
           hover: cor('sidebar-hover'),
@@ -103,14 +128,24 @@ module.exports = {
         body: cor('text-body'),
         muted: cor('text-muted'),
         subtle: cor('text-subtle'),
+        'on-dark': {
+          label: cor('on-dark-label'),
+          muted: cor('on-dark-muted'),
+          error: cor('on-dark-error'),
+          link: cor('on-dark-link'),
+          'link-hover': cor('on-dark-link-hover'),
+        },
         border: {
           DEFAULT: cor('border'),
           subtle: cor('border-subtle'),
+          strong: cor('border-strong'),
         },
         success: tom('success'),
         warning: tom('warning'),
-        danger: { ...tom('danger'), hover: cor('danger-hover') },
+        danger: tom('danger'),
         info: tom('info'),
+        ...Object.fromEntries(FAMILIAS.map((f) => [f, tom(f)])),
+        profile: Object.fromEntries(PERFIS.map((p) => [p, perfil(p)])),
         highlight: cor('highlight'),
         govbr: cor('govbr'),
         chart,
@@ -119,22 +154,63 @@ module.exports = {
         sans: ['var(--sd-font-sans)'],
         document: ['var(--sd-font-document)'],
       },
-      borderRadius: {
-        card: 'var(--sd-radius-card)',
-        control: 'var(--sd-radius-control)',
-        tile: 'var(--sd-radius-tile)',
-        popover: 'var(--sd-radius-popover)',
-        pill: 'var(--sd-radius-pill)',
-      },
+      fontSize: vars('font-size', [
+        '2xs',
+        'xs2',
+        'doc-10',
+        'doc-11',
+        'doc-12',
+        'doc-14',
+        'doc-16',
+        'doc-18',
+        'print-body',
+        'print-table',
+      ]),
+      borderRadius: vars('radius', [
+        'card',
+        'panel',
+        'callout',
+        'tile',
+        'control',
+        'popover',
+        'tag',
+        'xs',
+        'marker',
+        'pill',
+      ]),
       boxShadow: {
-        card: 'var(--sd-shadow-card)',
-        'card-hover': 'var(--sd-shadow-card-hover)',
-        popover: 'var(--sd-shadow-popover)',
-        modal: 'var(--sd-shadow-modal)',
-        'nav-active': 'var(--sd-shadow-nav-active)',
-        brand: 'var(--sd-shadow-brand)',
-        step: 'var(--sd-shadow-step)',
+        ...vars('shadow', [
+          'card',
+          'card-hover',
+          'popover',
+          'dropdown',
+          'modal',
+          'inner',
+          'nav-active',
+          'brand',
+          'brand-strong',
+          'step',
+        ]),
+        ...Object.fromEntries(PERFIS.map((p) => [`profile-${p}`, `var(--sd-shadow-profile-${p})`])),
       },
+      zIndex: vars('z', Z),
+      transitionDuration: {
+        DEFAULT: 'var(--sd-duration-fast)',
+        ...vars('duration', ['fast', 'normal', 'slow']),
+      },
+      transitionTimingFunction: {
+        DEFAULT: 'var(--sd-ease-standard)',
+        ...vars('ease', ['standard', 'out']),
+      },
+      width: vars('size', ['sidebar', 'sidebar-collapsed', 'tooltip', 'dropdown']),
+      height: vars('size', ['header']),
+      maxWidth: vars('size', ['modal-md', 'modal-lg', 'tooltip', 'dropdown', 'print-sheet']),
+      minHeight: {
+        textarea: 'var(--sd-size-textarea-min)',
+        editor: 'var(--sd-size-editor-min)',
+        'editor-frame': 'var(--sd-size-editor-frame-min)',
+      },
+      padding: vars('space', ['page-sm', 'page-md', 'page-lg']),
       keyframes: {
         'nav-progress': {
           '0%': { transform: 'translateX(-100%)' },
@@ -146,8 +222,8 @@ module.exports = {
         },
       },
       animation: {
-        'nav-progress': 'nav-progress 1s ease-in-out infinite',
-        'toast-in': 'sd-toast-in 150ms ease-out',
+        'nav-progress': 'nav-progress var(--sd-duration-progress) var(--sd-ease-standard) infinite',
+        'toast-in': 'sd-toast-in var(--sd-duration-fast) var(--sd-ease-out)',
       },
     },
   },
@@ -161,6 +237,13 @@ module.exports = {
         },
       });
       addComponents(camadas.components);
+      addUtilities({
+        // Coluna do kanban: largura entre o mínimo e o máximo do token.
+        '.w-kanban-column': {
+          minWidth: 'var(--sd-size-kanban-column-min)',
+          maxWidth: 'var(--sd-size-kanban-column-max)',
+        },
+      });
       addUtilities(camadas.utilities);
     }),
   ],

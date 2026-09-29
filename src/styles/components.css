@@ -53,7 +53,7 @@
   }
 
   .nav-item {
-    @apply flex items-center gap-3 rounded-control px-3 py-2.5 text-sm font-medium transition-all duration-200;
+    @apply flex items-center gap-3 rounded-control px-3 py-2.5 text-sm font-medium transition-all duration-normal;
   }
   .nav-item-active {
     @apply bg-sidebar-active text-sidebar-foreground shadow-nav-active;
@@ -66,17 +66,17 @@
     @apply card flex flex-col gap-3 p-5 transition hover:shadow-card-hover;
   }
   .section-label {
-    @apply px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-muted;
+    @apply px-3 py-2 text-2xs font-bold uppercase tracking-widest text-muted;
   }
 
   /* Texto de documento oficial (peças, atos). */
   .documento {
-    @apply font-document text-[12pt] leading-[1.6] text-foreground;
+    @apply font-document text-doc-12 leading-[1.6] text-foreground;
   }
 
   /* Editor de documentos (TipTap/ProseMirror), igual ao SGDM. */
   .editor-document-page .ProseMirror {
-    @apply min-h-[420px] font-document text-[12pt] leading-[1.6] text-foreground;
+    @apply min-h-editor font-document text-doc-12 leading-[1.6] text-foreground;
   }
   .editor-document-page .ProseMirror p.is-editor-empty:first-child::before {
     @apply pointer-events-none float-left h-0 text-subtle;
@@ -86,14 +86,14 @@
     @apply outline-none;
   }
   .editor-document-page .ProseMirror h1 {
-    @apply text-center text-[14pt] font-bold;
+    @apply text-center text-doc-14 font-bold;
   }
   .editor-document-page .ProseMirror h2 {
-    @apply text-[12pt] font-bold;
+    @apply text-doc-12 font-bold;
   }
   /* Dado a preencher vindo do modelo: [NOME], [VALOR]. Só na tela. */
   .ProseMirror .marcador-preencher {
-    @apply rounded-[2px] bg-highlight px-px text-warning-text;
+    @apply rounded-marker bg-highlight px-px text-warning-text;
   }
 }
 

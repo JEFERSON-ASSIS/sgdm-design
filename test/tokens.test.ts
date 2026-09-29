@@ -33,10 +33,10 @@ describe('tokens.css', () => {
     ['color-text', '#0f172a'],
     ['color-text-muted', '#64748b'],
     ['color-border', '#e2e8f0'],
-    ['color-success', '#22c55e'],
+    ['color-success', '#10b981'],
     ['color-warning', '#f59e0b'],
     ['color-danger', '#ef4444'],
-    ['color-info', '#06b6d4'],
+    ['color-info', '#3b82f6'],
     ['color-govbr', '#1351b4'],
   ])('--sd-%s vale %s (valor do SGDM)', (nome, hex) => {
     expect(valor(nome)).toBe(hexParaCanais(hex));
