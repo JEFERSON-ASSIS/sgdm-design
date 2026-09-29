@@ -1,13 +1,16 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AlertTriangle, FileText, Tag as TagIcon } from 'lucide-react';
+import { AlertTriangle, FileText, Plus, Tag as TagIcon, Trash2 } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import {
   Alert,
+  Button,
   Callout,
   Chip,
   EmptyState,
   Eyebrow,
+  IconButton,
   IconTile,
   LoadingState,
   Overline,
@@ -256,5 +259,123 @@ describe('B6. IconTile', () => {
     const tiles = container.querySelectorAll('[data-variant="soft"]');
     expect(tiles[0]).toHaveClass('h-11', 'w-11', 'rounded-tile', 'bg-violet-soft');
     expect(tiles[1]).toHaveClass('h-12', 'w-12', 'rounded-pill', 'bg-success-soft');
+  });
+});
+
+describe('B7. Button: variantes novas, lg, href e asChild', () => {
+  it.each([
+    ['success', 'btn-success'],
+    ['danger-outline', 'btn-danger-outline'],
+    ['link', 'btn-link'],
+  ] as const)('variante %s aplica %s', (variant, classe) => {
+    render(<Button variant={variant}>Ok</Button>);
+    expect(screen.getByRole('button', { name: 'Ok' })).toHaveClass(classe);
+  });
+
+  it('tamanho lg usa py-3; no link, o tamanho mexe só na fonte', () => {
+    render(
+      <>
+        <Button size="lg">Entrar</Button>
+        <Button variant="link" size="sm">
+          Ver todas
+        </Button>
+      </>,
+    );
+    expect(screen.getByRole('button', { name: 'Entrar' })).toHaveClass('py-3');
+    const link = screen.getByRole('button', { name: 'Ver todas' });
+    expect(link).toHaveClass('text-xs');
+    expect(link).not.toHaveClass('px-3');
+  });
+
+  it('href renderiza <a>, com componente de link opcional', () => {
+    function MeuLink(props: { href: string; className?: string; children?: ReactNode }) {
+      return <a data-roteador="" {...props} />;
+    }
+    render(
+      <>
+        <Button href="/novo" icon={<Plus />}>
+          Novo
+        </Button>
+        <Button href="/lista" linkComponent={MeuLink} variant="secondary">
+          Lista
+        </Button>
+      </>,
+    );
+    const novo = screen.getByRole('link', { name: 'Novo' });
+    expect(novo.tagName).toBe('A');
+    expect(novo).toHaveAttribute('href', '/novo');
+    expect(novo).toHaveClass('btn-primary');
+    expect(novo).not.toHaveAttribute('type');
+    const lista = screen.getByRole('link', { name: 'Lista' });
+    expect(lista).toHaveAttribute('data-roteador');
+    expect(lista).toHaveClass('btn-secondary');
+  });
+
+  it('link desabilitado perde o href e sai da ordem do Tab', () => {
+    render(
+      <Button href="/x" disabled>
+        Bloqueado
+      </Button>,
+    );
+    const el = screen.getByText('Bloqueado');
+    expect(el).not.toHaveAttribute('href');
+    expect(el).toHaveAttribute('aria-disabled', 'true');
+    expect(el).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('asChild aplica o visual ao filho e mantém as props dele', async () => {
+    const clique = vi.fn();
+    render(
+      <Button asChild variant="success" icon={<Plus />}>
+        <a href="/assinar" onClick={(e) => { e.preventDefault(); clique(); }}>
+          Assinar
+        </a>
+      </Button>,
+    );
+    const a = screen.getByRole('link', { name: 'Assinar' });
+    expect(a).toHaveAttribute('href', '/assinar');
+    expect(a).toHaveClass('btn-success');
+    expect(a.querySelector('svg')).not.toBeNull();
+    await userEvent.click(a);
+    expect(clique).toHaveBeenCalledOnce();
+  });
+
+  it('as variantes da v1 continuam iguais', () => {
+    render(<Button variant="danger" size="sm">Excluir</Button>);
+    expect(screen.getByRole('button')).toHaveClass('btn-danger', 'px-3', 'py-1.5', 'text-xs');
+  });
+});
+
+describe('B8. IconButton', () => {
+  it('aria-label é o nome acessível e vira a dica', async () => {
+    const clique = vi.fn();
+    render(<IconButton icon={<Trash2 />} aria-label="Excluir anexo" variant="danger" size="sm" onClick={clique} />);
+    const b = screen.getByRole('button', { name: 'Excluir anexo' });
+    expect(b).toHaveAttribute('title', 'Excluir anexo');
+    expect(b).toHaveAttribute('type', 'button');
+    expect(b).toHaveClass('h-8', 'w-8', 'rounded-control', 'hover:text-danger-strong');
+    b.focus();
+    await userEvent.keyboard('{Enter}');
+    expect(clique).toHaveBeenCalledOnce();
+  });
+
+  it('variantes ghost e secondary, tamanho md e loading', () => {
+    render(
+      <>
+        <IconButton icon={<Plus />} aria-label="A" />
+        <IconButton icon={<Plus />} aria-label="B" variant="secondary" loading />
+      </>,
+    );
+    expect(screen.getByRole('button', { name: 'A' })).toHaveClass('h-9', 'w-9', 'text-subtle');
+    const b = screen.getByRole('button', { name: 'B' });
+    expect(b).toHaveClass('border', 'bg-surface');
+    expect(b).toBeDisabled();
+    expect(b.querySelector('svg')).toHaveClass('animate-spin');
+  });
+
+  it('o tipo exige aria-label', () => {
+    // @ts-expect-error aria-label é obrigatório
+    const el = <IconButton icon={<Plus />} />;
+    expect(el).toBeTruthy();
   });
 });

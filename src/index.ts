@@ -39,6 +39,12 @@ export {
 export { TONES, type Tone, type ToneFamily } from './components/tones';
 
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './components/Button';
+export {
+  IconButton,
+  type IconButtonProps,
+  type IconButtonVariant,
+  type IconButtonSize,
+} from './components/IconButton';
 export { Card, type CardProps, type CardPadding } from './components/Card';
 export {
   FormField,

@@ -39,6 +39,16 @@
   .btn-govbr {
     @apply inline-flex w-full items-center justify-center gap-2 rounded-control border-2 border-govbr bg-surface px-4 py-2.5 text-sm font-semibold text-govbr transition hover:bg-primary-soft disabled:opacity-50;
   }
+  .btn-success {
+    @apply inline-flex items-center justify-center gap-2 rounded-control bg-success-strong px-4 py-2.5 text-sm font-semibold text-on-primary transition hover:bg-success-hover disabled:opacity-50;
+  }
+  .btn-danger-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-control border border-danger-border bg-surface px-4 py-2.5 text-sm font-semibold text-danger-strong transition hover:bg-danger-soft disabled:opacity-50;
+  }
+  /* Ação em forma de link, dentro de texto ou ao lado de um título. */
+  .btn-link {
+    @apply inline-flex items-center gap-1 rounded-xs text-sm font-medium text-accent underline-offset-2 transition hover:text-accent-text hover:underline disabled:opacity-50 disabled:hover:no-underline;
+  }
 
   /* Contorno visível só para quem navega pelo teclado. */
   .focus-ring {
