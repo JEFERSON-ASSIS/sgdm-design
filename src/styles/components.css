@@ -79,14 +79,80 @@
     @apply px-3 py-2 text-2xs font-bold uppercase tracking-widest text-muted;
   }
 
-  /* Texto de documento oficial (peças, atos). */
+  /* Texto de documento oficial (peças, atos), no editor e em modo leitura.
+     Substitui o "prose" do SGDM, que não funciona lá: o preflight do
+     Tailwind zera títulos, listas e margens, e isto os devolve. */
   .documento {
     @apply font-document text-doc-12 leading-[1.6] text-foreground;
+    overflow-wrap: break-word;
+  }
+  .documento > :first-child {
+    margin-top: 0;
+  }
+  .documento > :last-child {
+    margin-bottom: 0;
+  }
+  .documento p {
+    margin: 0 0 0.75em;
+  }
+  .documento h1 {
+    @apply text-center text-doc-14 font-bold;
+    margin: 0 0 1em;
+  }
+  .documento h2 {
+    @apply text-doc-12 font-bold;
+    margin: 1.25em 0 0.5em;
+  }
+  .documento h3 {
+    @apply text-doc-12 font-bold italic;
+    margin: 1em 0 0.5em;
+  }
+  .documento ul {
+    list-style: disc;
+    padding-left: 1.5em;
+    margin: 0 0 0.75em;
+  }
+  .documento ol {
+    list-style: decimal;
+    padding-left: 1.5em;
+    margin: 0 0 0.75em;
+  }
+  .documento li {
+    margin: 0.25em 0;
+  }
+  .documento li > p {
+    margin: 0;
+  }
+  .documento strong,
+  .documento b {
+    @apply font-bold;
+  }
+  .documento a {
+    @apply text-accent underline;
+  }
+  .documento blockquote {
+    @apply border-l-2 border-border-strong pl-4 text-body;
+    margin: 0 0 0.75em;
+  }
+  .documento hr {
+    @apply border-border;
+    margin: 1.5em 0;
+  }
+  .documento table {
+    @apply w-full border-collapse;
+    margin: 0 0 0.75em;
+  }
+  .documento th,
+  .documento td {
+    @apply border border-border-strong px-2 py-1 text-left align-top text-doc-11;
+  }
+  .documento th {
+    @apply bg-surface-hover font-bold;
   }
 
   /* Editor de documentos (TipTap/ProseMirror), igual ao SGDM. */
   .editor-document-page .ProseMirror {
-    @apply min-h-editor font-document text-doc-12 leading-[1.6] text-foreground;
+    @apply min-h-editor px-8 py-6 font-document text-doc-12 leading-[1.6] text-foreground;
   }
   .editor-document-page .ProseMirror p.is-editor-empty:first-child::before {
     @apply pointer-events-none float-left h-0 text-subtle;

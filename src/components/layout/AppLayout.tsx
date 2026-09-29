@@ -64,12 +64,14 @@ export function AppLayout({
 
   return (
     <SidebarContext.Provider value={estado}>
-      <div className="flex h-screen overflow-hidden bg-background">
+      {/* Na impressão a moldura some e o conteúdo flui por várias páginas
+          (sem a altura fixa da tela nem a rolagem interna). */}
+      <div className="flex h-screen overflow-hidden bg-background print:block print:h-auto print:overflow-visible print:bg-print-paper">
         <NavigationProgress active={navigating} />
         {sidebar}
-        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden print:block print:overflow-visible">
           {header}
-          <main className="scrollbar-none flex-1 overflow-y-auto overflow-x-hidden p-page-sm lg:p-page-md xl:p-page-lg">
+          <main className="scrollbar-none flex-1 overflow-y-auto overflow-x-hidden p-page-sm lg:p-page-md xl:p-page-lg print:overflow-visible print:p-0">
             <div className="w-full min-w-0 space-y-6">{children}</div>
           </main>
         </div>

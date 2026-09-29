@@ -238,6 +238,29 @@ export {
   type ChartLegendProps,
   type ChartLegendItem,
 } from './components/Chart';
+export {
+  DocumentContent,
+  EditorFrame,
+  EditorToolbar,
+  EditorToolbarButton,
+  EditorToolbarSeparator,
+  EditorFontSizeSelect,
+  type DocumentContentProps,
+  type EditorFrameProps,
+  type EditorToolbarProps,
+  type EditorToolbarButtonProps,
+  type EditorFontSizeSelectProps,
+} from './components/Editor';
+export {
+  PrintSheet,
+  PrintCover,
+  PrintSection,
+  NoPrint,
+  type PrintSheetProps,
+  type PrintCoverProps,
+  type PrintSectionProps,
+  type NoPrintProps,
+} from './components/Print';
 
 export {
   AuthLayout,

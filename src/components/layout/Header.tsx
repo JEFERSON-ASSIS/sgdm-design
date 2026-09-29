@@ -45,7 +45,7 @@ export function Header({ title, actions, user, onMenuClick, menuLabel = 'Alterna
   }
 
   return (
-    <header className="flex h-header shrink-0 items-center justify-between border-b border-border bg-surface px-page-sm lg:px-page-md">
+    <header className="flex h-header shrink-0 print:hidden items-center justify-between border-b border-border bg-surface px-page-sm lg:px-page-md">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"

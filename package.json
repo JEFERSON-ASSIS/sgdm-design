@@ -24,6 +24,7 @@
     },
     "./tokens.css": "./dist/tokens.css",
     "./components.css": "./dist/components.css",
+    "./print.css": "./dist/print.css",
     "./tailwind-preset": {
       "types": "./tailwind-preset.d.cts",
       "default": "./tailwind-preset.cjs"

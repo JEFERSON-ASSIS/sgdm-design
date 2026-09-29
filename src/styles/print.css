@@ -1,0 +1,85 @@
+/*
+ * @sgdm/design — impressão
+ *
+ * A folha do processo administrativo impressa pelo navegador (Ctrl+P /
+ * "Salvar como PDF"), igual ao globals.css do SGDM. O gerador de PDF do
+ * servidor perde negrito, listas e alinhamento; a impressão do navegador
+ * preserva a formatação do editor, que é o que precisa constar dos autos.
+ *
+ * CSS puro (sem diretivas do Tailwind): importe DEPOIS do tokens.css, porque as cores,
+ * fontes e tamanhos vêm das variáveis --sd-*.
+ *
+ *   import '@sgdm/design/tokens.css';
+ *   import '@sgdm/design/print.css';
+ *
+ * Classes:
+ *   .nao-imprimir   some no papel (barras, botões, avisos da tela)
+ *   .quebra-pagina  começa numa página nova
+ *   .folha-processo a folha (PrintSheet): sem margem, sombra nem largura máxima no papel
+ *   .peca-impressa  uma peça do processo: o título não fica sozinho no pé da página
+ */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 20mm 18mm;
+  }
+
+  body {
+    background: rgb(var(--sd-color-print-paper));
+    font-family: var(--sd-font-document);
+    font-size: var(--sd-font-size-print-body);
+    color: rgb(var(--sd-color-print-ink));
+  }
+
+  /* Some com tudo que é da aplicação, não do documento. */
+  .nao-imprimir,
+  aside,
+  nav,
+  header button,
+  .btn-primary,
+  .btn-secondary {
+    display: none !important;
+  }
+
+  .folha-processo {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    background: rgb(var(--sd-color-print-paper));
+    color: rgb(var(--sd-color-print-ink));
+  }
+
+  .quebra-pagina {
+    break-before: page;
+  }
+
+  /* Peça não deve começar numa página e deixar só o título na anterior. */
+  .peca-impressa h2,
+  .peca-impressa h3 {
+    break-after: avoid;
+  }
+
+  .peca-impressa {
+    break-inside: auto;
+  }
+
+  table {
+    break-inside: avoid;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  table th,
+  table td {
+    border: 1px solid rgb(var(--sd-color-print-border));
+    padding: 4pt 6pt;
+    font-size: var(--sd-font-size-print-table);
+  }
+
+  a {
+    color: rgb(var(--sd-color-print-ink));
+    text-decoration: none;
+  }
+}
