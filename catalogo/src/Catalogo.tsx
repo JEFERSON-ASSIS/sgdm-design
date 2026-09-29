@@ -12,6 +12,11 @@ import {
   FileText,
   Hash,
   Layers,
+  LogIn,
+  Columns3,
+  PieChart,
+  PenLine,
+  Printer,
   ListFilter,
   MoreHorizontal,
   LayoutDashboard,
@@ -74,6 +79,7 @@ import {
 import { Tokens } from './Tokens';
 import { AvisosECarregamento, BotoesNovos, FormulariosNovos, ListasDeDados, RotulosEIcones } from './CatalogoB';
 import { Documento, LinhaDoTempoEPassos, MenusENotificacoes, NavegacaoEFiltros, SinoDeExemplo } from './CatalogoC';
+import { Editor, Graficos, Impressao, Kanban, Paginas, Painel } from './CatalogoD';
 
 const SECOES = [
   { id: 'tokens', rotulo: 'Tokens', icone: Palette },
@@ -91,6 +97,12 @@ const SECOES = [
   { id: 'navegacao', rotulo: 'Abas, filtros e listas', icone: ListFilter },
   { id: 'menus', rotulo: 'Menus e notificações', icone: MoreHorizontal },
   { id: 'documento', rotulo: 'PDF, código e painel fixo', icone: FileText },
+  { id: 'paginas', rotulo: 'Páginas (login, pública, erro)', icone: LogIn },
+  { id: 'kanban', rotulo: 'Kanban', icone: Columns3 },
+  { id: 'painel', rotulo: 'Painel inicial', icone: LayoutDashboard },
+  { id: 'graficos', rotulo: 'Gráficos', icone: PieChart },
+  { id: 'editor', rotulo: 'Editor de texto', icone: PenLine },
+  { id: 'impressao', rotulo: 'Impressão', icone: Printer },
 ];
 
 /** Cores principais de exemplo: cada sistema troca só os tokens. */
@@ -607,6 +619,24 @@ function Conteudo() {
       </Secao>
       <Secao id="documento" titulo="PdfViewer, InlineCode, Mono e StickyAside" descricao="Prévia de PDF em painel e em página; código e texto mono; painel lateral que gruda ao rolar (role a página).">
         <Documento />
+      </Secao>
+      <Secao id="paginas" titulo="AuthLayout, AuthCard, AuthMessage, PublicLayout e ErrorPage" descricao="Páginas inteiras, mostradas aqui pela metade. No login e no cartão escuro, os campos, o link e o erro usam a variante onDark.">
+        <Paginas />
+      </Secao>
+      <Secao id="kanban" titulo="KanbanBoard, KanbanColumn e KanbanCard" descricao="Quadro só de leitura, com rolagem horizontal (role com o teclado depois de focar o quadro), contagem por coluna e coluna vazia.">
+        <Kanban />
+      </Secao>
+      <Secao id="painel" titulo="DashboardHero, MiniStat, QuickActions, QueueCard, CountList e MiniCalendar" descricao="Os widgets do painel inicial, com o tema de cada perfil.">
+        <Painel />
+      </Secao>
+      <Secao id="graficos" titulo="ChartCard e ChartLegend" descricao="Rosca com legenda e total no meio, barras, vazio e carregando. Os gráficos daqui são SVG simples: o recharts é opcional e não está instalado no catálogo.">
+        <Graficos />
+      </Secao>
+      <Secao id="editor" titulo="EditorFrame, EditorToolbar e DocumentContent" descricao="A moldura e a toolbar do editor (setas andam entre os botões), o modo leitura com .documento e o carregando.">
+        <Editor />
+      </Secao>
+      <Secao id="impressao" titulo="PrintSheet, PrintCover, PrintSection e print.css" descricao="A folha do processo. Clique em Imprimir (ou Ctrl+P) para ver o A4: a moldura some e cada peça começa numa página nova.">
+        <Impressao />
       </Secao>
     </>
   );
