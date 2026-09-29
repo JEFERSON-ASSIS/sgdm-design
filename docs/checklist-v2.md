@@ -11,42 +11,42 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
 
 ## A. Tokens e preset (correções)
 
-- [ ] **A1. Sucesso passa a ser esmeralda.** O app usa emerald 112× contra green 7×. Trocar `--sd-color-success*` por emerald 50/100/200/500/600/700/800/900 e ajustar o `StatusBadge active`, que tem emerald fixo, para usar o token.
-- [ ] **A2. Informação passa a ser azul.** Os avisos do app usam blue 50/200/900 (`(d)/publicacoes/page.tsx:32`), e o token é ciano.
+- [x] **A1. Sucesso passa a ser esmeralda.** O app usa emerald 112× contra green 7×. Trocar `--sd-color-success*` por emerald 50/100/200/500/600/700/800/900 e ajustar o `StatusBadge active`, que tem emerald fixo, para usar o token.
+- [x] **A2. Informação passa a ser azul.** Os avisos do app usam blue 50/200/900 (`(d)/publicacoes/page.tsx:32`), e o token é ciano.
   - Criar `--sd-color-info*` em azul.
   - Manter o ciano como família `cyan`, que o gráfico usa.
-- [ ] **A3. Texto de aviso em tom 900.** Criar o tom 900 para warning (amber), success, info (blue), danger e violet. Os avisos do app usam 900 (amber-900 35×).
-- [ ] **A4. Famílias que faltam.** Cada uma com os tons soft, border, strong e text:
+- [x] **A3. Texto de aviso em tom 900.** Criar o tom 900 para warning (amber), success, info (blue), danger e violet. Os avisos do app usam 900 (amber-900 35×).
+- [x] **A4. Famílias que faltam.** Cada uma com os tons soft, border, strong e text:
   - indigo (RH, controladoria);
   - rose (plataforma);
   - violet e purple (prefeito, aguardando assinatura);
   - orange;
   - teal;
   - sky.
-- [ ] **A5. Tema por perfil.** Tokens para os perfis rh, secretaria, prefeito, gabinete e plataforma: cor de destaque, fundo e sombra colorida. Referência: `components/dashboard/DashboardRoleHero.tsx:14-36` e `components/perfis/PerfilGuiaCard.tsx:42-109`.
-- [ ] **A6. Neutros.**
+- [x] **A5. Tema por perfil.** Tokens para os perfis rh, secretaria, prefeito, gabinete e plataforma: cor de destaque, fundo e sombra colorida. Referência: `components/dashboard/DashboardRoleHero.tsx:14-36` e `components/perfis/PerfilGuiaCard.tsx:42-109`.
+- [x] **A6. Neutros.**
   - border-strong: slate-300.
   - skeleton: slate-200.
   - overlay escuro: slate-900/50 e /70, além do black/40 atual.
   - Texto sobre fundo escuro, usado no login: label slate-300, erro red-400 e link blue-400.
-- [ ] **A7. Gráficos.**
+- [x] **A7. Gráficos.**
   - Incluir `#0EA5E9` (sky) nas cores de gráfico.
   - Criar tokens para o fallback `#94A3B8`, a grade `#E2E8F0` e a barra padrão `#3B82F6`.
-- [ ] **A8. Tamanhos de fonte.**
+- [x] **A8. Tamanhos de fonte.**
   - Nomear 10px (`text-2xs`) e 11px (`text-xs2` ou `text-label`).
   - Criar a escala do editor, de 10pt a 18pt, e a de impressão, 12pt e 10pt.
-- [ ] **A9. Raios.**
+- [x] **A9. Raios.**
   - `xs`: 4px, usado 33× em botões de toolbar e chips.
   - `marker`: 2px.
   - Revisar o `rounded-xl` de 12px: separar `panel`/`callout` de `tile`.
-- [ ] **A10. Sombras.**
+- [x] **A10. Sombras.**
   - Sombras coloridas por perfil.
   - `brand-strong`, com 0,5 de opacidade, para o logo do login.
   - `inner`.
   - `dropdown`: xl.
-- [ ] **A11. Camadas (z-index).** Escala única: dropdown 20, sticky 30, overlay 40, modal 50, toast 60, tooltip 100 e progress 110. Substituir os valores fixos do pacote.
-- [ ] **A12. Tempo.** Duração fast 150ms, normal 200ms e slow 300ms, com easing padrão.
-- [ ] **A13. Medidas de layout.**
+- [x] **A11. Camadas (z-index).** Escala única: dropdown 20, sticky 30, overlay 40, modal 50, toast 60, tooltip 100 e progress 110. Substituir os valores fixos do pacote.
+- [x] **A12. Tempo.** Duração fast 150ms, normal 200ms e slow 300ms, com easing padrão.
+- [x] **A13. Medidas de layout.**
   - Menu: 256px aberto, 72px recolhido.
   - Topo: 56px.
   - Padding da página: 16, 24 e 32.
@@ -56,6 +56,12 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
   - Folha de impressão: 820px.
   - Coluna do kanban: 280 a 320px.
   - O breakpoint de 1024px vira token/`screens`, e o JS do Header/Sidebar passa a lê-lo de uma constante exportada.
+
+> **Notas da seção A (feita em 28/09/2026).**
+> - Degraus de tom: base 500, `soft` 50, `tint` 100, `border` 200, `strong` 600, `hover` 700, `text` 800, `deep` 900 — iguais para feedback e famílias. O esquema está no topo do `tokens.css`.
+> - Perfis: rh = índigo, secretaria = azul, prefeito = violeta e plataforma = rosa, como no `DashboardRoleHero`; gabinete = laranja, do guia de perfis. O guia pinta o RH de esmeralda, e o painel de índigo; ficou o do painel.
+> - 11px virou `text-xs2`, porque `text-label` já é a cor do rótulo.
+> - Os valores que o JS precisa (breakpoint, z-index, durações, fontes do editor, perfis) estão em `src/tokens.ts`, e um teste confere que batem com o CSS.
 
 ## B. Componentes novos (ordem = quanto aparecem no SGDM)
 
@@ -141,20 +147,20 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
 
 ## C. Completar o que ficou pela metade
 
-- [ ] **C1. `Table`.**
+- [x] **C1. `Table`.**
   - Linha de total (`tfoot`) e seleção de linhas com checkbox e "selecionar todas".
   - `density` compact (`px-3 py-2`) e cabeçalho `uppercase text-xs`.
   - Prop `bare`, para usar dentro de um card sem o wrapper.
-- [ ] **C2. `Card`.** Prop `tone` (tingido) e `padding` sm, md, lg (`p-4`, `p-5`, `p-6`) e none.
-- [ ] **C3. `StatusBadge`.**
+- [x] **C2. `Card`.** Prop `tone` (tingido) e `padding` sm, md, lg (`p-4`, `p-5`, `p-6`) e none.
+- [x] **C3. `StatusBadge`.**
   - `size` xs/sm e `case` upper/normal, para o estilo da licitação (`text-xs font-medium`).
   - Variante `outline`, com borda e `rounded-md`, para a fase.
   - Exportar também `NUMERACAO_STATUS_COLORS` e os mapas de licitação, de situação, de fase e de peça, de `lib/licitacoes.ts:311-362` e `lib/pecas.ts:129`.
-- [ ] **C4. `StatCard`.** Tons violet, emerald, teal, sky, amber, purple, orange e indigo.
-- [ ] **C5. `CollapsibleCard`.** Modo controlado (`open` e `onOpenChange`) e novo `Accordion` para linhas de lista.
-- [ ] **C6. `Tooltip`.** Posição top, bottom, left e right.
-- [ ] **C7. `EmptyState`.** Variante `dashed`.
-- [ ] **C8. `Select`.** Tamanho compact e ícone à esquerda, como no seletor de prefeitura.
+- [x] **C4. `StatCard`.** Tons violet, emerald, teal, sky, amber, purple, orange e indigo.
+- [x] **C5. `CollapsibleCard`.** Modo controlado (`open` e `onOpenChange`) e novo `Accordion` para linhas de lista.
+- [x] **C6. `Tooltip`.** Posição top, bottom, left e right.
+- [x] **C7. `EmptyState`.** Variante `dashed`.
+- [x] **C8. `Select`.** Tamanho compact e ícone à esquerda, como no seletor de prefeitura.
 
 ## D. Entrega
 

@@ -2,9 +2,9 @@
 
 O visual do SGDM empacotado para os sistemas novos nascerem com a mesma aparência: tokens em variáveis CSS, um preset do Tailwind e componentes React.
 
-- **Tokens** (`tokens.css`): cores, fontes, raios e sombras com nomes de papel (`--sd-color-primary`, `--sd-radius-control`). A fonte Inter vem dentro do pacote, sem CDN.
+- **Tokens** (`tokens.css`): cores, famílias de tom, tema por perfil, fontes, tamanhos, raios, sombras, camadas (z-index), tempo e medidas de layout, com nomes de papel (`--sd-color-primary`, `--sd-radius-control`, `--sd-z-modal`). A fonte Inter vem dentro do pacote, sem CDN. Veja [Tokens](#tokens).
 - **Preset do Tailwind** (`tailwind-preset`): expõe os tokens como `bg-primary`, `text-muted`, `rounded-control` e `shadow-card`, e injeta as classes `.card`, `.btn-*`, `.input`, `.nav-item`… do SGDM.
-- **Componentes**: Button, Card, Input, Textarea, Select, FormField, FormSection, Modal, ConfirmModal, PageHeader, StatusBadge, StatCard, Table, Tabs, Toast (`ToastProvider` + `useToast`), EmptyState, ErrorState, WizardStepper, Tooltip (DicaInfo), CollapsibleCard, AppLayout, Sidebar, Header e NavigationProgress.
+- **Componentes**: Button, Card, Input, Textarea, Select, FormField, FormSection, Modal, ConfirmModal, PageHeader, StatusBadge, StatCard, Table, Tabs, Toast (`ToastProvider` + `useToast`), EmptyState, ErrorState, WizardStepper, Tooltip (DicaInfo), CollapsibleCard, Accordion, AppLayout, Sidebar, Header e NavigationProgress.
 
 Para ver tudo funcionando, rode `npm run catalogo` neste repositório.
 
@@ -154,6 +154,36 @@ Os outros componentes:
 <CollapsibleCard title="Assinatura" badge={<StatusBadge active />}>…</CollapsibleCard>
 ```
 
+Variantes que completam os componentes (v0.2):
+
+```tsx
+{/* Table: total no rodapé, seleção, compacta, cabeçalho em caixa-alta, sem card */}
+<Card title="Itens" padding="none">
+  <Table bare density="compact" headerCase="upper"
+    selectable selected={sel} onSelectedChange={setSel}
+    selectRowLabel={(i) => `Selecionar item ${i.numero}`}
+    columns={colunas} rows={itens}
+    footer={{ label: 'Valor estimado do processo', values: { total: 'R$ 4.936,00' } }} />
+</Card>
+
+<Card tone="warning" padding="sm">…</Card>          {/* padding: none | sm | md | lg */}
+<StatCard title="Portarias" value={8} icon={FileText} tone="violet" />  {/* + emerald, teal, sky, amber, purple, orange, indigo, rose, cyan */}
+
+{/* StatusBadge: size xs|sm, case upper|normal, variant pill|outline, e os mapas do SGDM */}
+<StatusBadge status={l.status} colors={LICITACAO_STATUS_COLORS} labels={LICITACAO_STATUS_LABELS} size="sm" case="normal" />
+<StatusBadge variant="outline" size="sm" case="normal" status={ativa ? 'ATIVA' : 'INATIVA'} colors={LICITACAO_FASE_COLORS}>
+  {LICITACAO_FASE_LABELS[fase]}
+</StatusBadge>
+{/* Também: NUMERACAO_STATUS_COLORS, LICITACAO_SITUACAO_COLORS, PECA_STATUS_COLORS, PECA_ESTADO_COLORS e os *_LABELS */}
+
+<CollapsibleCard title="IA" open={aberto} onOpenChange={setAberto}>…</CollapsibleCard>
+<Accordion items={[{ id: 'etp', title: 'ETP', description: 'Art. 18', meta: '4 seções', content: <Form /> }]} />
+
+<Tooltip text="Dica" placement="right" />          {/* top | bottom | left | right */}
+<EmptyState variant="dashed" icon={Paperclip} title="Nenhum anexo." />
+<Select size="compact" icon={<Building2 />} aria-label="Prefeitura em gestão" options={prefeituras} />
+```
+
 ### Layout
 
 Tudo que é específico do SGDM chega por prop: nome, ícone, itens de menu, seletor de prefeitura e notificações. O menu e o cabeçalho conversam pelo `AppLayout`, sem store externa.
@@ -209,6 +239,47 @@ As telas conhecem **só a API** dos componentes, nunca a aparência.
 - Para posicionar um componente (grade, margem), a tela o envolve numa `div` própria.
 - Dentro do pacote, nenhuma cor é fixa. Tudo sai do preset (`bg-primary`, `text-muted`), que aponta para as variáveis `--sd-*`. Há um teste que falha se aparecer um hex num componente.
 - A única exceção é o mapa de status (`bg-<cor>-100 text-<cor>-800`), que é um dado passado por prop (`colors`).
+
+## Tokens
+
+Todo token segue `--sd-<categoria>-<papel>[-<variante>]`. O esquema completo está no topo de `src/styles/tokens.css`, e o catálogo mostra todos.
+
+| Categoria | Exemplos de token | Classe do preset |
+| --- | --- | --- |
+| Cor de papel | `--sd-color-surface`, `--sd-color-text-muted`, `--sd-color-border-strong`, `--sd-color-skeleton`, `--sd-color-overlay-strong` | `bg-surface`, `text-muted`, `border-border-strong`, `bg-overlay-strong/70` |
+| Texto sobre fundo escuro | `--sd-color-on-dark-label`, `-muted`, `-error`, `-link`, `-link-hover` | `text-on-dark-label`, `text-on-dark-error` |
+| Tons de feedback | `--sd-color-success`, `warning`, `danger`, `info` (+ degraus) | `bg-success-soft`, `text-warning-deep` |
+| Famílias | `--sd-color-cyan`, `indigo`, `rose`, `violet`, `purple`, `orange`, `teal`, `sky` (+ degraus) | `bg-indigo-tint`, `text-rose-text` |
+| Perfil | `--sd-color-profile-<perfil>[-soft\|-tint\|-border\|-icon\|-text\|-title]`, `--sd-shadow-profile-<perfil>` | `bg-profile-rh-soft`, `shadow-profile-prefeito` |
+| Gráfico | `--sd-color-chart-1..13`, `-fallback`, `-grid`, `-bar` | `bg-chart-13`, `stroke-chart-grid` |
+| Tamanho de fonte | `--sd-font-size-2xs` (10px), `-xs2` (11px), `-doc-10..18`, `-print-body`, `-print-table` | `text-2xs`, `text-xs2`, `text-doc-12` |
+| Raio | `card` 16, `panel`/`callout`/`tile` 12, `control` 8, `popover`/`tag` 6, `xs` 4, `marker` 2, `pill` | `rounded-callout`, `rounded-xs` |
+| Sombra | `card`, `card-hover`, `popover`, `dropdown`, `modal`, `inner`, `nav-active`, `brand`, `brand-strong`, `step` | `shadow-dropdown`, `shadow-brand-strong` |
+| Camada | `raised` 10, `dropdown` 20, `sticky` 30, `overlay` 40, `modal` 50, `toast` 60, `tooltip` 100, `progress` 110 | `z-modal`, `z-tooltip` |
+| Tempo | `--sd-duration-fast` 150ms, `-normal` 200ms, `-slow` 300ms, `--sd-ease-standard`, `--sd-ease-out` | `duration-normal`, `ease-standard` (o `transition` puro já usa fast + standard) |
+| Medida | `--sd-size-sidebar` 256, `-sidebar-collapsed` 72, `-header` 56, `-modal-md` 512, `-modal-lg` 768, `-tooltip` 288, `-dropdown` 384, `-editor-min` 420, `-editor-frame-min` 480, `-print-sheet` 820, `-kanban-column-min/max` 280–320 | `w-sidebar`, `h-header`, `max-w-modal-lg`, `min-h-editor`, `w-kanban-column` |
+| Espaço da página | `--sd-space-page-sm` 16, `-md` 24, `-lg` 32 | `p-page-sm lg:p-page-md xl:p-page-lg` |
+| Breakpoint | `--sd-breakpoint-lg` 1024px (informativo) | `lg:` |
+
+**Degraus de tom.** Feedback e famílias têm os mesmos oito: base (500), `-soft` (50, fundo de aviso), `-tint` (100, fundo de selo e de ícone), `-border` (200), `-strong` (600, ícone e botão), `-hover` (700), `-text` (800, texto de selo) e `-deep` (900, texto de aviso). Success é esmeralda e info é azul, como no SGDM; o ciano é a família `cyan`.
+
+**Perfis.** `rh` (índigo), `secretaria` (azul), `prefeito` (violeta), `gabinete` (laranja) e `plataforma` (rosa), como no `DashboardRoleHero` e no guia de perfis do SGDM. Os tokens de perfil apontam para as famílias por `var()`: mudar `--sd-color-indigo-*` muda o RH junto.
+
+**No JavaScript.** Media query não lê variável CSS, e bibliotecas externas pedem número. Por isso o pacote exporta os mesmos valores (um teste confere que batem com o `tokens.css`):
+
+```ts
+import { BREAKPOINT_LG, MEDIA_QUERY_LG, isDesktopViewport, Z_INDEX, DURATION_MS,
+  EDITOR_FONT_SIZES, PRINT_FONT_SIZES, PROFILES, CHART_FALLBACK_COLOR, CHART_GRID_COLOR,
+  CHART_BAR_COLOR, CHART_EXTRA_COLOR } from '@sgdm/design';
+
+window.matchMedia(MEDIA_QUERY_LG);           // '(min-width: 1024px)'
+<Dropdown zIndex={Z_INDEX.dropdown} />       // 20
+<CartesianGrid stroke={CHART_GRID_COLOR} />  // o recharts escreve a cor num atributo SVG, onde var() não funciona
+```
+
+O Header e o Sidebar usam `isDesktopViewport()`: abaixo de `BREAKPOINT_LG` o botão de menu abre a gaveta, e a gaveta fecha sozinha se a tela crescer além dele.
+
+**`cn` conhece as escalas.** O `cn` do pacote sabe que `text-xs2` e `text-doc-12` são tamanho (e não cor), e que `shadow-card` disputa com `shadow-modal`. Use-o nas suas `div`s de layout se misturar classes do preset.
 
 ## Trocar a cor principal de um sistema
 
@@ -279,7 +350,8 @@ src/styles/tokens.css      variáveis --sd-* e a fonte Inter
 src/styles/components.css  .card, .btn-*, .input, .nav-item… (sintaxe Tailwind)
 tailwind-preset.cjs        tokens → nomes do Tailwind; injeta components.css
 src/cn.ts                  clsx + tailwind-merge
-src/status.ts              STATUS_COLORS e CHART_COLORS do SGDM
+src/status.ts              mapas de status (documento, numeração, licitação, peça) e cores de gráfico
+src/tokens.ts              os tokens que o JS lê: BREAKPOINT_LG, Z_INDEX, DURATION_MS…
 src/components/            componentes
 catalogo/                  app Vite do catálogo
 test/                      testes
