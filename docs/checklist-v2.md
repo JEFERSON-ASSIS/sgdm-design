@@ -222,4 +222,7 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
   - Seção "Padrão do SGDM → componente do pacote", de A1 a C8, com a referência no app e o que usar no lugar.
 - [x] **D4. Versão.** `package.json` passa a 0.2.0, com `CHANGELOG.md`.
   - `npm version 0.2.0 --no-git-tag-version` (sem tag: o envio ao GitHub e a tag `v0.2.0` ficam com o usuário). O `CHANGELOG.md` resume a v2 inteira e o que muda para quem usava a 0.1.
-- [ ] **D5. Verificação.** Build, testes, `tsc`, build do catálogo e instalação pelo git. Tirar uma captura do catálogo.
+- [x] **D5. Verificação.** Build, testes, `tsc`, build do catálogo e instalação pelo git. Tirar uma captura do catálogo.
+  - 28/09/2026: `npm test` (12 arquivos, 292 testes), `npx tsc --noEmit`, `npm run build` e `npm run catalogo:build` sem erro. Cada commit do lote 4 também passou em `tsc` e nos testes, isolado num worktree.
+  - Instalação com `npm install "git+file:///C:/xampp/htdocs/producao/sgdm-design"` num projeto vazio, sem o recharts: versão 0.2.0; `dist/` com `index.js`, `index.cjs`, os `.d.ts`, `tokens.css`, `components.css`, `print.css` e as fontes. Os exports novos existem em ESM e CJS, e a renderização no servidor funciona; `@sgdm/design/print.css` resolve pelo `exports`. O `dist` não menciona o recharts.
+  - Capturas do catálogo pelo Playwright, sem erro no console: uma por seção nova (`catalogo-v2-01-paginas` a `-06-impressao`) e a página inteira em 5 fatias (`catalogo-v2-completo-01` a `-05`), na pasta de rascunho da sessão (`teste-v2`). A impressão foi conferida com a mídia `print` emulada: moldura oculta, folha sem largura máxima nem sombra, Times no corpo e tabela com borda #999 e 10pt.
