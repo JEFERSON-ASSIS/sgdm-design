@@ -119,7 +119,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     'aria-disabled:pointer-events-none aria-disabled:opacity-50',
     variant === 'link' ? TAMANHOS_LINK[size] : TAMANHOS[size],
     escuro && 'text-on-dark-link hover:text-on-dark-link-hover focus-visible:outline-on-dark-link',
-    fullWidth && 'w-full',
+    fullWidth && 'w-full justify-center',
   );
 
   const filho = asChild ? Children.only(children) : null;

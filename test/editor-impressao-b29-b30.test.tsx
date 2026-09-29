@@ -142,10 +142,15 @@ describe('B30. print.css', () => {
     expect(print).toMatch(/display: none !important;/);
   });
 
+  it('vale em qualquer ordem de import: a folha perde largura, sombra e margem no papel', () => {
+    expect(print).toMatch(/\.folha-processo \{\s*max-width: none !important;\s*padding: 0 !important;\s*margin: 0 !important;\s*box-shadow: none !important;/);
+    expect(print).toMatch(/font-family: var\(--sd-font-document\) !important;/);
+  });
+
   it('tabela com borda #999 e 10pt, por token, sem cor fixa', () => {
-    expect(print).toMatch(/border: 1px solid rgb\(var\(--sd-color-print-border\)\);/);
-    expect(print).toMatch(/font-size: var\(--sd-font-size-print-table\);/);
-    expect(print).toMatch(/font-size: var\(--sd-font-size-print-body\);/);
+    expect(print).toMatch(/border: 1px solid rgb\(var\(--sd-color-print-border\)\)( !important)?;/);
+    expect(print).toMatch(/font-size: var\(--sd-font-size-print-table\)( !important)?;/);
+    expect(print).toMatch(/font-size: var\(--sd-font-size-print-body\)( !important)?;/);
     expect(tokens).toMatch(/--sd-color-print-border: 153 153 153;/);
     expect(print).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
     expect(print).not.toContain('@apply');

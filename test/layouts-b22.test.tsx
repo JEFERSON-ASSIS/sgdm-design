@@ -156,7 +156,7 @@ describe('B22. AuthCard e AuthMessage', () => {
     expect(status.querySelector('.rounded-pill')).toHaveClass('bg-on-dark-success/10', 'text-on-dark-success', 'h-14', 'w-14');
     expect(within(status).getByRole('heading', { level: 2, name: 'Senha redefinida' })).toHaveClass('text-sidebar-foreground');
     expect(within(status).getByText('Faça login com a nova senha.')).toHaveClass('text-on-dark-muted');
-    expect(within(status).getByRole('button', { name: 'Ir para o login' })).toHaveClass('w-full', 'py-3');
+    expect(within(status).getByRole('button', { name: 'Ir para o login' })).toHaveClass('w-full', 'justify-center', 'py-3');
   });
 });
 

@@ -7,7 +7,10 @@
  * preserva a formatação do editor, que é o que precisa constar dos autos.
  *
  * CSS puro (sem diretivas do Tailwind): importe DEPOIS do tokens.css, porque as cores,
- * fontes e tamanhos vêm das variáveis --sd-*.
+ * fontes e tamanhos vêm das variáveis --sd-*. As regras que disputam com
+ * utilitários do Tailwind (max-w-*, shadow-*, px-*, font-sans do body) levam
+ * !important: o @import vai para o topo do CSS, antes do Tailwind, e sem isso
+ * a folha sairia com 820px e sombra no papel.
  *
  *   import '@sgdm/design/tokens.css';
  *   import '@sgdm/design/print.css';
@@ -26,10 +29,10 @@
   }
 
   body {
-    background: rgb(var(--sd-color-print-paper));
-    font-family: var(--sd-font-document);
-    font-size: var(--sd-font-size-print-body);
-    color: rgb(var(--sd-color-print-ink));
+    background: rgb(var(--sd-color-print-paper)) !important;
+    font-family: var(--sd-font-document) !important;
+    font-size: var(--sd-font-size-print-body) !important;
+    color: rgb(var(--sd-color-print-ink)) !important;
   }
 
   /* Some com tudo que é da aplicação, não do documento. */
@@ -43,12 +46,12 @@
   }
 
   .folha-processo {
-    max-width: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-    background: rgb(var(--sd-color-print-paper));
-    color: rgb(var(--sd-color-print-ink));
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: rgb(var(--sd-color-print-paper)) !important;
+    color: rgb(var(--sd-color-print-ink)) !important;
   }
 
   .quebra-pagina {
@@ -73,13 +76,13 @@
 
   table th,
   table td {
-    border: 1px solid rgb(var(--sd-color-print-border));
-    padding: 4pt 6pt;
-    font-size: var(--sd-font-size-print-table);
+    border: 1px solid rgb(var(--sd-color-print-border)) !important;
+    padding: 4pt 6pt !important;
+    font-size: var(--sd-font-size-print-table) !important;
   }
 
   a {
-    color: rgb(var(--sd-color-print-ink));
-    text-decoration: none;
+    color: rgb(var(--sd-color-print-ink)) !important;
+    text-decoration: none !important;
   }
 }
