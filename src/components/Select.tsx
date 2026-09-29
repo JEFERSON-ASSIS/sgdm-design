@@ -93,7 +93,7 @@ const SelectControle = forwardRef<HTMLSelectElement, Omit<SelectProps, 'label' |
 );
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
-  { label, hint, error, ...rest },
+  { label, hint, error, onDark, ...rest },
   ref,
 ) {
   const invalid = rest.invalid ?? (error != null && error !== '' ? true : undefined);
@@ -101,7 +101,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
     return <SelectControle ref={ref} {...rest} invalid={invalid} />;
   }
   return (
-    <FormField label={label} hint={hint} error={error} required={rest.required} htmlFor={rest.id}>
+    <FormField label={label} hint={hint} error={error} required={rest.required} htmlFor={rest.id} onDark={onDark}>
       <SelectControle ref={ref} {...rest} invalid={invalid} />
     </FormField>
   );

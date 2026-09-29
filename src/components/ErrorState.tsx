@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { AlertCircle } from 'lucide-react';
+import { cn } from '../cn';
+import { useOnDark } from './OnDark';
 
 export interface ErrorStateProps {
   /** Erro da consulta. Sem erro, nada é exibido. Aceita `Error`, texto ou `true`. */
@@ -41,11 +43,27 @@ export function ErrorState({
   );
 }
 
-/** Variante compacta para cabeçalhos, dropdowns e seletores. */
-export function ErrorInline({ message = 'Falha ao carregar.' }: { message?: ReactNode }) {
+export interface ErrorInlineProps {
+  message?: ReactNode;
+  /** `xs` (padrão, 12px) ou `sm` (14px, o erro geral do formulário de login). */
+  size?: 'xs' | 'sm';
+  /** Sobre fundo escuro: vermelho claro (`on-dark-error`). Dentro de `AuthLayout` já vem ligado. */
+  onDark?: boolean;
+}
+
+/** Variante compacta para cabeçalhos, dropdowns, seletores e o erro geral de um formulário. */
+export function ErrorInline({ message = 'Falha ao carregar.', size = 'xs', onDark }: ErrorInlineProps) {
+  const escuro = useOnDark(onDark);
   return (
-    <span role="alert" className="inline-flex items-center gap-1.5 text-xs text-danger-hover">
-      <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
+    <span
+      role="alert"
+      className={cn(
+        'inline-flex items-center gap-1.5',
+        size === 'sm' ? 'text-sm' : 'text-xs',
+        escuro ? 'text-on-dark-error' : 'text-danger-hover',
+      )}
+    >
+      <AlertCircle className={cn('shrink-0', size === 'sm' ? 'h-4 w-4' : 'h-3.5 w-3.5')} aria-hidden />
       {message}
     </span>
   );

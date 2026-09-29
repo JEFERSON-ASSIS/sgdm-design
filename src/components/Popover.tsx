@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cn } from '../cn';
+import { OnDark } from './OnDark';
 
 export type PopoverAlign = 'start' | 'end';
 export type PopoverSide = 'bottom' | 'top';
@@ -222,7 +223,7 @@ export function Popover({
           tabIndex={-1}
           className={classePainel(align, side, width)}
         >
-          {typeof children === 'function' ? children({ close }) : children}
+          <OnDark value={false}>{typeof children === 'function' ? children({ close }) : children}</OnDark>
         </div>
       )}
     </div>

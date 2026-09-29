@@ -23,7 +23,7 @@ const TextareaControle = forwardRef<
 });
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { label, hint, error, ...rest },
+  { label, hint, error, onDark, ...rest },
   ref,
 ) {
   const invalid = rest.invalid ?? (error != null && error !== '' ? true : undefined);
@@ -31,7 +31,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
     return <TextareaControle ref={ref} {...rest} invalid={invalid} />;
   }
   return (
-    <FormField label={label} hint={hint} error={error} required={rest.required} htmlFor={rest.id}>
+    <FormField label={label} hint={hint} error={error} required={rest.required} htmlFor={rest.id} onDark={onDark}>
       <TextareaControle ref={ref} {...rest} invalid={invalid} />
     </FormField>
   );

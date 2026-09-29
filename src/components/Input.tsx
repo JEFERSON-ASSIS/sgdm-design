@@ -13,6 +13,11 @@ export interface CampoProps {
   invalid?: boolean;
   /** Mostra o asterisco no rótulo e anuncia o campo como obrigatório. */
   required?: boolean;
+  /**
+   * Rótulo, dica e erro nas cores de fundo escuro (login). O campo continua
+   * branco, como no SGDM. Dentro de `AuthLayout`/`AuthCard` já vem ligado.
+   */
+  onDark?: boolean;
 }
 
 export interface InputProps
@@ -104,7 +109,7 @@ const InputControle = forwardRef<HTMLInputElement, Omit<InputInternoProps, 'labe
 
 /** Campo interno completo (com FormField quando há rótulo). O PasswordInput usa este. */
 export const InputBase = forwardRef<HTMLInputElement, InputInternoProps>(function InputBase(
-  { label, hint, error, ...rest },
+  { label, hint, error, onDark, ...rest },
   ref,
 ) {
   const invalid = rest.invalid ?? (error != null && error !== '' ? true : undefined);
@@ -112,7 +117,7 @@ export const InputBase = forwardRef<HTMLInputElement, InputInternoProps>(functio
     return <InputControle ref={ref} {...rest} invalid={invalid} />;
   }
   return (
-    <FormField label={label} hint={hint} error={error} required={rest.required} htmlFor={rest.id}>
+    <FormField label={label} hint={hint} error={error} required={rest.required} htmlFor={rest.id} onDark={onDark}>
       <InputControle ref={ref} {...rest} invalid={invalid} />
     </FormField>
   );

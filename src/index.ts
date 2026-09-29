@@ -37,6 +37,7 @@ export {
 } from './tokens';
 
 export { TONES, type Tone, type ToneFamily } from './components/tones';
+export { OnDark, useOnDark, type OnDarkProps } from './components/OnDark';
 
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from './components/Button';
 export {
@@ -97,7 +98,7 @@ export {
   type ToastApi,
 } from './components/Toast';
 export { EmptyState, type EmptyStateProps } from './components/EmptyState';
-export { ErrorState, ErrorInline, type ErrorStateProps } from './components/ErrorState';
+export { ErrorState, ErrorInline, type ErrorStateProps, type ErrorInlineProps } from './components/ErrorState';
 export {
   WizardStepper,
   type WizardStepperProps,
@@ -184,6 +185,17 @@ export {
   type IconTileShape,
   type IconTileVariant,
 } from './components/IconTile';
+
+export {
+  AuthLayout,
+  AuthCard,
+  AuthMessage,
+  type AuthLayoutProps,
+  type AuthCardProps,
+  type AuthMessageProps,
+} from './components/layout/AuthLayout';
+export { PublicLayout, type PublicLayoutProps, type PublicLayoutWidth } from './components/layout/PublicLayout';
+export { ErrorPage, type ErrorPageProps } from './components/layout/ErrorPage';
 
 export {
   AppLayout,

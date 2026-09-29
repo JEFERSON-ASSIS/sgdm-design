@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '../cn';
+import { useOnDark } from './OnDark';
 
 export interface CheckboxProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'style' | 'type' | 'size'> {
@@ -24,6 +25,8 @@ export interface CheckboxProps
    */
   indeterminate?: boolean;
   invalid?: boolean;
+  /** Rótulo e descrição nas cores de fundo escuro (login). Dentro de `AuthLayout` já vem ligado. */
+  onDark?: boolean;
 }
 
 /** A caixa em si: a do SGDM (`h-4 w-4 rounded border-slate-300`), na cor de destaque. */
@@ -54,9 +57,10 @@ function useIndeterminado(indeterminate: boolean | undefined, externa: Ref<HTMLI
 
 /** Caixa de marcar simples, com rótulo e descrição opcionais. */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
-  { label, description, indeterminate, invalid, id, disabled, 'aria-describedby': describedBy, ...rest },
+  { label, description, indeterminate, invalid, onDark, id, disabled, 'aria-describedby': describedBy, ...rest },
   ref,
 ) {
+  const escuro = useOnDark(onDark);
   const setRef = useIndeterminado(indeterminate, ref);
   const gerado = useId();
   const campoId = id ?? `sd-check-${gerado}`;
@@ -87,11 +91,11 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
     >
       {caixa}
       <span className="min-w-0">
-        <span id={rotuloId} className="block text-sm text-label">
+        <span id={rotuloId} className={cn('block text-sm', escuro ? 'text-on-dark-label' : 'text-label')}>
           {label}
         </span>
         {description != null && (
-          <span id={descricaoId} className="mt-0.5 block text-xs text-muted">
+          <span id={descricaoId} className={cn('mt-0.5 block text-xs', escuro ? 'text-on-dark-muted' : 'text-muted')}>
             {description}
           </span>
         )}
@@ -100,7 +104,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
   );
 });
 
-export interface CheckboxCardProps extends Omit<CheckboxProps, 'label'> {
+export interface CheckboxCardProps extends Omit<CheckboxProps, 'label' | 'onDark'> {
   /** Título do cartão (nome acessível da caixa). */
   label: ReactNode;
   /** Código ou detalhe em fonte monoespaçada (ex.: `licitacao.editar`). */

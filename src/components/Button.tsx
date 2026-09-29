@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '../cn';
+import { useOnDark } from './OnDark';
 
 export type ButtonVariant =
   | 'primary'
@@ -55,6 +56,12 @@ export interface ButtonProps
    * mantém as próprias props; a classe é a do botão.
    */
   asChild?: boolean;
+  /**
+   * Sobre fundo escuro (login): o `link` fica azul-claro (`on-dark-link`),
+   * como o "Esqueci minha senha". Dentro de `AuthLayout`/`AuthCard` já vem
+   * ligado. As outras variantes não mudam.
+   */
+  onDark?: boolean;
 }
 
 const VARIANTES: Record<ButtonVariant, string> = {
@@ -97,11 +104,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     rel,
     download,
     asChild = false,
+    onDark,
     children,
     ...rest
   },
   ref,
 ) {
+  const escuro = useOnDark(onDark) && variant === 'link';
   const tamanhoIcone = size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4';
   const bloqueado = Boolean(disabled || loading);
   const classes = cn(
@@ -109,6 +118,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     'focus-ring disabled:cursor-not-allowed [&_svg]:shrink-0',
     'aria-disabled:pointer-events-none aria-disabled:opacity-50',
     variant === 'link' ? TAMANHOS_LINK[size] : TAMANHOS[size],
+    escuro && 'text-on-dark-link hover:text-on-dark-link-hover focus-visible:outline-on-dark-link',
     fullWidth && 'w-full',
   );
 

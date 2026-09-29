@@ -1,5 +1,6 @@
 import { createContext, useContext, useId, type ReactNode } from 'react';
 import { cn } from '../cn';
+import { OnDark, useOnDark } from './OnDark';
 
 interface FormFieldContextValue {
   id: string;
@@ -29,6 +30,11 @@ export interface FormFieldProps {
   htmlFor?: string;
   /** Mostra o rótulo só para leitores de tela. */
   hideLabel?: boolean;
+  /**
+   * Sobre fundo escuro (login): rótulo, dica e erro nas cores `on-dark-*`.
+   * Dentro de `AuthLayout`/`AuthCard` já vem ligado.
+   */
+  onDark?: boolean;
   children: ReactNode;
 }
 
@@ -39,8 +45,10 @@ export function FormField({
   error,
   htmlFor,
   hideLabel,
+  onDark,
   children,
 }: FormFieldProps) {
+  const escuro = useOnDark(onDark);
   const gerado = useId();
   const id = htmlFor ?? `sd-campo-${gerado}`;
   const hasError = error != null && error !== false && error !== '';
@@ -56,23 +64,26 @@ export function FormField({
 
   return (
     <FormFieldContext.Provider value={ctx}>
-      <div className="space-y-1.5">
-        <label htmlFor={id} className={cn('block text-sm font-medium text-label', hideLabel && 'sr-only')}>
+      <div className="space-y-1.5" data-on-dark={escuro || undefined}>
+        <label
+          htmlFor={id}
+          className={cn('block text-sm font-medium', escuro ? 'text-on-dark-label' : 'text-label', hideLabel && 'sr-only')}
+        >
           {label}
           {required && (
-            <span className="ml-0.5 text-danger" aria-hidden>
+            <span className={cn('ml-0.5', escuro ? 'text-on-dark-error' : 'text-danger')} aria-hidden>
               *
             </span>
           )}
         </label>
         {children}
         {hasHint && (
-          <p id={ctx.hintId} className="text-xs text-subtle">
+          <p id={ctx.hintId} className={cn('text-xs', escuro ? 'text-on-dark-muted' : 'text-subtle')}>
             {hint}
           </p>
         )}
         {hasError && (
-          <p id={ctx.errorId} className="text-xs text-danger-strong">
+          <p id={ctx.errorId} className={cn('text-xs', escuro ? 'text-on-dark-error' : 'text-danger-strong')}>
             {error}
           </p>
         )}
