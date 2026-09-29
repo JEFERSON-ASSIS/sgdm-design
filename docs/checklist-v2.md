@@ -137,13 +137,13 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
 > - `NotificationBell` não busca nada: lista, carregando, erro e ações chegam por prop, e o `onOpenChange` serve para buscar só ao abrir. O nome do botão traz a contagem ("Notificações (12 não lidas)") e uma região `aria-live` anuncia a mudança do número.
 > - `CounterBadge`: sobre um ícone (filhos), inline, ou no canto do pai (`placement="corner"`). `label` troca o número lido e `live` anuncia a mudança. `formatCount` é exportado.
 > - `PdfViewer`: `panel` é a prévia do editor (iframe, `min-h-editor` = 420px, sem a barra do leitor do navegador); `page` é a tela do PDF (`object`, `min-h-editor-frame` = 480px, alternativa de download). O `IconButton` ganhou o tamanho `xs` (24px, raio de 4px) para a toolbar do painel.
-- [ ] **B22. Layouts de página.**
+- [x] **B22. Layouts de página.**
   - `AuthLayout` dividido: formulário em fundo escuro e painel de imagem com gradiente (`app/login/page.tsx:66-176`). Os componentes de formulário ganham a variante `onDark`.
   - `AuthCard`, o cartão escuro centralizado (`app/redefinir-senha/page.tsx:171-190`).
   - `PublicLayout`, a página pública estreita com cabeçalho de escudo e rodapé (`app/validar/*`).
   - `ErrorPage`, a página inteira de erro (`app/error.tsx`).
-- [ ] **B23. `KanbanBoard`**, `KanbanColumn` (cabeçalho com contagem) e `KanbanCard` compacto, sem arrastar. Referência: `components/licitacoes/LicitacaoKanban.tsx`.
-- [ ] **B24. Widgets do painel inicial.**
+- [x] **B23. `KanbanBoard`**, `KanbanColumn` (cabeçalho com contagem) e `KanbanCard` compacto, sem arrastar. Referência: `components/licitacoes/LicitacaoKanban.tsx`.
+- [x] **B24. Widgets do painel inicial.**
   - `DashboardHero`, por perfil.
   - `QuickActions`.
   - `QueueCard`, com cabeçalho de destaque e "ver todas".
@@ -151,6 +151,14 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
   - `MiniStat`.
   - `MiniCalendar`.
   - Referência: `components/dashboard/*`.
+
+> **Notas de B22–B24 (feitas em 28/09/2026).**
+> - `onDark`: prop em `FormField`, `Input`, `PasswordInput`, `Textarea`, `Select`, `Checkbox`, `Button` (só muda o `link`) e `ErrorInline`, e o contexto `<OnDark>`, que o `AuthLayout` e o `AuthCard` aplicam sozinhos. Muda só as cores de texto (rótulo, dica, erro, link) para as `on-dark-*`; o campo continua branco, como no login do SGDM. `Card`, `Modal` e `Popover` voltam ao claro dentro da área escura (o "Esqueci a senha" abre um modal por cima do login).
+> - `AuthLayout`: a foto é um `<img>` com uma camada de gradiente por cima (`from-overlay-strong/85 via-overlay-strong/30 via-60%`), e não o `style={{ backgroundImage }}` do SGDM, para não ter cor nem medida fora de token. Sem foto e sem frase, não há painel. O logo usa `rounded-card` (16px = `rounded-2xl`) e `shadow-brand-strong`. O `AuthCard` do SGDM não é um cartão de fato: é a tela escura centralizada, e assim ficou; o resultado ("Senha redefinida", "Link inválido") é o `AuthMessage`, com o verde-claro no token novo `on-dark-success` (emerald-400; o SGDM usa green-400, mas sucesso é esmeralda desde o A1).
+> - Larguras novas por token: `max-w-form` (448px, o `max-w-md` do login e do texto de erro), `max-w-public-sm` (512px) e `max-w-public-md` (768px) do `PublicLayout`.
+> - `ErrorPage`: `<main>` na tela cheia e `<div>` com `fullScreen={false}`, para não aninhar dois `<main>` dentro do `AppLayout`. O título e a mensagem ficam numa região `role="alert"`, porque o `error.tsx` do Next troca a tela sem recarregar.
+> - Kanban: o quadro é uma região rolável que recebe foco (rolagem pelo teclado); cada coluna é uma `<section>` nomeada pelo título, com os cartões numa lista. O cartão vira link (`href`/`linkComponent`), botão (`onClick`) ou `div`, só com elementos de frase dentro. Hover da borda em `primary-light/60`, no lugar do blue-300, que não é degrau do pacote.
+> - Painel: `DashboardHero` tem `soft` (o `DashboardRoleHero`) e `solid` (o destaque do `PlatformDashboard`), para os cinco perfis; o gradiente termina sempre em `-soft/30` (a secretaria do SGDM termina em sky-50/40). `QuickActions` sem perfil usa a cor principal, como a secretaria no SGDM; o foco dos itens é um anel por dentro, que o `overflow-hidden` do card não corta. `QueueCard` tinge o cabeçalho em `-soft` inteiro (o SGDM usa `/80`). `CountList` usa o degrau 500 (`TONE_BG_BASE`, novo em `tones.ts`) no ponto; o SGDM mistura 400 e 500. `MiniStat` é o indicador pequeno do painel da plataforma (ícone solto, sem quadrado), com a variante `dashed`. `MiniCalendar` é uma tabela com o mês na legenda, os dias da semana por extenso para o leitor de tela e o hoje em `aria-current="date"`; `month` controla de fora e `onDayClick` torna os dias clicáveis.
 - [x] **B25. `InlineCode` / `Mono`**, para protocolo e hash.
 - [x] **B26. `FlowChips`**, a sequência A → B → C (`components/perfis/PerfilGuiaCard.tsx:164-176`).
 - [x] **B27. `StickyAside`**, o painel lateral fixo (`components/pecas/ChecklistConteudoMinimo.tsx:24`).
@@ -159,19 +167,27 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
 > - `InlineCode` é `<code>` e `Mono` é `<span>`, com as mesmas props: `size`, `tone`, `weight`, `boxed` (fundo cinza) e `breakAll` (hash).
 > - `FlowChips` é uma `<ol>` com as setas escondidas do leitor de tela. A cor de cada perfil vem por `tone` (fundo 50, texto 900, contorno 100); o `tones.ts` ganhou `TONE_RING_TINT`, `TONE_TEXT_HOVER` e `TONE_BG_STRONG`.
 > - `StickyAside` é um `<aside>` nomeado pelo título, com o cabeçalho tingido por `tone` e `offset` de 16, 24 (padrão, o `top-6` do SGDM) ou 32px. Não leva `z-sticky`, como no SGDM, para não passar por cima de menus abertos no conteúdo.
-- [ ] **B28. Gráficos.**
+- [x] **B28. Gráficos.**
   - `ChartCard`, com título e ações.
   - `ChartLegend`, com amostra de cor e %.
   - Defaults para recharts: cores, grade e eixos por token.
   - Recharts é peer dependency **opcional**, então o pacote não pode quebrar sem ele: exportar os helpers de config e a legenda em HTML.
-- [ ] **B29. Estilos do editor de texto rico.**
+- [x] **B29. Estilos do editor de texto rico.**
   - `EditorFrame` e `EditorToolbar`, com botões de toolbar, separador e select de tamanho.
   - Classes de conteúdo `.documento` para o modo leitura, que substituem o `prose` que hoje não funciona no SGDM.
   - Não embutir o Tiptap: só a moldura, a toolbar como componentes de apresentação e o CSS.
-- [ ] **B30. Folha de impressão.**
+- [x] **B30. Folha de impressão.**
   - `print.css` com `@page` A4, margens de 20mm e 18mm, `.nao-imprimir`, `.quebra-pagina`, `.folha-processo` e `.peca-impressa`.
   - Tabelas com borda `#999` e fonte de 10pt.
   - Componente `PrintSheet`.
+
+> **Notas de B28–B30 (feitas em 28/09/2026).**
+> - Gráficos: o recharts é `peerDependency` opcional (`peerDependenciesMeta`) e nenhum arquivo do pacote o importa — um teste varre o `src`, e o `dist` não tem a palavra. O `src/charts.ts` monta props prontas (`chartProps()`: grade, eixo, barra deitada e em pé, rosca e tooltip), `chartColor`/`chartSeriesColor`, `toChartData` (tira os zeros, põe rótulo, cor e %) e `getChartTheme()`, que lê os tokens com `getComputedStyle` (um sistema que troca as cores continua certo; no servidor dá os hex). Entraram `CHART_AXIS_COLOR` (= text-muted) e `CHART_CURSOR_COLOR` (= surface-muted), e um teste confere que batem com os tokens. A amostra da `ChartLegend` pinta a cor por `style`, porque a cor é dado (vem do mapa de status); sem cor, usa `--sd-color-chart-N` pela posição.
+> - `ChartCard` com `legend` põe o gráfico num quadrado de 208px ao lado da legenda (o "Documentos por status"); sem legenda, 256px de altura na largura toda (o dos relatórios). `center` escreve o total no meio da rosca; `chartLabel` transforma a área numa imagem nomeada.
+> - Editor: só apresentação. `EditorToolbar` é `role="toolbar"`, com setas, Home e End entre os controles (dentro do select as setas continuam mudando o valor). `EditorToolbarButton` tem `aria-pressed` quando recebe `active` (negrito) e não tem quando é comando (desfazer), e não rouba o foco do editor no clique. O ativo é `primary-ring`/`accent-text` (blue-100/700) e o hover, `bg-border` (slate-200).
+> - `.documento` agora devolve o que o preflight do Tailwind zera: margens de parágrafo, títulos (h1 centrado 14pt, h2 12pt, h3 12pt itálico), listas com marcador e número, citação, linha e tabela com borda. Vale no modo leitura (`DocumentContent`, `EditorFrame html`) e dentro do editor, porque a área editável fica em `.editor-document-page.documento`. A margem da folha (32px × 24px) passou para o `.editor-document-page .ProseMirror`.
+> - `print.css`: o mesmo bloco do `globals.css` do SGDM, com cores e fontes por token (`--sd-color-print-ink`, `-paper`, `-border` = #999, `--sd-font-size-print-*`). As regras que disputam com utilitários do Tailwind levam `!important`: a impressão emulada no catálogo mostrou que, com o `@import` no topo do CSS, o `max-w-print-sheet`, a sombra e a fonte Inter do body venciam. O `AppLayout` ganhou `print:` para a moldura (altura da tela, rolagem interna, padding) sair da frente, e o `Header` e a barra de progresso somem no papel.
+> - `PrintSheet` (a folha de 820px, com `toolbar` só na tela), `PrintCover` (a capa), `PrintSection` (seção, ou peça com `piece`: `.peca-impressa`, `.quebra-pagina` e traço em cima) e `NoPrint`.
 
 ## C. Completar o que ficou pela metade
 
@@ -192,14 +208,17 @@ A regra do pacote continua a mesma: o componente só recebe props semânticas, e
 
 ## D. Entrega
 
-- [ ] **D1. Catálogo.** Uma seção por grupo, mostrando cada item novo em todas as variantes.
-- [ ] **D2. Testes.** Um por componente novo, incluindo:
+- [x] **D1. Catálogo.** Uma seção por grupo, mostrando cada item novo em todas as variantes.
+  - Lote 4: seções Páginas, Kanban, Painel inicial, Gráficos, Editor de texto e Impressão (`catalogo/src/CatalogoD.tsx`). As páginas inteiras aparecem pela metade numa moldura; os gráficos são SVG simples, porque o recharts não está instalado (é opcional); o editor usa um `contentEditable` no lugar do Tiptap.
+- [x] **D2. Testes.** Um por componente novo, incluindo:
   - Checkbox indeterminado;
   - Dropdown fechando com Esc e com clique fora;
   - FileUpload aceitando e removendo arquivo;
   - Table selecionando linhas;
   - teste de tokens atualizado.
   - O teste "sem cor fixa em componente" continua valendo.
-- [ ] **D3. README.** Tabela "padrão do SGDM → componente do pacote" com todos os itens.
+  - Os quatro testes de comportamento já existiam (lotes 2 e 3). O lote 4 trouxe `layouts-b22`, `kanban-painel-b23-b24`, `graficos-b28`, `editor-impressao-b29-b30` e `tokens-b4`: 292 testes no total.
+- [x] **D3. README.** Tabela "padrão do SGDM → componente do pacote" com todos os itens.
+  - Seção "Padrão do SGDM → componente do pacote", de A1 a C8, com a referência no app e o que usar no lugar.
 - [ ] **D4. Versão.** `package.json` passa a 0.2.0, com `CHANGELOG.md`.
 - [ ] **D5. Verificação.** Build, testes, `tsc`, build do catálogo e instalação pelo git. Tirar uma captura do catálogo.

@@ -4,7 +4,11 @@ O visual do SGDM empacotado para os sistemas novos nascerem com a mesma aparênc
 
 - **Tokens** (`tokens.css`): cores, famílias de tom, tema por perfil, fontes, tamanhos, raios, sombras, camadas (z-index), tempo e medidas de layout, com nomes de papel (`--sd-color-primary`, `--sd-radius-control`, `--sd-z-modal`). A fonte Inter vem dentro do pacote, sem CDN. Veja [Tokens](#tokens).
 - **Preset do Tailwind** (`tailwind-preset`): expõe os tokens como `bg-primary`, `text-muted`, `rounded-control` e `shadow-card`, e injeta as classes `.card`, `.btn-*`, `.input`, `.nav-item`… do SGDM.
-- **Componentes**: Button, IconButton, Card, Input, PasswordInput, Textarea, Select, Checkbox, CheckboxCard, CheckboxGroup, FileUpload, FileButton, FormField, FormSection, Modal, ConfirmModal, PageHeader, StatusBadge, StatCard, Table, Tabs, Toast (`ToastProvider` + `useToast`), Alert (Callout), Spinner, LoadingState, Skeleton, PageSkeleton, EmptyState, ErrorState, Eyebrow (Overline), Chip (Tag), IconTile, DescriptionList, KeyValue, WizardStepper, NumberedSteps, ProcessStepper, Timeline, FlowChips, SegmentedControl, FilterBar, SearchInput, SelectableList, Popover, Dropdown, NotificationBell, CounterBadge, PdfViewer, InlineCode (Mono), StickyAside, Tooltip (DicaInfo), CollapsibleCard, Accordion, AppLayout, Sidebar, Header e NavigationProgress.
+- **Componentes**: Button, IconButton, Card, Input, PasswordInput, Textarea, Select, Checkbox, CheckboxCard, CheckboxGroup, FileUpload, FileButton, FormField, FormSection, Modal, ConfirmModal, PageHeader, StatusBadge, StatCard, Table, Tabs, Toast (`ToastProvider` + `useToast`), Alert (Callout), Spinner, LoadingState, Skeleton, PageSkeleton, EmptyState, ErrorState, Eyebrow (Overline), Chip (Tag), IconTile, DescriptionList, KeyValue, WizardStepper, NumberedSteps, ProcessStepper, Timeline, FlowChips, SegmentedControl, FilterBar, SearchInput, SelectableList, Popover, Dropdown, NotificationBell, CounterBadge, PdfViewer, InlineCode (Mono), StickyAside, Tooltip (DicaInfo), CollapsibleCard, Accordion, KanbanBoard, KanbanColumn, KanbanCard, DashboardHero, QuickActions, QueueCard, CountList, MiniStat, MiniCalendar, ChartCard, ChartLegend, EditorFrame, EditorToolbar (com EditorToolbarButton, EditorToolbarSeparator e EditorFontSizeSelect), DocumentContent, PrintSheet, PrintCover, PrintSection, NoPrint, AppLayout, Sidebar, Header, NavigationProgress, AuthLayout, AuthCard, AuthMessage, PublicLayout e ErrorPage.
+- **Impressão** (`print.css`): a folha A4 do processo administrativo, com as classes `.nao-imprimir`, `.quebra-pagina`, `.folha-processo` e `.peca-impressa` do SGDM.
+- **Gráficos**: padrões de cor, grade e eixo para o recharts (`chartProps`), sem depender dele.
+
+A tabela [Padrão do SGDM → componente do pacote](#padrão-do-sgdm--componente-do-pacote) diz o que usar no lugar de cada coisa que o SGDM repetia à mão.
 
 Para ver tudo funcionando, rode `npm run catalogo` neste repositório.
 
@@ -15,7 +19,7 @@ O pacote não é publicado no npm. Ele é instalado direto do repositório:
 ```bash
 npm install github:<usuario>/sgdm-design
 # ou uma versão fixa (tag ou commit)
-npm install github:<usuario>/sgdm-design#v0.1.0
+npm install github:<usuario>/sgdm-design#v0.2.0
 ```
 
 Na instalação, o npm roda o script `prepare`, que gera o `dist/`. Precisa de Node 18 ou mais novo.
@@ -27,6 +31,9 @@ Dependências que o sistema já deve ter (peer dependencies):
 | `react` / `react-dom` | 18 ou 19 |
 | `tailwindcss` | 3.4 |
 | `lucide-react` | qualquer versão recente |
+| `recharts` | 2 ou mais novo — **opcional**, só para quem desenha gráficos |
+
+O pacote nunca importa o `recharts`: `ChartCard`, `ChartLegend` e os helpers de `chartProps` funcionam sem ele instalado. Quem quer o gráfico instala o recharts no próprio sistema e espalha as props prontas nos componentes dele.
 
 ## Configurar o Tailwind
 
@@ -72,6 +79,16 @@ Vite (`main.tsx`) funciona do mesmo jeito. Outra forma é colocar no topo do CSS
 ```
 
 Com isso, o `globals.css` do sistema não precisa mais do `@import` do Google Fonts nem do bloco `:root` com as cores.
+
+Para imprimir (a folha do processo, com Ctrl+P ou "Salvar como PDF"), importe também o `print.css`, **depois** dos tokens:
+
+```tsx
+import '@sgdm/design/tokens.css';
+import '@sgdm/design/print.css';
+import './globals.css';
+```
+
+Ele só age no papel (`@media print`): página A4 com margens de 20mm × 18mm, some com o menu, o cabeçalho e o que tiver `.nao-imprimir`, e põe as tabelas com borda `#999` e 10pt (tudo por token). As regras que disputam com utilitários do Tailwind levam `!important`, então a ordem dos imports não importa. O SGDM tinha isso no fim do `globals.css`; quem migrar tira de lá.
 
 `@sgdm/design/components.css` é o fonte das classes de componente, em sintaxe do Tailwind (`@layer`/`@apply`). Ele vai no pacote para consulta. Quem usa o preset não precisa dele.
 
@@ -281,6 +298,84 @@ Navegação, histórico, menus e documento (v0.2):
 <StickyAside title="Conteúdo mínimo" description="Art. 18" tone="warning" icon={Scale}>…</StickyAside>
 ```
 
+Páginas, painel, gráficos, editor e impressão (v0.2):
+
+```tsx
+{/* Login dividido: formulário no fundo escuro e foto com gradiente. Os campos,
+    o link e o erro dentro dele usam a variante onDark sozinhos. */}
+<AuthLayout title="SGDM" description="Sistema de Gestão Documental Municipal"
+  image={{ src: '/imgVera.png' }} headline="Gestão, controle e transparência em um só lugar."
+  tagline="Rastreabilidade, auditoria e workflow oficial.">
+  <form onSubmit={entrar} className="space-y-5">
+    <Input label="Usuário ou e-mail" leftIcon={<User />} {...register('email')} error={erros.email} />
+    <PasswordInput label="Senha" leftIcon={<Lock />} {...register('senha')} />
+    <Button variant="link" onClick={esqueci}>Esqueci minha senha</Button>
+    <ErrorInline size="sm" message={erroGeral} />
+    <Button type="submit" size="lg" fullWidth loading={enviando}>Entrar</Button>
+  </form>
+</AuthLayout>
+<AuthCard title="Redefinir senha" description="Escolha uma nova senha.">
+  <AuthMessage tone="success" icon={CheckCircle2} title="Senha redefinida"
+    action={<Button size="lg" fullWidth href="/login" linkComponent={Link}>Ir para o login</Button>} />
+</AuthCard>
+<Input label="Nome" onDark />   {/* onDark por prop fora do AuthLayout, ou <OnDark>…</OnDark>; Card, Modal e Popover voltam ao claro */}
+<PublicLayout title="Verificação de assinatura" description="Informe o código" width="sm" footer="Lei nº 14.063/2020.">…</PublicLayout>
+<ErrorPage error={error} onRetry={reset} />     {/* o app/error.tsx inteiro; fullScreen={false} dentro do AppLayout */}
+
+{/* Kanban só de leitura */}
+<KanbanBoard label="Processos por fase">
+  <KanbanColumn title="Planejamento" subtitle="Compras">
+    <KanbanCard code={l.numeroProcesso} title={l.objeto} badge={<StatusBadge … />}
+      meta={formatMoeda(l.valor)} footer={`Em: ${l.setor}`} href={`/licitacoes/${l.id}`} linkComponent={Link} />
+  </KanbanColumn>
+</KanbanBoard>
+
+{/* Painel inicial */}
+<DashboardHero profile="prefeito" title="Painel do Prefeito" description="…" icon={Landmark} />
+<DashboardHero profile="plataforma" variant="solid" title="Dono da plataforma" icon={Shield} />
+<QuickActions title="Ações rápidas — RH" profile="rh" linkComponent={Link}
+  actions={[{ href: '/numeracoes', label: 'Analisar numerações', icon: Hash }]} />
+<QueueCard title="Fila de assinatura" subtitle="…" icon={FileSignature} tone="violet" href="/assinaturas"
+  empty="Nenhum documento aguardando assinatura."><DocumentoLista … /></QueueCard>
+<CountList title="Pendências" href="/pendencias"
+  items={[{ id: 'EM_ANALISE', label: 'Em análise', count: 5, tone: 'orange', href: '/numeracoes' }]} />
+<MiniStat label="Prefeituras ativas" value={12} icon={Building2} tone="rose" />
+<MiniCalendar />
+
+{/* Gráficos: o recharts é da tela; o pacote dá o card, a legenda e as props */}
+const dados = toChartData(porStatus, { labels: STATUS_LABELS });   // tira os zeros, põe cor e %
+const c = chartProps();                                           // ou chartProps(getChartTheme()), que lê o tema
+<ChartCard title="Documentos por status" center={{ label: 'Total', value: total }}
+  legend={<ChartLegend items={dados} total={total} />}>
+  <ResponsiveContainer><PieChart><Pie data={dados} dataKey="value" {...c.pie}>
+    {dados.map((d) => <Cell key={d.key} fill={d.color} />)}
+  </Pie></PieChart></ResponsiveContainer>
+</ChartCard>
+<BarChart …><CartesianGrid {...c.grid} /><XAxis {...c.axis} /><Bar dataKey="total" {...c.barHorizontal} /></BarChart>
+
+{/* Editor: a moldura e a toolbar; o Tiptap fica com a tela */}
+<EditorFrame loading={!editor} toolbar={
+  <EditorToolbar>
+    <EditorFontSizeSelect value={editor.getAttributes('textStyle').fontSize ?? ''} onChange={mudarTamanho} />
+    <EditorToolbarSeparator />
+    <EditorToolbarButton label="Negrito" icon={<Bold />} active={editor.isActive('bold')}
+      onClick={() => editor.chain().focus().toggleBold().run()} />
+  </EditorToolbar>}>
+  <EditorContent editor={editor} />
+</EditorFrame>
+<EditorFrame html={conteudo} />                        {/* modo leitura */}
+<DocumentContent html={peca.conteudoHtml} justify />   {/* no lugar do "prose prose-sm" */}
+
+{/* Folha de impressão (com @sgdm/design/print.css importado) */}
+<PrintSheet toolbar={<Button icon={<Printer />} onClick={() => window.print()}>Imprimir</Button>}>
+  <PrintCover organization={prefeitura.nome} title="Processo de Contratação" code={p.numeroProcesso} />
+  <PrintSection title="Identificação">…</PrintSection>
+  <PrintSection piece title={peca.nome} subtitle={peca.fundamentoLegal} code={peca.protocolo} aside={`Fls. ${n}`}>
+    <DocumentContent html={peca.conteudoHtml} justify />
+  </PrintSection>
+</PrintSheet>
+```
+
 `StatCard` e `EmptyState` desenham o ícone com o `IconTile`. As cores de chip, aviso e ícone saem dos mapas de `tones.ts`, um por degrau, escritos por extenso para o Tailwind achá-los no `dist`.
 
 ### Layout
@@ -329,6 +424,64 @@ export function Moldura({ children }) {
 
 Um item do menu fica ativo quando o caminho é igual ao `href` ou é uma subpágina dele. Use `exact` para exigir o caminho exato, ou `active` para decidir por conta própria.
 
+## Padrão do SGDM → componente do pacote
+
+Tudo que o levantamento de 28/09/2026 achou repetido à mão nas telas do SGDM (`apps/web`, com `(d)` = `app/(dashboard)`), e o que usar no lugar. Os números são os itens de `docs/checklist-v2.md`.
+
+| Item | Padrão no SGDM (onde) | No pacote |
+| --- | --- | --- |
+| A1 | `emerald-*` para sucesso (112×, contra 7× `green`) | `--sd-color-success*` em esmeralda; `bg-success-soft`, `text-success-text`; `StatusBadge active` |
+| A2 | avisos `blue-50/200/900` (`(d)/publicacoes/page.tsx:32`) | `--sd-color-info*` em azul; o ciano virou a família `cyan` |
+| A3 | texto de aviso em `amber-900` (35×) e afins | degrau `-deep` (900): `text-warning-deep`, `text-info-deep`… |
+| A4 | `indigo`, `rose`, `violet`, `purple`, `orange`, `teal`, `sky` soltos | famílias `--sd-color-<família>-*` e o tipo `Tone` |
+| A5 | cores por perfil (`DashboardRoleHero.tsx:14-36`, `PerfilGuiaCard.tsx:42-109`) | `--sd-color-profile-*`, `shadow-profile-*`, `PROFILES` |
+| A6 | `slate-300` em borda, `slate-200` no carregamento, `slate-900/50` e `/70`, textos do login | `border-border-strong`, `bg-skeleton`, `bg-overlay-strong/70`, `text-on-dark-*` |
+| A7 | `#0EA5E9`, `#94A3B8`, `#E2E8F0` e `#3B82F6` nos gráficos | `--sd-color-chart-13`, `-fallback`, `-grid`, `-bar` e `CHART_*_COLOR` |
+| A8 | `text-[10px]`, `text-[11px]`, 10pt a 18pt no editor, 12pt e 10pt na impressão | `text-2xs`, `text-xs2`, `text-doc-10..18`, `text-print-*`, `EDITOR_FONT_SIZES` |
+| A9 | `rounded` (4px) em toolbar e chip, marcador de 2px, `rounded-xl` para tudo | `rounded-xs`, `rounded-marker`, `rounded-panel`/`-callout`/`-tile` |
+| A10 | `shadow-xl shadow-blue-900/50` no logo, `shadow-inner`, sombra colorida por perfil | `shadow-brand-strong`, `shadow-inner`, `shadow-dropdown`, `shadow-profile-*` |
+| A11 | `z-50`, `z-[60]`, `z-[100]`… | `z-dropdown` (20) a `z-progress` (110) e `Z_INDEX` |
+| A12 | `duration-150/200/300` | `duration-fast/normal/slow`, `ease-standard` e `DURATION_MS` |
+| A13 | `w-64`, `w-[72px]`, `h-14`, `max-w-[820px]`, `min-w-[280px]`, `innerWidth < 1024` no JS | `w-sidebar`, `w-sidebar-collapsed`, `h-header`, `max-w-print-sheet`, `w-kanban-column`, `BREAKPOINT_LG`… |
+| B1 | avisos `rounded-xl border bg-*-50 text-*-900` (~120×), "Etapa 3 — Elaboração" (`DocumentoEditorPanel.tsx:766`) | `Alert` / `Callout`, com `variant="stage"` |
+| B2 | `Loader2 animate-spin` e "Carregando…" (~88×) | `Spinner`, `LoadingState` |
+| B3 | blocos cinza do `(d)/loading.tsx` | `Skeleton`, `PageSkeleton` |
+| B4 | `text-[11px] uppercase tracking-wide text-slate-500` (50×) | `Eyebrow` / `Overline` |
+| B5 | chips `rounded-full bg-*-100 px-2 text-xs` (~37×) | `Chip` / `Tag` |
+| B6 | quadrado de ícone `h-10 w-10 rounded-xl bg-*-50` (~35×) | `IconTile` (também dentro de `StatCard` e `EmptyState`) |
+| B7 | links `text-blue-600 hover:underline`, botões verdes, `py-3` do login, `<Link className="btn-*">` | `Button variant="link"/"success"/"danger-outline"`, `size="lg"`, `href`, `asChild` |
+| B8 | botões só com ícone (~25×) | `IconButton` (`aria-label` obrigatório) |
+| B9 | `dl` em `grid-cols-[160px_1fr]` (`DocumentoDadosPanel.tsx:48-58`, `validar/[codigo]/page.tsx:227`) | `DescriptionList` (rows, grid, tiles, compact), `KeyValue` |
+| B10 | checkboxes e a matriz de permissões (`PerfilPermissoesEditor.tsx:274-320`) | `Checkbox` (com indeterminado), `CheckboxCard`, `CheckboxGroup` |
+| B11 | `components/forms/CampoSenha.tsx` | `PasswordInput` |
+| B12 | ícone absoluto dentro do campo, `R$` e `%` | `Input leftIcon/rightIcon/prefix/suffix` |
+| B13 | `components/forms/FileUpload.tsx:96-153`, o `label` do `AssinaturaDigitalPanel.tsx:171` | `FileUpload`, `FileButton` |
+| B14 | `DocumentoHistorico.tsx:153-186`, `LicitacaoTimeline.tsx:99-129` | `Timeline` (icon, dots, phases) |
+| B15 | abas coloridas de `(d)/documentos/[id]/page.tsx:690-708`, filtro das numerações | `Tabs variant="pill"`, `SegmentedControl` |
+| B16 | card "Filtros" com grade de campos, campo de busca com lupa | `FilterBar`, `SearchInput` |
+| B17 | passos do `AssinaturaDigitalPanel.tsx:113-193`, "Onde você está" (`DocumentoEditorPanel.tsx:61-102`), PassosCadastro | `NumberedSteps`, `ProcessStepper`, `WizardStepper variant="tiles"`, `bare` e `href` |
+| B18 | lista mestre de `(d)/cadastros/perfis/page.tsx:204-235` | `SelectableList` |
+| B19 | `NotificacoesDropdown.tsx:128-297` e menus de ações | `Popover`, `Dropdown`, `NotificationBell` |
+| B20 | bolinha com número sobre o sino | `CounterBadge`, `formatCount` |
+| B21 | `DocumentoPreviaPanel.tsx:94-135` | `PdfViewer` (panel, page) |
+| B22 | `app/login/page.tsx:66-176`, `app/redefinir-senha/page.tsx:171-190`, `app/validar/*`, `app/error.tsx` | `AuthLayout`, `AuthCard`, `AuthMessage`, `PublicLayout`, `ErrorPage`; `onDark` nos campos, no `Button link` e no `ErrorInline`, ou a área `<OnDark>` |
+| B23 | `LicitacaoKanban.tsx` e `LicitacaoCardCompact` | `KanbanBoard`, `KanbanColumn`, `KanbanCard` |
+| B24 | `components/dashboard/*`: `DashboardRoleHero`, `QuickActions`, `DashboardFilaCard`, `PendingList`, `CalendarWidget` e o indicador do `PlatformDashboard` | `DashboardHero`, `QuickActions`, `QueueCard`, `CountList`, `MiniCalendar`, `MiniStat` |
+| B25 | protocolo e hash em `font-mono` | `InlineCode`, `Mono` |
+| B26 | fluxo A → B → C (`PerfilGuiaCard.tsx:164-176`) | `FlowChips` |
+| B27 | painel lateral fixo (`ChecklistConteudoMinimo.tsx:24`) | `StickyAside` |
+| B28 | `StatusChart.tsx` e `RelatorioBarChart.tsx` (recharts, cores em hex) | `ChartCard`, `ChartLegend`, `chartProps`, `toChartData`, `chartColor`, `getChartTheme` |
+| B29 | `RichTextEditor.tsx` (toolbar, `min-h-[420px]`) e o `prose prose-sm`, que não funciona sem o plugin | `EditorFrame`, `EditorToolbar`, `EditorToolbarButton`, `EditorToolbarSeparator`, `EditorFontSizeSelect`, `DocumentContent` e a classe `.documento` |
+| B30 | `@media print` do `globals.css` e `licitacoes/[id]/processo/page.tsx` | `@sgdm/design/print.css`, `PrintSheet`, `PrintCover`, `PrintSection`, `NoPrint` |
+| C1 | tabelas com total, seleção, compactas, dentro de card | `Table` com `footer`, `selectable`, `density`, `headerCase` e `bare` |
+| C2 | cards tingidos e com `p-4`, `p-5` ou `p-6` | `Card tone padding` |
+| C3 | selos da licitação (`lib/licitacoes.ts:311-362`), da fase e da peça (`lib/pecas.ts:129`) | `StatusBadge size/case/variant` e os mapas `LICITACAO_*`, `PECA_*`, `NUMERACAO_*` |
+| C4 | `StatCard` com `iconBg`/`iconColor` soltos | `StatCard tone` |
+| C5 | `CardRecolhivel` controlado, linhas que abrem | `CollapsibleCard open/onOpenChange`, `Accordion` |
+| C6 | `DicaInfo` abrindo para os lados | `Tooltip placement` |
+| C7 | vazio com borda tracejada | `EmptyState variant="dashed"` |
+| C8 | seletor de prefeitura do cabeçalho | `Select size="compact" icon` |
+
 ## A regra: as telas não passam visual
 
 As telas conhecem **só a API** dos componentes, nunca a aparência.
@@ -346,7 +499,8 @@ Todo token segue `--sd-<categoria>-<papel>[-<variante>]`. O esquema completo est
 | Categoria | Exemplos de token | Classe do preset |
 | --- | --- | --- |
 | Cor de papel | `--sd-color-surface`, `--sd-color-text-muted`, `--sd-color-border-strong`, `--sd-color-skeleton`, `--sd-color-overlay-strong` | `bg-surface`, `text-muted`, `border-border-strong`, `bg-overlay-strong/70` |
-| Texto sobre fundo escuro | `--sd-color-on-dark-label`, `-muted`, `-error`, `-link`, `-link-hover` | `text-on-dark-label`, `text-on-dark-error` |
+| Texto sobre fundo escuro | `--sd-color-on-dark-label`, `-muted`, `-error`, `-link`, `-link-hover`, `-success` | `text-on-dark-label`, `text-on-dark-error` |
+| Impressão | `--sd-color-print-ink`, `-paper`, `-border` (#999) | usados pelo `print.css`; `border-print-border` |
 | Tons de feedback | `--sd-color-success`, `warning`, `danger`, `info` (+ degraus) | `bg-success-soft`, `text-warning-deep` |
 | Famílias | `--sd-color-cyan`, `indigo`, `rose`, `violet`, `purple`, `orange`, `teal`, `sky` (+ degraus) | `bg-indigo-tint`, `text-rose-text` |
 | Perfil | `--sd-color-profile-<perfil>[-soft\|-tint\|-border\|-icon\|-text\|-title]`, `--sd-shadow-profile-<perfil>` | `bg-profile-rh-soft`, `shadow-profile-prefeito` |
@@ -356,7 +510,7 @@ Todo token segue `--sd-<categoria>-<papel>[-<variante>]`. O esquema completo est
 | Sombra | `card`, `card-hover`, `popover`, `dropdown`, `modal`, `inner`, `nav-active`, `brand`, `brand-strong`, `step` | `shadow-dropdown`, `shadow-brand-strong` |
 | Camada | `raised` 10, `dropdown` 20, `sticky` 30, `overlay` 40, `modal` 50, `toast` 60, `tooltip` 100, `progress` 110 | `z-modal`, `z-tooltip` |
 | Tempo | `--sd-duration-fast` 150ms, `-normal` 200ms, `-slow` 300ms, `--sd-ease-standard`, `--sd-ease-out` | `duration-normal`, `ease-standard` (o `transition` puro já usa fast + standard) |
-| Medida | `--sd-size-sidebar` 256, `-sidebar-collapsed` 72, `-header` 56, `-modal-md` 512, `-modal-lg` 768, `-tooltip` 288, `-dropdown` 384, `-editor-min` 420, `-editor-frame-min` 480, `-print-sheet` 820, `-kanban-column-min/max` 280–320, `-dl-label` 160 | `w-sidebar`, `h-header`, `max-w-modal-lg`, `min-h-editor`, `w-kanban-column`, `grid-cols-label-value` |
+| Medida | `--sd-size-sidebar` 256, `-sidebar-collapsed` 72, `-header` 56, `-modal-md` 512, `-modal-lg` 768, `-tooltip` 288, `-dropdown` 384, `-editor-min` 420, `-editor-frame-min` 480, `-print-sheet` 820, `-kanban-column-min/max` 280–320, `-dl-label` 160, `-form` 448, `-public-sm` 512, `-public-md` 768 | `w-sidebar`, `h-header`, `max-w-modal-lg`, `min-h-editor`, `w-kanban-column`, `grid-cols-label-value`, `max-w-form`, `max-w-public-sm` |
 | Espaço da página | `--sd-space-page-sm` 16, `-md` 24, `-lg` 32 | `p-page-sm lg:p-page-md xl:p-page-lg` |
 | Breakpoint | `--sd-breakpoint-lg` 1024px (informativo) | `lg:` |
 
@@ -450,6 +604,8 @@ src/styles/components.css  .card, .btn-*, .input, .nav-item… (sintaxe Tailwind
 tailwind-preset.cjs        tokens → nomes do Tailwind; injeta components.css
 src/cn.ts                  clsx + tailwind-merge
 src/status.ts              mapas de status (documento, numeração, licitação, peça) e cores de gráfico
+src/charts.ts              padrões para o recharts (sem importá-lo): chartProps, toChartData, getChartTheme
+src/styles/print.css       a folha A4 do processo (@media print)
 src/tokens.ts              os tokens que o JS lê: BREAKPOINT_LG, Z_INDEX, DURATION_MS…
 src/components/            componentes
 catalogo/                  app Vite do catálogo
@@ -457,7 +613,8 @@ test/                      testes
 ```
 
 Fora do escopo deste pacote:
-- tema escuro, porque o SGDM não tem;
-- estilos de impressão, que são do processo administrativo do SGDM e continuam lá.
+- tema escuro, porque o SGDM não tem (o `onDark` é só para as telas de login, que já são escuras);
+- arrastar cartões no kanban: mudar de fase é uma ação do processo, feita na tela dele;
+- o editor em si (Tiptap) e os gráficos em si (recharts): o pacote dá a moldura, a toolbar, o CSS e as props, e o sistema traz a biblioteca.
 
 A fonte Inter é distribuída sob a SIL Open Font License, em `src/styles/fonts/LICENSE-Inter-OFL.txt`.
